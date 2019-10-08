@@ -1,0 +1,24 @@
+
+<!-- Last Run Result (0x1) -->
+<QueryList>
+  <Query Id="0" Path="Microsoft-Windows-TaskScheduler/Operational">
+    <Select Path="Microsoft-Windows-TaskScheduler/Operational">
+     *[System[(EventID=201)]]
+      and
+     *[EventData[Data[@Name='ResultCode'] and (Data='2147942401')]] <!-- 0x80070001 -->
+    </Select>
+  </Query>
+</QueryList>
+
+<!-- non-zero Last Run Result -->
+<QueryList>
+  <Query Id="0" Path="Microsoft-Windows-TaskScheduler/Operational">
+    <Select Path="Microsoft-Windows-TaskScheduler/Operational">
+     *[System[(EventID=201)]]
+    </Select>
+    <Suppress Path="Microsoft-Windows-TaskScheduler/Operational">
+     *[EventData[Data[@Name='ResultCode'] and (Data='0')]]
+    </Suppress>
+  </Query>
+</QueryList>
+
