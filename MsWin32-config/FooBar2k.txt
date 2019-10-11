@@ -1,0 +1,27 @@
+
+Segoe UI Symbol
+
+• Default UI
+[%album artist% · ]['['%album%[ #%discnumber%][ №%tracknumber%]']' ]%title%[ '//' %track artist%]
+%codec% | %bitrate% kbps | %samplerate% Hz | %channels% | %playback_time%[ / %length%]
+[%artist% · ]%title%
+
+• Playlist View → Custom columns
+Artist · Album | %artist% · %album%
+Title // Track artist | %title%[ '//' %track artist%]
+№ | %track%
+▷ | $if(%ispaused%,$char(10074)$char(10074),$if(%isplaying%,$char(9654),))
+· · : · · | %length%
+
+• Album List
+by album
+%album%[ '['%album artist%']']|[[%discnumber%.]%tracknumber%. ][%track artist% · ]%title%
+by artist
+%<artist>%|%album%|[[%discnumber%.]%tracknumber%. ][%track artist% · ]%title%
+by genre
+%<genre>%|[%album artist% · ]%album%|[[%discnumber%.]%tracknumber%. ][%track artist% · ]%title%
+by year
+%<date>%|[%album artist% · ]%album%|[[%discnumber%.]%tracknumber%. ][%track artist% · ]%title%
+by artist/album
+[%album artist% · ]['['%date%']' ]%album%|[[%discnumber%.]%tracknumber%. ][%track artist% · ]%title%
+
