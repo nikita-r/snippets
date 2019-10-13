@@ -20,3 +20,5 @@ Add-Type @'
 '@
 [System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAllCertsPolicy
 
+rv * -ea SilentlyContinue
+
