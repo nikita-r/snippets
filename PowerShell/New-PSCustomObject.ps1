@@ -18,6 +18,8 @@ function New-PSCustomObject {
 
 	$result = [PSCustomObject]$Hsh
 
+	if (-not $DefProps) { return $result }
+
 	$ddps = New-Object System.Management.Automation.PSPropertySet `
 			DefaultDisplayPropertySet, $DefProps
 
