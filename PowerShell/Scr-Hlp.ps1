@@ -23,7 +23,7 @@ Add-Type @'
 rv * -ea SilentlyContinue
 [gc]::Collect()
 
-function ?? ($PossiblyNil, $ValueIfNil) {
+function ?? ($PossiblyNil, $ValueIfNil = $(throw)) {
 if ([string]::IsNullOrWhiteSpace($PossiblyNil)) { $ValueIfNil } else { $PossiblyNil }
 }
 
