@@ -21,4 +21,14 @@ Add-Type @'
 [System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAllCertsPolicy
 
 rv * -ea SilentlyContinue
+[gc]::Collect()
+
+function ?? ($PossiblyNil, $ValueIfNil) {
+if ([string]::IsNullOrWhiteSpace($PossiblyNil)) { $ValueIfNil } else { $PossiblyNil }
+}
+
+# $_.ToString() would omit the exception type
+try { throw } catch {
+("$(?? $_.InvocationInfo.ScriptName '<interactive>'):{0:d4}: " -f $_.InvocationInfo.ScriptLineNumber) + $_.Exception.ToString()
+}
 
