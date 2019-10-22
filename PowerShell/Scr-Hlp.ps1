@@ -27,8 +27,8 @@ function ?? ($PossiblyNil, $ValueIfNil = $(throw)) {
 if ([string]::IsNullOrWhiteSpace($PossiblyNil)) { $ValueIfNil } else { $PossiblyNil }
 }
 
-# $_.ToString() would omit the exception type
+# $_.ToString() is $_.Exception.ToString() sans exception type
 try { throw } catch {
-("$(?? $_.InvocationInfo.ScriptName '<interactive>'):{0:d4}: " -f $_.InvocationInfo.ScriptLineNumber) + $_.Exception.ToString()
+'{0}:{1:d4}: {2}' -f (?? $_.InvocationInfo.ScriptName '<interactive>'), $_.InvocationInfo.ScriptLineNumber, $_.Exception
 }
 
