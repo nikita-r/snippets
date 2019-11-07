@@ -20,33 +20,48 @@ function PumpMessages {
 
 $MainForm = [windows.markup.XamlReader]::Load([xml.XmlNodeReader] $xaml)
 
+function Buttons_Enable ($b = $true) {
+    $xaml.Window.Grid.Button.Name |% { $MainForm.FindName($_).IsEnabled = $b }
+    PumpMessages
+}
+
 $ProgressBar = $MainForm.FindName('ProgressBar') # $ProgressBar.Value
+
 $DataGrid = $MainForm.FindName('DataGrid') # $DataGrid.ItemsSource
 
 
 $MainForm.FindName('btn_A').Add_Click({
+    Buttons_Enable $false
     $MainForm.Cursor = [Windows.Input.Cursors]::Wait
   try {
+    sleep 1
   } finally {
     $MainForm.Cursor = [Windows.Input.Cursors]::Arrow
+    Buttons_Enable
   }
 })
 
 
 $MainForm.FindName('btn_B').Add_Click({
+    Buttons_Enable $false
     $MainForm.Cursor = [Windows.Input.Cursors]::Wait
   try {
+    sleep 1
   } finally {
     $MainForm.Cursor = [Windows.Input.Cursors]::Arrow
+    Buttons_Enable
   }
 })
 
 
 $MainForm.FindName('btn_C').Add_Click({
+    Buttons_Enable $false
     $MainForm.Cursor = [Windows.Input.Cursors]::Wait
   try {
+    sleep 1
   } finally {
     $MainForm.Cursor = [Windows.Input.Cursors]::Arrow
+    Buttons_Enable
   }
 })
 
