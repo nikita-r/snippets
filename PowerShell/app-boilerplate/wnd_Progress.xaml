@@ -25,7 +25,7 @@
         <ProgressBar x:Name="ProgressBar" Height="30" Margin="10,70,12,0" VerticalAlignment="Top"/>
 
         <DataGrid x:Name="DataGrid" IsReadOnly="True"
-                    CanUserResizeRows="False" EnableRowVirtualization="True"
+                    CanUserResizeRows="False" EnableRowVirtualization="False"
                     Margin="10,108,12,10" Foreground="MidnightBlue"
                     RowBackground="#FFF4E5" AlternationCount="1" AlternatingRowBackground="Azure"
                     GridLinesVisibility="Vertical" VerticalGridLinesBrush="{DynamicResource {x:Static SystemColors.ScrollBarBrushKey}}"
