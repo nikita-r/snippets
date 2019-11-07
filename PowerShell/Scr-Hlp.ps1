@@ -27,8 +27,12 @@ function ?? ($PossiblyNil, $ValueIfNil = $(throw)) {
 if ([string]::IsNullOrWhiteSpace($PossiblyNil)) { $ValueIfNil } else { $PossiblyNil }
 }
 
-# $_.ToString() is $_.Exception.ToString() sans exception type
-try { throw } catch {
+try { throw } catch { # $_.ToString() is $_.Exception.ToString() sans exception type?
 '{0}:{1:d4}: {2}' -f (?? $_.InvocationInfo.ScriptName '<interactive>'), $_.InvocationInfo.ScriptLineNumber, $_.Exception
+}
+
+if ($host.Name -clike '* ISE *' -and -not $global:is_host_profile_loaded) {
+    . ($profile -creplace 'ISE')
+    $global:is_host_profile_loaded = $true
 }
 
