@@ -44,12 +44,14 @@ $MainForm.FindName('btn_A').Add_Click({
     PumpMessages
 
     $total=32
-    1..$total |% { $rows = @() } {
-        <# ToDo: actual work instead of #> sleep -mil 100
-        $rows += [pscustomobject]@{ Num=$_; Chr=[char]([int][char]'A' + ($_-1)%26); Ord=([int][char]'A' + ($_-1)%26) }
+    1..$total |% { $dt = [Data.DataTable]::new()
+        $dt.Columns.AddRange(@( 'Num', 'Chr', 'Ord' ))
+        'Num', 'Ord' |% { $dt.Columns[$_].DataType = 'int' }
+    } { <# ToDo: actual work instead of #> sleep -mil 100
+        [void]$dt.Rows.Add(@( [int]$_, [char]([int][char]'A' + ($_-1)%26), ([int][char]'A' + ($_-1)%26) ))
         $ProgressBar.Value = $_ * 100 / $total
         PumpMessages
-    } { $DataGrid.ItemsSource = $rows }
+    } { $DataGrid.ItemsSource = $dt.DefaultView }
 
     [void][Windows.MessageBox]::Show($this, 'Action Completed', 'ok', 64)
   } catch {
