@@ -1,5 +1,10 @@
-
-# > PowerShell -NoProfile -ExecutionPolicy Bypass -File …
+<#
+.Synopsis
+    A boilerplate WPF application for launching long-running tasks in PowerShell.
+    Task to be executed on the UI thread, but UI may be updated via PumpMessages.
+.Description
+    Cannot be launched from ISE.
+#>
 
 Set-StrictMode -Version:Latest; $ErrorActionPreference = 'Stop'
 
