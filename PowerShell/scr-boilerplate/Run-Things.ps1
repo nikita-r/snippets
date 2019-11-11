@@ -18,7 +18,7 @@ try {
 
 $dtLog = [data.DataTable]::new()
 $dtLog.Columns.AddRange(@( 'when', 'what', 'why' ))
-#[void]$dtLog.Rows.Add(@(  ))
+#[void]$dtLog.Rows.Add(@( when, what, why ))
 
 try {
 
@@ -28,7 +28,7 @@ try {
 
 } finally {
 
-$dtLog.Select('', 'when, what deSC, why') `
+$dtLog.Select("", 'when, what deSC, why') `
 | ConvertTo-Csv -NoType | Set-Content "$dlog\Log.csv"
 
 }
