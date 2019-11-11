@@ -12,5 +12,7 @@ rem echo.%date%>date.tmp.txt
 rem for %%? in (date.tmp.txt) do set "date_strlen=%%~z?"
 rem echo %date_strlen%
 
+set time=%date:~8,6%
 set date=%date:~0,8%
-echo %date%
+echo D%date%
+echo T%time%
