@@ -6,9 +6,18 @@ $ErrorActionPreference = 'Stop'; Set-StrictMode -Version:Latest
 $SysDir = [Environment]::CurrentDirectory
 if ($SysDir -ne (pwd).Path) { throw }
 if ((Split-Path (pwd).Path -Leaf) -ne 'scr') { throw }
+
 $ScrName = [io.path]::GetFileNameWithoutExtension($MyInvocation.MyCommand)
 
-$dlog = ".\logs\${ScrName}_D$((Get-Date -f s) -replace ':', '-')"
+try {
+  $flock = [io.file]::Open("$(Split-Path -Resolve $MyInvocation.MyCommand -Parent)\$ScrName.lock", 'Create', 'Write')
+} catch {
+  $msg = 'Cannot acquire lock file: ' + $_.Exception.InnerException.Message
+  Write-Error $msg
+  exit 1
+}
+
+$dlog = ".\logs\${ScrName}_D$((Get-Date -f s) -replace ':', '-' -replace '-')"
 ni -Type Directory "$dlog" | out-null
 
 Start-Transcript "$dlog\Transcript.txt"
