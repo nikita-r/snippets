@@ -1,0 +1,1 @@
+runas /trustlevel:0x20000 "cmd /c \"start PowerShell %*\""
