@@ -45,15 +45,18 @@ if ($host.Name -clike '* ISE *' -and -not $global:is_host_profile_loaded) {
 
 <# re-try #>
 [int]$cntTry = $maxTry
+$errorEx = $null
 while ($cntTry-- -gt 0) {
     Write-Host ('Try #{0:D2}' -f ($maxTry - $cntTry))
   try {
   } catch {
+    $errorEx = $_.Exception
     continue
   }
+    $Error.Clear()
     break
 }
 if ($cntTry -lt 0) {
-    throw
+    throw $errorEx
 }
 
