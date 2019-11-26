@@ -43,3 +43,17 @@ if ($host.Name -clike '* ISE *' -and -not $global:is_host_profile_loaded) {
     $global:is_host_profile_loaded = $true
 }
 
+<# re-try #>
+[int]$cntTry = $maxTry
+while ($cntTry-- -gt 0) {
+    Write-Host ('Try #{0:D2}' -f ($maxTry - $cntTry))
+  try {
+  } catch {
+    continue
+  }
+    break
+}
+if ($cntTry -lt 0) {
+    throw
+}
+
