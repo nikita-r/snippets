@@ -32,9 +32,13 @@ del ctypes
 #~|~#
 
 import json
+
 from types import SimpleNamespace as Sns
 
 def json2Sns(jstr): return json.loads(jstr, object_hook=(lambda dict: Sns(**dict)))
+
+def Sns2json(SnsO): return json.dumps(SnsO, sort_keys=True, indent=4
+                                                    , default=lambda o: o.__dict__)
 
 #~|~#
 
