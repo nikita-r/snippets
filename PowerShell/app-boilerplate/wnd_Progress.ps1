@@ -92,6 +92,15 @@ $xaml.Window.Grid.Button.Name |% { $MainForm.FindName($_).add_Click({
 }) }
 
 
+$MainForm.FindName('Grid_Menu_Exit').add_Click({
+    $MainForm.Close()
+})
+
+$MainForm.FindName('DataGrid_Menu_Colour').Items.add_Click({
+    $DataGrid.SelectedItems |% { $c = $DataGrid.ItemContainerGenerator.ContainerFromItem($_); $c.Background = $this.Header }
+})
+
+
 $App.add_Exit({ param ( $sender, [Windows.ExitEventArgs]$evtA )
     Write-Host App.OnExit
     $evtA.ApplicationExitCode = 0

@@ -5,11 +5,38 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:try_wpf"
         mc:Ignorable="d"
-        Title="wnd_Progress" Width="800" Height="600" MinWidth="400" MinHeight="300"
+        Title="wnd_Progress" Width="800" Height="600" MinWidth="416" MinHeight="300"
         FontFamily="Calibri" FontSize="16"
         ResizeMode="CanResize" WindowStartupLocation="CenterScreen"
         >
-    <Grid>
+    <Window.Resources>
+        <ControlTemplate x:Key="icon_Colour">
+            <Canvas>
+                <Canvas.Resources>
+                    <Geometry x:Key="pathData">F1 M 4,4 L 4,16 16,16 16,4 Z</Geometry>
+                </Canvas.Resources>
+                <Path Fill="{Binding RelativeSource = {RelativeSource AncestorType={x:Type MenuItem}}, Path=Header, Mode=OneTime}"
+                      Stroke="Black" StrokeLineJoin="Round"
+                      Stretch="Fill" Width="16" Height="16"
+                      Canvas.Left="0" Canvas.Top="0"
+                      Data="{StaticResource pathData}" />
+            </Canvas>
+        </ControlTemplate>
+    </Window.Resources>
+
+    <Grid Background="Transparent">
+        <Grid.ContextMenu>
+            <ContextMenu>
+                <MenuItem Header="Item" />
+                <MenuItem Header="Exit" x:Name="Grid_Menu_Exit" />
+            </ContextMenu>
+        </Grid.ContextMenu>
+
+        <Label x:Name="lbl_Caption" Target="{Binding ElementName=DataGrid}"
+                Content="_DataGrid" FontFamily="Cambria" FontSize="16"
+                Margin="12,12,0,0"
+                />
+
         <Button x:Name="btn_A" Content="Button A" Width="84" Height="30"
                 HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,12,216,0"
                 />
@@ -20,15 +47,36 @@
                 HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,12,024,0"
                 />
 
-        <Separator Height="18" Margin="10,48,12,0" VerticalAlignment="Top"/>
+        <Separator Height="18" Margin="10,48,12,0" VerticalAlignment="Top"
+                />
 
-        <ProgressBar x:Name="ProgressBar" Height="30" Margin="10,70,12,0" VerticalAlignment="Top"/>
+        <ProgressBar x:Name="ProgressBar" Height="30" Margin="10,70,12,0" VerticalAlignment="Top"
+                Background="Linen" Foreground="Navy" BorderBrush="MidnightBlue"
+                />
 
         <DataGrid x:Name="DataGrid" IsReadOnly="True"
                     CanUserResizeRows="False" EnableRowVirtualization="False"
                     Margin="10,108,12,10" Foreground="MidnightBlue"
                     RowBackground="#FFF4E5" AlternationCount="1" AlternatingRowBackground="Azure"
                     GridLinesVisibility="Vertical" VerticalGridLinesBrush="{DynamicResource {x:Static SystemColors.ScrollBarBrushKey}}"
-                />
+                    HeadersVisibility="Column" BorderBrush="MidnightBlue"
+                >
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Colour" x:Name="DataGrid_Menu_Colour">
+                        <MenuItem Header="Salmon">
+                                <MenuItem.Icon><ContentControl Template="{StaticResource icon_Colour}" /></MenuItem.Icon></MenuItem>
+                        <MenuItem Header="LemonChiffon">
+                                <MenuItem.Icon><ContentControl Template="{StaticResource icon_Colour}" /></MenuItem.Icon></MenuItem>
+                        <MenuItem Header="SkyBlue">
+                                <MenuItem.Icon><ContentControl Template="{StaticResource icon_Colour}" /></MenuItem.Icon></MenuItem>
+                    </MenuItem>
+                    <Separator />
+                    <MenuItem Command="SelectAll" />
+                <!--<MenuItem Header="_Copy" Click="DataGrid_Menu_Copy" />-->
+                    <MenuItem Command="Copy" />
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+        </DataGrid>
     </Grid>
 </Window>
