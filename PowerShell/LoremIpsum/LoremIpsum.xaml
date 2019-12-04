@@ -24,13 +24,13 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit.  Nam hendrerit nisi sed
         </Label>
 
         <DataGrid x:Name='DataGrid' Grid.Row="1"
+                FontFamily="Calibri" FontSize="16"
                 BorderBrush="#1880C8" BorderThickness="1"
                 AlternationCount="1" AlternatingRowBackground="{DynamicResource {x:Static SystemColors.InactiveBorderBrushKey}}"
                 GridLinesVisibility="Vertical" VerticalGridLinesBrush="{DynamicResource {x:Static SystemColors.ScrollBarBrushKey}}"
                 CanUserResizeRows="False" EnableRowVirtualization="False"
-                FontFamily="Calibri" FontSize="16"
-                ScrollViewer.VerticalScrollBarVisibility="Visible"
                 HeadersVisibility="Column"
+                ScrollViewer.VerticalScrollBarVisibility="Visible"
                 IsReadOnly="True">
             <DataGrid.Resources>
                 <Style TargetType="ScrollViewer">
