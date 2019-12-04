@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:try_wpf"
         mc:Ignorable="d"
-        Title="wnd_Progress" Width="800" Height="600" MinWidth="416" MinHeight="300"
+        Width="800" Height="600" MinWidth="416" MinHeight="309"
         FontFamily="Calibri" FontSize="16"
-        ResizeMode="CanResize" WindowStartupLocation="CenterScreen"
-        >
+        ResizeMode="CanResizeWithGrip" WindowStartupLocation="CenterScreen"
+        Title="wnd_Progress">
     <Window.Resources>
         <ControlTemplate x:Key="icon_Colour">
             <Canvas>
