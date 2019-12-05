@@ -15,7 +15,7 @@
                 <Canvas.Resources>
                     <Geometry x:Key="pathData">F1 M 4,4 L 4,16 16,16 16,4 Z</Geometry>
                 </Canvas.Resources>
-                <Path Fill="{Binding RelativeSource = {RelativeSource AncestorType={x:Type MenuItem}}, Path=Header, Mode=OneTime}"
+                <Path Fill="{Binding RelativeSource={RelativeSource AncestorType={x:Type MenuItem}}, Path=Header, Mode=OneTime}"
                       Stroke="Black" StrokeLineJoin="Round"
                       Stretch="Fill" Width="16" Height="16"
                       Canvas.Left="0" Canvas.Top="0"
@@ -54,13 +54,13 @@
                 Background="Linen" Foreground="Navy" BorderBrush="MidnightBlue"
                 />
 
-        <DataGrid x:Name="DataGrid" IsReadOnly="True"
-                    CanUserResizeRows="False" EnableRowVirtualization="False"
-                    Margin="10,108,12,10" Foreground="MidnightBlue"
-                    RowBackground="#FFF4E5" AlternationCount="1" AlternatingRowBackground="Azure"
-                    GridLinesVisibility="Vertical" VerticalGridLinesBrush="{DynamicResource {x:Static SystemColors.ScrollBarBrushKey}}"
-                    HeadersVisibility="Column" BorderBrush="MidnightBlue"
-                >
+        <DataGrid x:Name="DataGrid" Margin="10,108,12,10"
+                Foreground="MidnightBlue" BorderBrush="MidnightBlue"
+                RowBackground="#FFF4E5" AlternationCount="1" AlternatingRowBackground="Azure"
+                EnableRowVirtualization="False"
+                GridLinesVisibility="Vertical" VerticalGridLinesBrush="{DynamicResource {x:Static SystemColors.ScrollBarBrushKey}}"
+                CanUserResizeRows="False" HeadersVisibility="Column"
+                IsReadOnly="True">
             <DataGrid.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Colour" x:Name="DataGrid_Menu_Colour">
@@ -77,6 +77,11 @@
                     <MenuItem Command="Copy" />
                 </ContextMenu>
             </DataGrid.ContextMenu>
+
+            <DataGrid.Resources>
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="CornflowerBlue" />
+                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="#B7CCCC" />
+            </DataGrid.Resources>
         </DataGrid>
     </Grid>
 </Window>
