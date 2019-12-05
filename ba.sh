@@ -3,7 +3,7 @@
 lsof -i:4001
 
 # prepend timestamp to each line of the <command> output
-<command> | gawk '{ print strftime("<%Y-%m-%d %H:%M:%S>"), $0; fflush(); }'
+command | gawk '{ print strftime(" %Y-%m-%d %H:%M:%S . . .", systime(), 1), $0; fflush(); }'
 
 # grep recursively from root
 echo "find / -xdev -not \( -type d -path '*/exclude/dir' -prune \) -type f -print0 | xargs -0 grep --color -HIP 'regexp'" | sudo sh
@@ -16,7 +16,7 @@ echo -en '\033c'
 alias sudo='sudo '
 
 # highlight <word> in the <command> output in less
-<command> | grep --color=always -e $ -e <word> | less -r
+command | grep --colour=always -e $ -e word | less -r
 
 # flush to the history file after each command
 export PROMPT_COMMAND='history -a'
@@ -32,4 +32,9 @@ unset IFS; set +f
 
 # find all lib icu sos; pad the size column; sort by name (*.so.1 goes before *.so?)
 find /usr/lib -name 'libicu*' -exec ls -dl {} \; | awk '{ $5=sprintf("%011d", $5) }5' | sort -k9 | less -S
+
+# dos2unix
+IFS=$'\n'; set -o noglob
+for f in $(find ./Folder -type f | sort); do sed -i 's/\r$//g' $f; done
+unset IFS; set +f
 
