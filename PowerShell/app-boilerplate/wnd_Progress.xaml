@@ -60,6 +60,7 @@
                 EnableRowVirtualization="False"
                 GridLinesVisibility="Vertical" VerticalGridLinesBrush="{DynamicResource {x:Static SystemColors.ScrollBarBrushKey}}"
                 CanUserResizeRows="False" HeadersVisibility="Column"
+                CanUserDeleteRows="False" CanUserAddRows="False"
                 IsReadOnly="True">
             <DataGrid.ContextMenu>
                 <ContextMenu>
@@ -80,7 +81,19 @@
 
             <DataGrid.Resources>
                 <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="CornflowerBlue" />
-                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="#B7CCCC" />
+                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="#D8E8F3" />
+<!--
+                <Style TargetType="CheckBox">
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                </Style>
+-->
+                <Style TargetType="DataGridColumnHeadersPresenter">
+                    <Setter Property="FontFamily" Value="Consolas" />
+                    <Setter Property="FontSize" Value="13" />
+                </Style>
+                <Style TargetType="DataGridColumnHeader">
+                    <Setter Property="Padding" Value="4,10,6,2" />
+                </Style>
             </DataGrid.Resources>
         </DataGrid>
     </Grid>

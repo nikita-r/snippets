@@ -45,6 +45,9 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit.  Nam hendrerit nisi sed
                 <Style TargetType="ScrollBar">
                     <Setter Property="FlowDirection" Value="LeftToRight"/>
                 </Style>
+
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="CornflowerBlue" />
+                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="#D8E8F3" />
             </DataGrid.Resources>
 
             <DataGrid.ContextMenu><ContextMenu>
