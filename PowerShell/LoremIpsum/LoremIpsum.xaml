@@ -47,7 +47,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit.  Nam hendrerit nisi sed
                 </Style>
 
                 <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="CornflowerBlue" />
-                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="#D8E8F3" />
+                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="#D8E8F8" />
             </DataGrid.Resources>
 
             <DataGrid.ContextMenu><ContextMenu>

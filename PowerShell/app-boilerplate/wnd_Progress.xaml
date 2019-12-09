@@ -22,6 +22,36 @@
                       Data="{StaticResource pathData}" />
             </Canvas>
         </ControlTemplate>
+
+        <Style x:Key="custom_FocusVisualStyle">
+            <Setter Property="Control.Template"><Setter.Value><ControlTemplate>
+                <Rectangle Margin="-2" StrokeThickness="2"
+                        ><!-- RadiusX="2" RadiusY="2"> --> <!--StrokeDashArray="8 1"-->
+                    <Rectangle.Stroke>
+                        <SolidColorBrush x:Name="RectangleStroke" />
+                    </Rectangle.Stroke>
+                    <Rectangle.Triggers>
+                        <EventTrigger RoutedEvent="Rectangle.Loaded">
+                            <BeginStoryboard><Storyboard>
+                                <ColorAnimation From="DodgerBlue" To="AliceBlue"
+                                        Duration="0:0:0.5" RepeatBehavior="Forever"
+                                        Storyboard.TargetName="RectangleStroke"
+                                        Storyboard.TargetProperty="Color" />
+                                <!--
+                                <DoubleAnimation To="9"
+                                        Duration="0:0:0.5" RepeatBehavior="Forever"
+                                        Storyboard.TargetProperty="StrokeDashOffset" />
+                                -->
+                            </Storyboard></BeginStoryboard>
+                        </EventTrigger>
+                    </Rectangle.Triggers>
+                </Rectangle>
+            </ControlTemplate></Setter.Value></Setter>
+        </Style>
+
+        <Style TargetType="{x:Type Button}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource custom_FocusVisualStyle}" />
+        </Style>
     </Window.Resources>
 
     <Grid Background="Transparent">
@@ -81,7 +111,7 @@
 
             <DataGrid.Resources>
                 <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="CornflowerBlue" />
-                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="#D8E8F3" />
+                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="#D8E8F8" />
 <!--
                 <Style TargetType="CheckBox">
                     <Setter Property="VerticalAlignment" Value="Center" />

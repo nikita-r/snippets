@@ -52,11 +52,11 @@ $DataGrid.add_AutoGeneratingColumn({
         $e.Column.ElementStyle = $ns
     }
 
-    $TyAlign = @{ [int]='Right'; [char]='Center' }
+    $TyAlign = @{ [int]='Right'; [char]='Center'; }; $Property = 'HorizontalAlignment'
     if ($e.PropertyType -in $TyAlign.Keys) {
         $ns = [Windows.Style]::new($e.Column.ElementStyle.TargetType, $e.Column.ElementStyle)
-        $p = [Windows.Controls.TextBlock]::HorizontalAlignmentProperty
-        $ns.Setters.Add([Windows.Setter]::new($p, [Windows.HorizontalAlignment]::$($TyAlign[$e.PropertyType])))
+        $val = ([type]"Windows.$Property")::$($TyAlign[$e.PropertyType])
+        $ns.Setters.Add([Windows.Setter]::new([Windows.Controls.TextBlock]::"${Property}Property", $val))
         $e.Column.ElementStyle = $ns
     }
 })
