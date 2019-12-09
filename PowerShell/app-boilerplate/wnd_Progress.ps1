@@ -51,6 +51,14 @@ $DataGrid.add_AutoGeneratingColumn({
         $ns.Setters.Add([Windows.Setter]::new($p, [Windows.VerticalAlignment]::Center))
         $e.Column.ElementStyle = $ns
     }
+
+    $TyAlign = @{ [int]='Right'; [char]='Center' }
+    if ($e.PropertyType -in $TyAlign.Keys) {
+        $ns = [Windows.Style]::new($e.Column.ElementStyle.TargetType, $e.Column.ElementStyle)
+        $p = [Windows.Controls.TextBlock]::HorizontalAlignmentProperty
+        $ns.Setters.Add([Windows.Setter]::new($p, [Windows.HorizontalAlignment]::$($TyAlign[$e.PropertyType])))
+        $e.Column.ElementStyle = $ns
+    }
 })
 
 
@@ -77,13 +85,16 @@ $MainForm.FindName('btn_A').Add_Click({
         'Chr' |% { $dt.Columns[$_].DataType = 'char' }
         'Is_a_Vowel' |% { $dt.Columns[$_].DataType = 'bool' }
     } { <# ToDo: actual work instead of #> sleep -mil 100
+
         $ord = ([int][char]'A' + ($_-1)%26)
         $vow = switch ([char]$ord) { default { $false }
             { $_ -in 'yeaiou'.ToCharArray() } { $true }
             { $_ -eq 'w' } { $null } }
         [void]$dt.Rows.Add(@( [int]$_, [char]$ord, $ord, $vow ))
-        $ProgressBar.Value = $_ * 100 / $total
+
+        $ProgressBar.Value = 100 * $_ / $total
         PumpMessages
+
     } { $DataGrid.ItemsSource = $dt.DefaultView }
 
     [void][Windows.MessageBox]::Show($this, 'Action Completed', 'ok', 64)
