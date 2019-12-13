@@ -52,6 +52,15 @@
         <Style TargetType="{x:Type Button}">
             <Setter Property="FocusVisualStyle" Value="{StaticResource custom_FocusVisualStyle}" />
         </Style>
+        <Style TargetType="{x:Type TextBlock}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource custom_FocusVisualStyle}" />
+        </Style>
+        <Style TargetType="{x:Type DataGridCell}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource custom_FocusVisualStyle}" />
+        </Style>
+    <!--<Style TargetType="{x:Type CheckBox}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource custom_FocusVisualStyle}" />
+        </Style>-->
     </Window.Resources>
 
     <Grid Background="Transparent">
@@ -86,12 +95,12 @@
 
         <DataGrid x:Name="DataGrid" Margin="10,108,12,10"
                 Foreground="MidnightBlue" BorderBrush="MidnightBlue"
-                RowBackground="#FFF4E5" AlternationCount="1" AlternatingRowBackground="Azure"
+                RowBackground="#FFFFDEAD" AlternationCount="1" AlternatingRowBackground="Azure"
                 EnableRowVirtualization="False"
                 GridLinesVisibility="Vertical" VerticalGridLinesBrush="{DynamicResource {x:Static SystemColors.ScrollBarBrushKey}}"
                 CanUserResizeRows="False" HeadersVisibility="Column"
                 CanUserDeleteRows="False" CanUserAddRows="False"
-                IsReadOnly="True">
+                ><!-- IsReadOnly="True"> -->
             <DataGrid.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Colour" x:Name="DataGrid_Menu_Colour">

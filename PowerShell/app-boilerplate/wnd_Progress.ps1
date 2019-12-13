@@ -34,6 +34,8 @@ $DataGrid = $MainForm.FindName('DataGrid') # $DataGrid.ItemsSource
 $DataGrid.add_AutoGeneratingColumn({
     param( $o, [Windows.Controls.DataGridAutoGeneratingColumnEventArgs]$e )
 
+    $e.Column.IsReadOnly = $e.Column.Header -ne '?'
+
     $e.Column.Header = $e.Column.Header -replace '_', '__' # emulate RecognizesAccessKey="False"
 <#
     if ($e.PropertyType -eq [Boolean]) {
@@ -46,11 +48,14 @@ $DataGrid.add_AutoGeneratingColumn({
     # CheckBox in an auto-generated column does not pick up user-defined Style.
     # Instead, it creates its own "default" style which we will try and modify.
     #
-        $ns = [Windows.Style]::new($e.Column.ElementStyle.TargetType, $e.Column.ElementStyle)
-        $p = ( $e.Column.ElementStyle.Setters.Property |? Name -eq 'VerticalAlignment' )
+    foreach ($Editing in '', 'Editing') {
+        $ns = [Windows.Style]::new($e.Column."${Editing}ElementStyle".TargetType, $e.Column."${Editing}ElementStyle")
+        $p = ( $e.Column."${Editing}ElementStyle".Setters.Property |? Name -eq 'VerticalAlignment' )
         $ns.Setters.Add([Windows.Setter]::new($p, [Windows.VerticalAlignment]::Center))
-        $e.Column.ElementStyle = $ns
-    }
+        $ns.Setters.Add([Windows.Setter]::new(    [Windows.Controls.CheckBox]::FocusVisualStyleProperty
+                                             ,  $MainForm.FindResource('custom_FocusVisualStyle') ))
+        $e.Column."${Editing}ElementStyle" = $ns
+    } }
 
     $TyAlign = @{ [int]='Right'; [char]='Center'; }; $Property = 'HorizontalAlignment'
     if ($e.PropertyType -in $TyAlign.Keys) {
@@ -80,17 +85,18 @@ $MainForm.FindName('btn_A').Add_Click({
 
     $total=32
     1..$total |% { $dt = [Data.DataTable]::new()
-        $dt.Columns.AddRange(@( 'Idx', 'Chr', 'Ord', 'Is_a_Vowel' ))
+
+        $dt.Columns.AddRange(@( 'Idx', '?', 'Chr', 'Ord', 'Is_a_Vowel' ))
         'Idx', 'Ord' |% { $dt.Columns[$_].DataType = 'int' }
         'Chr' |% { $dt.Columns[$_].DataType = 'char' }
-        'Is_a_Vowel' |% { $dt.Columns[$_].DataType = 'bool' }
+        'Is_a_Vowel', '?' |% { $dt.Columns[$_].DataType = 'bool' }
     } { <# ToDo: actual work instead of #> sleep -mil 100
 
         $ord = ([int][char]'A' + ($_-1)%26)
         $vow = switch ([char]$ord) { default { $false }
             { $_ -in 'yeaiou'.ToCharArray() } { $true }
             { $_ -eq 'w' } { $null } }
-        [void]$dt.Rows.Add(@( [int]$_, [char]$ord, $ord, $vow ))
+        [void]$dt.Rows.Add(@( [int]$_, $null, [char]$ord, $ord, $vow ))
 
         $ProgressBar.Value = 100 * $_ / $total
         PumpMessages
