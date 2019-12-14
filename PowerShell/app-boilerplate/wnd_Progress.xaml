@@ -23,6 +23,9 @@
             </Canvas>
         </ControlTemplate>
 
+        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="CornflowerBlue" />
+        <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="#D8E8F8" />
+
         <Style x:Key="custom_FocusVisualStyle">
             <Setter Property="Control.Template"><Setter.Value><ControlTemplate>
                 <Rectangle Margin="-2" StrokeThickness="2"
@@ -33,7 +36,7 @@
                     <Rectangle.Triggers>
                         <EventTrigger RoutedEvent="Rectangle.Loaded">
                             <BeginStoryboard><Storyboard>
-                                <ColorAnimation From="DodgerBlue" To="AliceBlue"
+                                <ColorAnimation From="CornflowerBlue" To="Azure"
                                         Duration="0:0:0.5" RepeatBehavior="Forever"
                                         Storyboard.TargetName="RectangleStroke"
                                         Storyboard.TargetProperty="Color" />
@@ -52,15 +55,12 @@
         <Style TargetType="{x:Type Button}">
             <Setter Property="FocusVisualStyle" Value="{StaticResource custom_FocusVisualStyle}" />
         </Style>
-        <Style TargetType="{x:Type TextBlock}">
-            <Setter Property="FocusVisualStyle" Value="{StaticResource custom_FocusVisualStyle}" />
-        </Style>
         <Style TargetType="{x:Type DataGridCell}">
             <Setter Property="FocusVisualStyle" Value="{StaticResource custom_FocusVisualStyle}" />
         </Style>
-    <!--<Style TargetType="{x:Type CheckBox}">
+        <Style TargetType="{x:Type CheckBox}">
             <Setter Property="FocusVisualStyle" Value="{StaticResource custom_FocusVisualStyle}" />
-        </Style>-->
+        </Style>
     </Window.Resources>
 
     <Grid Background="Transparent">
@@ -119,8 +119,6 @@
             </DataGrid.ContextMenu>
 
             <DataGrid.Resources>
-                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="CornflowerBlue" />
-                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="#D8E8F8" />
 <!--
                 <Style TargetType="CheckBox">
                     <Setter Property="VerticalAlignment" Value="Center" />
