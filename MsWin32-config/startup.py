@@ -57,3 +57,12 @@ def MyBin(n):
 
 #~|~#
 
+def _hash(s: str):
+    hash = 5381
+    for c in s:
+        shifted = ((hash << 5) + hash) % (1 << 31)
+        hash = shifted ^ ord(c)
+    return hash
+
+#~|~#
+
