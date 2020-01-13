@@ -58,11 +58,13 @@ def MyBin(n):
 #~|~#
 
 def _hash(s: str):
-    hash = 5381
+    # Fowler–Noll–Vo hash function (1a)
+    hash = 0xcbf29ce484222325
     for c in s:
-        shifted = ((hash << 5) + hash) % (1 << 31)
-        hash = shifted ^ ord(c)
-    return hash
+        hash ^= ord(c)
+        hash *= 0x100000001b3
+        hash %= (1 << 64)
+    return hash % int(1e9)
 
 #~|~#
 
