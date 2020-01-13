@@ -64,7 +64,7 @@ def _hash(s: str):
         hash ^= ord(c)
         hash *= 0x100000001b3
         hash %= (1 << 64)
-    return hash % int(1e9)
+    return f'{hash % (10**9):09d}'
 
 #~|~#
 
