@@ -7,9 +7,9 @@ class _const:
          raise type(self).Err('Cannot rebind const.%s' % name)
       self.__dict__[name]=value
     def __delattr__(self, name):
-         raise type(self).Err('Cannot delete const.%s' % name)
+         raise type(self).Err('Cannot unbind const.%s' % name)
     def __init__(self):
-      self.Err = ... # need to hide the class attribute
+      self.Err=type(self).Err # shadow the class attribute
 
 import sys
 sys.modules[__name__]=_const()
