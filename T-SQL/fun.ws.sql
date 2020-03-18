@@ -26,3 +26,5 @@ select cast('true' as bit) as bit;
 select cast('false' as bit) as bit;
 select cast('-1' as bit) as bit;
 
+TRIM( NCHAR(0x09) + NCHAR(0x20) + NCHAR(0x0D) + NCHAR(0x0A) from [Text] )
+

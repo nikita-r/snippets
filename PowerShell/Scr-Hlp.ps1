@@ -49,14 +49,26 @@ $errorEx = $null
 while ($cntTry-- -gt 0) {
     Write-Host ('Try #{0:D2}' -f ($maxTry - $cntTry))
   try {
+    # . . .
   } catch {
-    $errorEx = $_.Exception
+    #$errorEx = $_.Exception
     continue
   }
     $Error.Clear()
     break
 }
 if ($cntTry -lt 0) {
+    $errorEx = $Error[0].Exception
     throw $errorEx
+}
+
+<# spinster #>
+:mainLoop `
+while (1) { # once a minute
+  $Error.Clear()
+  sleep (61 - (Get-Date -f:ss))
+  try {
+  } catch {
+  }
 }
 

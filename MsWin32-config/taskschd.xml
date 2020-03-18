@@ -22,3 +22,32 @@
   </Query>
 </QueryList>
 
+<!-- Task Start Failed: Launch Failure -->
+<QueryList>
+  <Query Id="0" Path="Microsoft-Windows-TaskScheduler/Operational">
+    <Select Path="Microsoft-Windows-TaskScheduler/Operational">
+     *[System[(EventID=101)]]
+      and
+     *[EventData[Data[@Name='ResultCode'] and (Data='2147943726')]]
+    </Select>
+  </Query>
+</QueryList>
+
+<!-- ○ -->
+<QueryList>
+  <Query Id="0" Path="Microsoft-Windows-TaskScheduler/Operational">
+    <Select Path="Microsoft-Windows-TaskScheduler/Operational">
+     *[System[(EventID=201)]] <!-- Action completed -->
+      and
+     *[EventData[Data[@Name='ResultCode'] and (Data='2147942401')]] <!-- exit code is 1 -->
+      and
+     *[EventData[Data[@Name='ActionName'] and (Data='c:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe')]] <!-- where powershell ( not "powershell.exe" ) -->
+    </Select>
+  </Query>
+  <Query Id="1" Path="Microsoft-Windows-TaskScheduler/Operational">
+    <Select Path="Microsoft-Windows-TaskScheduler/Operational">
+     *[System[(EventID=101)]] <!-- Task Start Failed -->
+    </Select>
+  </Query>
+</QueryList>
+

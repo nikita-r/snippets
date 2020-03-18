@@ -4,7 +4,7 @@ param ( $subj = $(throw), $body = $(throw)
 , $addr = 'Nikita.Retyunskiy@moodys.com' )
 
 #$addrFrom = "$env:UserName@$([net.dns]::GetHostByName('localhost').HostName)"
-$addrFrom = "$env:UserName.$([net.dns]::GetHostName())@$env:UserDnsDomain"
+$addrFrom = "$env:UserName@$([net.dns]::GetHostName()).$env:UserDnsDomain"
 
 $mail = New-Object net.mail.MailMessage($addrFrom, $addr, $subj, $body)
 $attachments |% { $mail.Attachments.Add($(New-Object net.mail.Attachment($_))) }
