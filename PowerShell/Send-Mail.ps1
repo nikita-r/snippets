@@ -1,7 +1,7 @@
 #·Send-Mail.ps1
 param ( $subj = $(throw), $body = $(throw)
 , $attachments = @()
-, $addr = 'Nikita.Retyunskiy@moodys.com' )
+, $addr = 'Nikita.Retyunskiy@outlook.com' )
 
 #$addrFrom = "$env:UserName@$([net.dns]::GetHostByName('localhost').HostName)"
 $addrFrom = "$env:UserName@$([net.dns]::GetHostName()).$env:UserDnsDomain"
