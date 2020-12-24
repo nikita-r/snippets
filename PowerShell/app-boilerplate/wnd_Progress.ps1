@@ -83,7 +83,17 @@ $MainForm.FindName('btn_A').Add_Click({
     $ProgressBar.Value = $null
     PumpMessages
 
-    $total=32
+    <# ToDo: fetch items #> $items = $null
+    $items = @($items)
+    $total = $items.Count
+    <# ToDo: use real number instead of #> $total=32
+
+    if ($total -eq 0) {
+        $ProgressBar.Value = 100
+        [void][Windows.MessageBox]::Show('0 items found', $this, 'ok', 64)
+        return
+    }
+
     1..$total |% { $dt = [Data.DataTable]::new()
 
         $dt.Columns.AddRange(@( 'Idx', '?', 'Chr', 'Ord', 'Is_a_Vowel' ))
@@ -103,7 +113,7 @@ $MainForm.FindName('btn_A').Add_Click({
 
     } { $DataGrid.ItemsSource = $dt.DefaultView }
 
-    [void][Windows.MessageBox]::Show($this, 'Action Completed', 'ok', 64)
+    #[void][Windows.MessageBox]::Show($this, 'Action Completed', 'ok', 64)
   } catch {
     report_catch $_
     [void][Windows.MessageBox]::Show('Exception caught!' + "`n"*2 + $this, 'Unexpected Error', 'ok', 16)
@@ -122,6 +132,9 @@ $MainForm.FindName('btn_B').Add_Click({
 
 $MainForm.FindName('btn_C').Add_Click({
   try {
+    $r = [Windows.MessageBox]::Show('Are you sure?', ('Confirm [ {0} ]' -f $this.Content), 'okcancel', 32)
+    if ($r -ne 'ok') { return }
+
     $DataGrid.ItemsSource = $null
     $ProgressBar.Value = $null
     sleep 1
