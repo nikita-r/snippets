@@ -83,10 +83,10 @@ $MainForm.FindName('btn_A').Add_Click({
     $ProgressBar.Value = $null
     PumpMessages
 
-    <# ToDo: fetch items #> $items = $null
+    $items = [char]'A'..[char]'Z' + 65..70 |% { [char]$_ }
+
     $items = @($items)
     $total = $items.Count
-    <# ToDo: use real number instead of #> $total=32
 
     if ($total -eq 0) {
         $ProgressBar.Value = 100
@@ -102,11 +102,11 @@ $MainForm.FindName('btn_A').Add_Click({
         'Is_a_Vowel', '?' |% { $dt.Columns[$_].DataType = 'bool' }
     } { <# ToDo: actual work instead of #> sleep -mil 100
 
-        $ord = ([int][char]'A' + ($_-1)%26)
-        $vow = switch ([char]$ord) { default { $false }
+        $vow = switch ($items[$_-1]) { default { $false }
             { $_ -in 'yeaiou'.ToCharArray() } { $true }
             { $_ -eq 'w' } { $null } }
-        [void]$dt.Rows.Add(@( [int]$_, $null, [char]$ord, $ord, $vow ))
+
+        [void]$dt.Rows.Add(@( [int]$_, $null, $items[$_-1], [int]$items[$_-1], $vow ))
 
         $ProgressBar.Value = 100 * $_ / $total
         PumpMessages
@@ -132,11 +132,15 @@ $MainForm.FindName('btn_B').Add_Click({
 
 $MainForm.FindName('btn_C').Add_Click({
   try {
-    $r = [Windows.MessageBox]::Show('Are you sure?', ('Confirm [ {0} ]' -f $this.Content), 'okcancel', 32)
-    if ($r -ne 'ok') { return }
+    $r = $(. ./dlg_Prompt/dlg_Prompt.ps1 ./dlg_Prompt/dlg_Prompt.xaml $MainForm)
+    if (-not $r) { return }
+
+    $MainForm.Cursor = [Windows.Input.Cursors]::Wait
+    PumpMessages
 
     $DataGrid.ItemsSource = $null
     $ProgressBar.Value = $null
+
     sleep 1
   } catch {
     report_catch $_
