@@ -90,7 +90,7 @@
                 />
 
         <ProgressBar x:Name="ProgressBar" Height="30" Margin="10,70,12,0" VerticalAlignment="Top"
-                Background="#D8E8F8" Foreground="Navy" BorderBrush="MidnightBlue"
+                Foreground="Navy" BorderBrush="MidnightBlue"
                 />
 
         <DataGrid x:Name="DataGrid" Margin="10,108,12,10"
