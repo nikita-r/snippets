@@ -72,3 +72,30 @@ while (1) { # once a minute
   }
 }
 
+
+<# dict.update #>
+
+$obj = ConvertFrom-Json '{}' # [pscustomobject]
+$obj.{row·id} = [string][char]0xd8 # Ø
+if (!@($obj.psobject.Properties).Count -or $kv.Key -notIn $obj.psobject.Properties.Name) {
+    $obj | Add-Member -MemberType NoteProperty -Name $kv.Key -Value $kv.Value.Clone() # ? Value.PSObject.Copy()
+} else {
+    $obj.$($kv.Key) | Should -Be $kv.Value
+}
+
+
+<# shape output #>
+
+$n = 123456789.6599
+$n.ToString('.###') # '123456789.66'
+$n.ToString('#,0.000') -eq $n.ToString('N3') # '123,456,789.660'
+$n.ToString('#,.000') # '123456.790'
+
+$delta.ToString('Δ+0.#####%;Δ−0.#####%;Δ·')
+$delta.ToString('Δ+0%;Δ−0%;Δ~0') # returns 'Δ~0' for non-zero values that are less than 1%; more precisely, less than 0.5%, as the value is rounded to nearest (half away from zero)
+
+$init = { $datetime = Get-Date }
+$proc = { "${_}: " + $datetime.ToString([cultureinfo]::CreateSpecificCulture($_)) }
+[cultureinfo]::GetCultures([Globalization.CultureTypes]::AllCultures).Name |% $init $proc
+'fr-FR', 'fr-CA', 'en-US', 'en-GB', 'ru-RU' |% $init $proc
+
