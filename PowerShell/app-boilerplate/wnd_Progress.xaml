@@ -101,6 +101,7 @@
                 CanUserResizeRows="False" HeadersVisibility="Column"
                 CanUserDeleteRows="False" CanUserAddRows="False"
                 ><!-- IsReadOnly="True"> -->
+            <!--SelectionUnit="Cell"-->
             <DataGrid.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Colour" x:Name="DataGrid_Menu_Colour">

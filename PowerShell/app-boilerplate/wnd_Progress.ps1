@@ -21,6 +21,7 @@ function PumpMessages {
                         -notMatch '^\s+mc:Ignorable="d"$' -notMatch '^\s+xmlns:local="[^"]+"$'
 
 $MainForm = [windows.markup.XamlReader]::Load([xml.XmlNodeReader] $xaml)
+$MainForm.Title = [io.path]::GetFileNameWithoutExtension($MyInvocation.MyCommand)
 
 $ProgressBar = $MainForm.FindName('ProgressBar')
 
@@ -95,11 +96,16 @@ $MainForm.FindName('btn_A').Add_Click({
         'Idx', 'Ord' |% { $dt.Columns[$_].DataType = 'int' }
         'Chr' |% { $dt.Columns[$_].DataType = 'char' }
         'Is_a_Vowel', '?' |% { $dt.Columns[$_].DataType = 'bool' }
-    } { <# ToDo: actual work instead of #> sleep -mil 100
+    } {
+        if ($false) {
+            return # like continue in ForEach-Object
+        } else {
+            <# ToDo: actual work instead of #> sleep -mil 100
+        }
 
         $vow = switch ($items[$_-1]) { default { $false }
-            { $_ -in 'yeaiou'.ToCharArray() } { $true }
-            { $_ -eq 'w' } { $null } }
+              { $_ -in 'yeaiou'.ToCharArray() } { $true }
+              { $_ -eq 'w' } { $null } }
 
         [void]$dt.Rows.Add(@( [int]$_, $null, $items[$_-1], [int]$items[$_-1], $vow ))
 
