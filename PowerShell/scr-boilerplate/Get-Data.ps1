@@ -1,10 +1,10 @@
 param (
-#$ = $(throw)
+$cnxnStr = $(throw)
 )
 
-$script:Result = [Data.DataTable]::new()
+$script:cnxn = [Data.SqlClient.SqlConnection] $cnxnStr
 
-$script:cnxn = [Data.SqlClient.SqlConnection] $connectionString
+$script:data = [Data.DataTable]::new()
 
 [void] `
 [Data.SqlClient.SqlDataAdapter]::new(
@@ -16,8 +16,8 @@ SELECT *
  ORDER BY 1 deSC, 2, 3
 ;
 "@, $cnxn)
-).Fill($Result)
+).Fill($data)
 
-$cnxn.Dispose()
+$cnxn.Close()
 
-,$Result # need the comma to return the actual DataTable and not an Object[] of DataRow
+,$data # need the comma to return the actual DataTable and not an Object[] of DataRow

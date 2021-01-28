@@ -1,10 +1,5 @@
-<#
-.Synopsis
-    A boilerplate WPF application for launching long-running tasks in PowerShell.
-    Task to be executed on the UI thread, but UI may be updated via PumpMessages.
-.Description
-    Cannot be launched from ISE.
-#>
+#Requires -PSEdition Core
+#Requires -Version 7.1
 
 Set-StrictMode -Version:Latest; $ErrorActionPreference = 'Stop'
 
@@ -27,9 +22,9 @@ function PumpMessages {
 
 $MainForm = [windows.markup.XamlReader]::Load([xml.XmlNodeReader] $xaml)
 
-$ProgressBar = $MainForm.FindName('ProgressBar') # $ProgressBar.Value
+$ProgressBar = $MainForm.FindName('ProgressBar')
 
-$DataGrid = $MainForm.FindName('DataGrid') # $DataGrid.ItemsSource
+$DataGrid = $MainForm.FindName('DataGrid')
 
 $DataGrid.add_AutoGeneratingColumn({
     param( $o, [Windows.Controls.DataGridAutoGeneratingColumnEventArgs]$e )
