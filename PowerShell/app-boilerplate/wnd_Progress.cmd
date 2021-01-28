@@ -3,6 +3,6 @@
 pushd "%~dp0"
 pwsh.exe -WindowStyle Hidden -NoProfile -ExecutionPolicy Bypass -File "%~n0.ps1"
 @rem @echo exe.ExitCode=%ErrorLevel%
-@if %ErrorLevel% EQU 0 GoTo :EoF
-@PowerShell.exe -NoProfile -ExecutionPolicy Bypass -File .\aux_Win32\ShowConsoleWindow.ps1
+@if %ErrorLevel% EQU 0 exit
+@PowerShell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0\aux_Win32\ShowConsoleWindow.ps1"
 pause

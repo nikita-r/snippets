@@ -127,7 +127,7 @@ $MainForm.FindName('btn_B').Add_Click({
 
 $MainForm.FindName('btn_C').Add_Click({
   try {
-    $dlg = . ./dlg_Prompt/dlg_Prompt.ps1 ./dlg_Prompt/dlg_Prompt.xaml $MainForm
+    $dlg = & ./dlg_Prompt/dlg_Prompt.ps1 ./dlg_Prompt/dlg_Prompt.xaml $MainForm
     $r = $dlg.ShowDialog()
     if (-not $r) { return }
 
