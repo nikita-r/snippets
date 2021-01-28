@@ -7,6 +7,8 @@ function report_catch ([Management.Automation.ErrorRecord]$err) {
     Write-Host ('{0}:{1:d4}: {2}' -f $err.InvocationInfo.ScriptName, $err.InvocationInfo.ScriptLineNumber, $err.Exception.Message)
 }
 
+$AppName = [io.path]::GetFileNameWithoutExtension($MyInvocation.MyCommand)
+
 
 Add-Type -Ass PresentationFramework
 $App = [Windows.Application]::new()
@@ -16,12 +18,19 @@ function PumpMessages {
 }
 
 
-[xml]$xaml = [io.file]::ReadLines([io.path]::GetFileNameWithoutExtension($MyInvocation.MyCommand)+'.xaml') `
+$AppData = gc "$AppName.json" | ConvertFrom-Json
+
+if ('error' -in ( $AppData.psobject.Properties |% Name )) {
+    throw $AppData.error
+}
+
+
+[xml]$xaml = [io.file]::ReadLines("$AppName.xaml") `
                         -replace '^<Window.+', '<Window' `
                         -notMatch '^\s+mc:Ignorable="d"$' -notMatch '^\s+xmlns:local="[^"]+"$'
 
 $MainForm = [windows.markup.XamlReader]::Load([xml.XmlNodeReader] $xaml)
-$MainForm.Title = [io.path]::GetFileNameWithoutExtension($MyInvocation.MyCommand)
+$MainForm.Title = $AppName
 
 $ProgressBar = $MainForm.FindName('ProgressBar')
 
