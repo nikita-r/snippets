@@ -1,5 +1,6 @@
 @if -%1-==-- runas /trustlevel:0x20000 "cmd /c \"\"%~0\"\" -" & GoTo :EoF
 @title %~n0
+@prompt $$$+$G$S
 pushd "%~dp0"
 pwsh.exe -WindowStyle Hidden -NoProfile -ExecutionPolicy Bypass -File "%~n0.ps1"
 @rem @echo exe.ExitCode=%ErrorLevel%

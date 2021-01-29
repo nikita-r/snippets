@@ -24,7 +24,7 @@
             <StackPanel Orientation="Horizontal" Margin="8">
                 <Label Content="Value _Gamma" Target="{Binding ElementName=dlg_Prompt_txt_C}" />
                 <ComboBox x:Name="dlg_Prompt_txt_C"
-                            IsEditable="True"
+                            Text="greeks" IsEditable="True" IsTextSearchEnabled='True'
                             VerticalContentAlignment="Center" MinWidth="100" />
             </StackPanel>
         </StackPanel>

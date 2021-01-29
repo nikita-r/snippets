@@ -29,6 +29,7 @@ $dlg_Prompt = [Windows.Window]::GetWindow($this)
 $dlg_Prompt.DialogResult = $false
 })
 
+$dlg_Prompt.FindName("dlg_Prompt_txt_C").Text = 'αβγδεζηθικλμνξοπρςστυφχψω'
 $dlg_Prompt.FindName("dlg_Prompt_txt_C").ItemsSource = $null, 'alpha', 'beta', 'gamma', 'delta', 'epsilon', 'zeta', 'eta', 'theta', 'iota', 'kappa', 'lambda', 'mu', 'nu', 'xi', 'omicron', 'pi', 'rho', 'sigma', 'tau', 'upsilon', 'phi', 'chi', 'psi', 'omega'
 
 $dlg_Prompt.FindName("dlg_Prompt_txt_C").Add_SelectionChanged({
@@ -36,9 +37,9 @@ $dlg_Prompt.FindName("dlg_Prompt_txt_C").Add_SelectionChanged({
     # previous text: $this.Text
     # new selection: $this.SelectedItem
 
-    if ($this.SelectedItem -ne $null) {
-    } else {
-    }
+    if ($this.SelectedItem -eq $null) { return }
+
+    # …
 })
 
 return $dlg_Prompt
