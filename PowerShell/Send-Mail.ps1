@@ -1,12 +1,30 @@
 #·Send-Mail.ps1
-param ( $subj = $(throw), $body = $(throw)
+param ( $subject = $(throw), $body = $(throw)
+, $addrTo=( 'Nikita.Retyunskiy@outlook.com' )
 , $attachments = @()
-, $addr = 'Nikita.Retyunskiy@outlook.com' )
+)
+$addrFrom = $env:UserName + '|' + [net.dns]::GetHostName() + '@' + $env:UserDnsDomain
 
-#$addrFrom = "$env:UserName@$([net.dns]::GetHostByName('localhost').HostName)"
-$addrFrom = "$env:UserName@$([net.dns]::GetHostName()).$env:UserDnsDomain"
+[string]::IsNullOrWhiteSpace($subject) -and $(throw) | out-null
 
-$mail = New-Object net.mail.MailMessage($addrFrom, $addr, $subj, $body)
+#if ([string]::IsNullOrWhiteSpace($body)) {
+    $body=@"
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+$body
+<br />
+<hr color='Navy' style='height:8px' />
+</body>
+</html>
+"@
+#}
+
+$mail = New-Object net.mail.MailMessage($addrFrom, $addrTo, $subject, $body)
+$mail.IsBodyHtml = $true
+
 $attachments |% { $mail.Attachments.Add($(New-Object net.mail.Attachment($_))) }
 
 $smtp = New-Object net.mail.SmtpClient('smtp.sendgrid.net', 587)

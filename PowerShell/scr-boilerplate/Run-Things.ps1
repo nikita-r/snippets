@@ -1,11 +1,13 @@
+#Requires -PSEdition Desktop
+#Requires -Version 5.1
 
-$ErrorActionPreference = 'Stop'; Set-StrictMode -Version:Latest
+$ErrorActionPreference='Stop'
+Set-StrictMode -Version:Latest
 
 <# Prologue #>
 
 $SysDir = [Environment]::CurrentDirectory
 if ($SysDir -ne (pwd).Path) { throw }
-if ((Split-Path (pwd).Path -Leaf) -ne 'scr') { throw }
 
 $ScrName = [io.path]::GetFileNameWithoutExtension($MyInvocation.MyCommand)
 

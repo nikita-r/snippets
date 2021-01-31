@@ -1,10 +1,12 @@
 #Requires -PSEdition Core
 #Requires -Version 7.1
 
-Set-StrictMode -Version:Latest; $ErrorActionPreference = 'Stop'
+$ErrorActionPreference='Stop'
+Set-StrictMode -Version:Latest
 
 function report_catch ([Management.Automation.ErrorRecord]$err) {
-    Write-Host ('{0}:{1:d4}: {2}' -f $err.InvocationInfo.ScriptName, $err.InvocationInfo.ScriptLineNumber, $err.Exception.Message)
+    Write-Host -ForegroundColor Red `
+    ('{0}:{1:d4}: {2}' -f $err.InvocationInfo.ScriptName, $err.InvocationInfo.ScriptLineNumber, $err.Exception.Message)
 }
 
 $AppName = [io.path]::GetFileNameWithoutExtension($MyInvocation.MyCommand)
@@ -18,7 +20,7 @@ function PumpMessages {
 }
 
 
-$AppData = gc "$AppName.json" | ConvertFrom-Json
+$AppData = Get-Content "$AppName.json" | ConvertFrom-Json
 
 if ('error' -in ( $AppData.psobject.Properties |% Name )) {
     throw $AppData.error
@@ -78,8 +80,8 @@ function Buttons_Enable ($b = $true) {
 }
 
 $xaml.Window.Grid.Button.Name |% { $MainForm.FindName($_).add_Click({
-    Buttons_Enable $false
     $MainForm.Cursor = [Windows.Input.Cursors]::Wait
+    Buttons_Enable $false
 }) }
 
 $MainForm.FindName('btn_A').Add_Click({
