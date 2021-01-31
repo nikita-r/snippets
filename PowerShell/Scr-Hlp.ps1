@@ -99,3 +99,9 @@ $proc = { "${_}: " + $datetime.ToString([cultureinfo]::CreateSpecificCulture($_)
 [cultureinfo]::GetCultures([Globalization.CultureTypes]::AllCultures).Name |% $init $proc
 'fr-FR', 'fr-CA', 'en-US', 'en-GB', 'ru-RU' |% $init $proc
 
+
+# MS SQL Server
+[Data.SqlClient.SqlConnection]$cnxn
+Write-Host ('SQL Server Connection timeout=' + $cnxn.ConnectionTimeout)
+if ($cnxn.State -ne 1) { $cnxn.Open(); Write-Host ('SQL Server Connection re-opened') }
+
