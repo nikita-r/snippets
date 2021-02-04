@@ -4,13 +4,22 @@
 $ErrorActionPreference='Stop'
 Set-StrictMode -Version:Latest
 
+<# Prologue #>
+
+$AppName = [io.path]::GetFileNameWithoutExtension($MyInvocation.MyCommand)
+
+$SysDir = [Environment]::CurrentDirectory
+if ($SysDir -ne (pwd).Path) { throw }
+
+$AppDir = Split-Path -Resolve $MyInvocation.MyCommand -Parent
+if ($SysDir -ne $AppDir) { throw }
+
 function report_catch ([Management.Automation.ErrorRecord]$err) {
     Write-Host -ForegroundColor Red `
     ('{0}:{1:d4}: {2}' -f $err.InvocationInfo.ScriptName, $err.InvocationInfo.ScriptLineNumber, $err.Exception.Message)
 }
 
-$AppName = [io.path]::GetFileNameWithoutExtension($MyInvocation.MyCommand)
-
+<# init $App #>
 
 Add-Type -Ass PresentationFramework
 $App = [Windows.Application]::new()
@@ -19,6 +28,7 @@ function PumpMessages {
     $App.Dispatcher.Invoke([Windows.Threading.DispatcherPriority]::Background, [action]{})
 }
 
+<# init data #>
 
 $AppData = Get-Content "$AppName.json" | ConvertFrom-Json
 
@@ -26,6 +36,7 @@ if ('error' -in ( $AppData.psobject.Properties |% Name )) {
     throw $AppData.error
 }
 
+<# Application logic begins #>
 
 [xml]$xaml = [io.file]::ReadLines("$AppName.xaml") `
                         -replace '^<Window.+', '<Window' `
