@@ -23,3 +23,18 @@ End Function
 ' last token (delim="/") by means of an Excel formula
 '=MID([@Col],FIND("*",SUBSTITUTE([@Col],"/","*",LEN([@Col])-LEN(SUBSTITUTE([@Col],"/",""))))+1,LEN([@Col]))
 
+' concatenate tail tokens
+Public Function StrTokTail(str As String, delim As String, idx As Integer) As String
+Dim arr() As String
+On Error GoTo ErrorHandler
+    arr = Split(str, delim)
+    If idx < 0 Then idx = UBound(arr) + 1 + idx
+    StrTokTail = arr(idx)
+    For idx = idx + 1 To UBound(arr)
+        StrTokTail = StrTokTail + delim + arr(idx)
+    Next
+Exit Function
+ErrorHandler:
+    StrTokTail = ""
+End Function
+
