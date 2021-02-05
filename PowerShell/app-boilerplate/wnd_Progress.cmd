@@ -1,6 +1,6 @@
 @if -%1-==-- runas /trustlevel:0x20000 "cmd /c \"\"%~0\"\" -" & GoTo :EoF
 @title %~n0
-@echo Launched on %date% at %time%
+@echo Launched on %date% at %time: =0%
 @prompt $$$+$G$S
 pushd "%~dp0"
 pwsh.exe -WindowStyle Hidden -NoProfile -ExecutionPolicy Bypass -File "%~n0.ps1"

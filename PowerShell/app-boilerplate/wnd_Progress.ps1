@@ -19,6 +19,14 @@ function report_catch ([Management.Automation.ErrorRecord]$err) {
     ('{0}:{1:d4}: {2}' -f $err.InvocationInfo.ScriptName, $err.InvocationInfo.ScriptLineNumber, $err.Exception.Message)
 }
 
+<# init data #>
+
+$AppData = Get-Content "$AppName.json" | ConvertFrom-Json
+
+if ('error' -in ( $AppData.psobject.Properties |% Name )) {
+    throw $AppData.error
+}
+
 <# init $App #>
 
 Add-Type -Ass PresentationFramework
@@ -28,26 +36,22 @@ function PumpMessages {
     $App.Dispatcher.Invoke([Windows.Threading.DispatcherPriority]::Background, [action]{})
 }
 
-<# init data #>
+$App.add_Exit({ param ( $sender, [Windows.ExitEventArgs]$evtA )
+    Write-Host App.OnExit
+    $evtA.ApplicationExitCode = 0
+})
 
-$AppData = Get-Content "$AppName.json" | ConvertFrom-Json
-
-if ('error' -in ( $AppData.psobject.Properties |% Name )) {
-    throw $AppData.error
-}
-
-<# Application logic begins #>
+<# init elements of form #>
 
 [xml]$xaml = [io.file]::ReadLines("$AppName.xaml") `
                         -replace '^<Window.+', '<Window' `
                         -notMatch '^\s+mc:Ignorable="d"$' -notMatch '^\s+xmlns:local="[^"]+"$'
 
 $MainForm = [windows.markup.XamlReader]::Load([xml.XmlNodeReader] $xaml)
+
 $MainForm.Title = $AppName
 
-$ProgressBar = $MainForm.FindName('ProgressBar')
-
-$DataGrid = $MainForm.FindName('DataGrid')
+$ProgressBar, $DataGrid = 'ProgressBar', 'DataGrid' |% { $MainForm.FindName($_) }
 
 $DataGrid.add_AutoGeneratingColumn({
     param( $o, [Windows.Controls.DataGridAutoGeneratingColumnEventArgs]$e )
@@ -84,6 +88,8 @@ $DataGrid.add_AutoGeneratingColumn({
     }
 })
 
+
+<# Application logic begins #>
 
 function Buttons_Enable ($b = $true) {
     $xaml.Window.Grid.Button.Name |% { $MainForm.FindName($_).IsEnabled = $b }
@@ -178,6 +184,8 @@ $xaml.Window.Grid.Button.Name |% { $MainForm.FindName($_).add_Click({
 }) }
 
 
+<# menu items #>
+
 $MainForm.FindName('Grid_Menu_Exit').add_Click({
     $MainForm.Close()
 })
@@ -186,11 +194,6 @@ $MainForm.FindName('DataGrid_Menu_Colour').Items.add_Click({
     $DataGrid.SelectedItems |% { $c = $DataGrid.ItemContainerGenerator.ContainerFromItem($_); $c.Background = $this.Header }
 })
 
-
-$App.add_Exit({ param ( $sender, [Windows.ExitEventArgs]$evtA )
-    Write-Host App.OnExit
-    $evtA.ApplicationExitCode = 0
-})
 
 
 $App.ShutdownMode = 'OnMainWindowClose'
