@@ -4,6 +4,8 @@ import pyodbc
 odbc_cnxn_fstr = 'DRIVER={Microsoft Access Driver (*.mdb)};DBQ=%s;READONLY=True'
 cnxn = pyodbc.connect(odbc_cnxn_fstr % mdb_filepath)
 #cnxn.setdecoding(pyodbc.SQL_WCHAR, 'cp1252')
+#cnxn.setdecoding(pyodbc.SQL_WMETADATA, 'cp1252')
+#cnxn.setencoding(encoding='utf-8')
 cursor = cnxn.cursor()
 for t in cursor.tables(): print(t.table_name)
 ...

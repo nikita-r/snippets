@@ -38,3 +38,18 @@ ErrorHandler:
     StrTokTail = ""
 End Function
 
+' concatenate head tokens
+Public Function StrTokHead(str As String, delim As String, idx As Integer) As String
+Dim arr() As String
+On Error GoTo ErrorHandler
+    arr = Split(str, delim)
+    If idx < 0 Then idx = UBound(arr) + 1 + idx
+    StrTokHead = arr(idx)
+    For idx = idx - 1 To 0 Step -1
+        StrTokHead = arr(idx) + delim + StrTokHead
+    Next
+Exit Function
+ErrorHandler:
+    StrTokHead = ""
+End Function
+
