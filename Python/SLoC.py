@@ -23,19 +23,24 @@ def split_path(path):
     return rez
 
 def walk_directories(dirs, excl, t):
+    norm = os.path.normcase
     paths_walked = set()
     for dir in dirs:
+        dir = os.path.realpath(dir)
+        if not os.path.isdir(dir): raise Exception(f'Dir "{dir}" does not exist.')
         for dirpath, dirnames, filenames in os.walk(dir):
+            dirpath = norm(os.path.relpath(dirpath))
+            dirpath_split = split_path(dirpath)
+            if any( norm(_) in dirpath_split for _ in excl ):
+                continue
             if dirpath in paths_walked:
                 continue
             paths_walked.add(dirpath)
-            if any( _.lower() in split_path(dirpath.lower()) for _ in excl ):
-                continue
             for file in filenames:
                 if os.extsep not in file:
                     continue
                 for ext in t:
-                    if file.split(os.extsep)[-1].lower() == ext.lower():
+                    if norm(file.split(os.extsep)[-1]) == norm(ext):
                         yield ( dirpath, file )
 
 import fileinput
