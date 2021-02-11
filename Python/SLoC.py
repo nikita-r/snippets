@@ -29,19 +29,27 @@ def walk_directories(dirs, excl, t):
         dir = os.path.realpath(dir)
         if not os.path.isdir(dir): raise Exception(f'Dir "{dir}" does not exist.')
         for dirpath, dirnames, filenames in os.walk(dir):
-            dirpath = norm(os.path.relpath(dirpath))
+
+            try:
+                if (os.path.relpath(dirpath)[0:3] in ( '..' + os.sep, '..' )):
+                    raise Exception()
+                dirpath = norm(os.path.relpath(dirpath))
+            except:
+                dirpath = norm(dirpath)
+
             dirpath_split = split_path(dirpath)
             if any( norm(_) in dirpath_split for _ in excl ):
                 continue
+
             if dirpath in paths_walked:
                 continue
             paths_walked.add(dirpath)
+
             for file in filenames:
-                if os.extsep not in file:
-                    continue
                 for ext in t:
-                    if norm(file.split(os.extsep)[-1]) == norm(ext):
+                    if norm(os.path.splitext(file)[1])[1:] == norm(ext):
                         yield ( dirpath, file )
+                        break
 
 import fileinput
 
