@@ -78,9 +78,29 @@ if __name__ == '__main__':
     from time import time
     print('seconds=%i' % time())
 
+    import cProfile
+    prof_pr = cProfile.Profile()
+    prof_pr.enable()
+
     t_lines = iter_files_lines( os.path.join(t[0], t[1]) for t in walk_directories(args.dirs, args.x, args.t) )
     print('SLoC count=%09d' % sum(1 for dummy in lines_skip_empty(t_lines)))
     print('newl count=%09d' % fileinput.lineno())
 
+    prof_pr.disable()
+
     print('seconds=%i' % time())
+
+    import shutil
+    COLUMNS, LINES = shutil.get_terminal_size()
+    print()
+    print('='*COLUMNS)
+
+    import pstats, io
+    ostringstream = io.StringIO()
+    prof_st = pstats.Stats(prof_pr, stream=ostringstream)
+    prof_st.strip_dirs()
+    prof_st.sort_stats(pstats.SortKey.CUMULATIVE)
+    prof_st.print_stats(LINES-2)
+    print(ostringstream.getvalue())
+    ostringstream.close()
 
