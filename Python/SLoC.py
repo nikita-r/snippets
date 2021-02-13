@@ -37,24 +37,24 @@ def walk_directories(dirs, excl, t):
             except:
                 dirpath = norm(dirpath)
 
-            dirpath_split = split_path(dirpath)
-            if any( norm(_) in dirpath_split for _ in excl ):
-                continue
+            if excl:
+                dirpath_split = split_path(dirpath)
+                if any( norm(_) in dirpath_split for _ in excl ):
+                    continue
 
             if dirpath in paths_walked:
                 continue
             paths_walked.add(dirpath)
 
             for file in filenames:
-                for ext in t:
-                    if norm(os.path.splitext(file)[1])[1:] == norm(ext):
-                        yield ( dirpath, file )
-                        break
+                if norm(os.path.splitext(file)[1])[1:] in ( norm(ext) for ext in t ):
+                    yield ( dirpath, file )
 
 import fileinput
 
 def iter_files_lines(files_list):
-    with fileinput.input(files_list) as line_iter:
+    openhook = fileinput.hook_encoded(encoding="utf-8", errors="surrogateescape")
+    with fileinput.input(files_list, openhook=openhook) as line_iter:
         for line in line_iter:
             yield ( fileinput.filename(), fileinput.filelineno(), line )
 
@@ -70,17 +70,17 @@ if __name__ == '__main__':
 
     import argparse
     ArgParser = argparse.ArgumentParser()
-    ArgParser.add_argument("-t", metavar='Ext', action='append', help='include file type (extension)', default=[], required=True)
-    ArgParser.add_argument("-x", metavar='Dir', action='append', help='exclude directory', default=[])
-    ArgParser.add_argument("rest", nargs='+', metavar='Dir', help='directories which to walk')
+    ArgParser.add_argument("-t", action='append', required=True, help='include file type (extension)', metavar='Ext')
+    ArgParser.add_argument("-x", action='append', default=[], help='exclude directory', metavar='Dir')
+    ArgParser.add_argument("dirs", nargs='+', help='directories which to walk', metavar='Dir')
     args = ArgParser.parse_args()
 
-    import time
-    print('seconds=%i' % int(time.time()))
+    from time import time
+    print('seconds=%i' % time())
 
-    t_lines = iter_files_lines( os.path.join(t[0], t[1]) for t in walk_directories(args.rest, args.x, args.t) )
+    t_lines = iter_files_lines( os.path.join(t[0], t[1]) for t in walk_directories(args.dirs, args.x, args.t) )
     print('SLoC count=%09d' % sum(1 for dummy in lines_skip_empty(t_lines)))
     print('newl count=%09d' % fileinput.lineno())
 
-    print('seconds=%i' % int(time.time()))
+    print('seconds=%i' % time())
 
