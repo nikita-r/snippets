@@ -8,7 +8,7 @@ function New-PSCustomObject {
 
 	[Parameter(Mandatory,Position=0)]
 	[ValidateNotNullOrEmpty()]
-	[System.Collections.Hashtable]$Hsh,
+	[System.Collections.Hashtable]$h,
 
 	[Parameter(Position=1)]
 	[ValidateNotNullOrEmpty()]
@@ -16,15 +16,15 @@ function New-PSCustomObject {
 	[System.String[]]$DefProps
 	)
 
-	$result = [PSCustomObject]$Hsh
+	$result = [PSCustomObject] $h
 
 	if (-not $DefProps) { return $result }
 
-	$ddps = New-Object System.Management.Automation.PSPropertySet `
-			DefaultDisplayPropertySet, $DefProps
+	$ddps = New-Object Management.Automation.PSPropertySet `
+	        DefaultDisplayPropertySet, $DefProps
 
 	$result | Add-Member -MemberType MemberSet -Name PSStandardMembers `
-			-Value ([Management.Automation.PSMemberInfo[]]$ddps) `
-			-PassThru
+	          -Value ([Management.Automation.PSMemberInfo[]] $ddps) `
+	          -PassThru
 }
 
