@@ -66,8 +66,8 @@
     <Grid Background="Transparent">
         <Grid.ContextMenu>
             <ContextMenu>
-                <MenuItem Header="Item" />
-                <MenuItem Header="Exit" x:Name="Grid_Menu_Exit" />
+                <!--<MenuItem Header="Item" />-->
+                <MenuItem Header="Exit 1" x:Name="Grid_Menu_Exit_1" />
             </ContextMenu>
         </Grid.ContextMenu>
 

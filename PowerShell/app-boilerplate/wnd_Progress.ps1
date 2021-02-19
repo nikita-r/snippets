@@ -36,9 +36,10 @@ function PumpMessages {
     $App.Dispatcher.Invoke([Windows.Threading.DispatcherPriority]::Background, [action]{})
 }
 
+$App | Add-Member -MemberType NoteProperty -Name myExitCode -Value 0
 $App.add_Exit({ param ( $sender, [Windows.ExitEventArgs]$evtA )
-    Write-Host App.OnExit
-    $evtA.ApplicationExitCode = 0
+    #Write-Host App.OnExit
+    $evtA.ApplicationExitCode = $App.myExitCode
 })
 
 <# init elements of form #>
@@ -186,7 +187,8 @@ $xaml.Window.Grid.Button.Name |% { $MainForm.FindName($_).add_Click({
 
 <# menu items #>
 
-$MainForm.FindName('Grid_Menu_Exit').add_Click({
+$MainForm.FindName('Grid_Menu_Exit_1').add_Click({
+    $App.myExitCode = 1
     $MainForm.Close()
 })
 
@@ -199,3 +201,4 @@ $MainForm.FindName('DataGrid_Menu_Colour').Items.add_Click({
 $App.ShutdownMode = 'OnMainWindowClose'
 $ExitCode = $App.Run($MainForm)
 Write-Host ('App.ExitCode='+$ExitCode)
+exit $ExitCode

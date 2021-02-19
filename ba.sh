@@ -1,3 +1,4 @@
+set -xuef
 
 # Which process occupies port 4001?
 lsof -i:4001
@@ -37,4 +38,7 @@ find /usr/lib -name 'libicu*' -exec ls -dl {} \; | awk '{ $5=sprintf("%011d", $5
 IFS=$'\n'; set -o noglob
 for f in $(find ./Folder -type f | sort); do sed -i 's/\r$//g' $f; done
 unset IFS; set +f
+
+# Who used up my disk space?
+du -b -x / | awk '{ $1=sprintf("%015d", $1) }1' | sort -r | more
 
