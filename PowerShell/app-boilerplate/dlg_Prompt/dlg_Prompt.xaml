@@ -4,7 +4,14 @@
         SizeToContent="WidthAndHeight" FontSize="16" FontFamily="Calibri"
         MinWidth="400" MinHeight="300" UseLayoutRounding="True"
         ResizeMode="NoResize" WindowStartupLocation="CenterOwner">
-    <Grid ShowGridLines='True'>
+<Window.Resources>
+    <LinearGradientBrush x:Key="grad_Brush" StartPoint="0,0" EndPoint="1,0">
+        <GradientStop Offset="0.20" Color="Black" />
+        <GradientStop Offset="1.00" Color="Transparent" />
+    </LinearGradientBrush>
+</Window.Resources>
+
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width='auto' />
         </Grid.ColumnDefinitions>
@@ -13,6 +20,12 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="60" />
         </Grid.RowDefinitions>
+
+        <Border Grid.Column="0" Grid.Row="0" BorderBrush="Black" BorderThickness="0,0,0,2"
+                OpacityMask="{StaticResource grad_Brush}" />
+        <Border Grid.Column="0" Grid.Row="1" BorderBrush="Black" BorderThickness="0,0,0,2"
+                OpacityMask="{StaticResource grad_Brush}" />
+
         <TextBlock TextWrapping="Wrap" Text="Please input values that will be ignored."
                                 Margin="8" Grid.Row="0" />
         <StackPanel Orientation="Vertical" Grid.Row="1">
