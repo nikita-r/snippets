@@ -1,5 +1,9 @@
 #·.gitignore
 
+# Python
 __pycache__/
 *.pyc
+
+# npm
+node_modules/
 

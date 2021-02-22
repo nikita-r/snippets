@@ -1,4 +1,6 @@
-set -xuef
+set -fux -o pipefail
+set -e # $ErrorActionPreference='Exit'
+false
 
 # Which process occupies port 4001?
 lsof -i:4001
@@ -41,4 +43,7 @@ unset IFS; set +f
 
 # Who used up my disk space?
 du -b -x / | awk '{ $1=sprintf("%015d", $1) }1' | sort -r | more
+
+# list all variables
+( set -o posix ; set ) | less
 
