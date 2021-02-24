@@ -47,7 +47,7 @@ du -b -x / | awk '{ $1=sprintf("%015d", $1) }1' | sort -r | more
 # list all variables
 ( set -o posix ; set ) | less
 
-# deal with core.autocrlf=true under WinGit
-find . -type d -print0 | xargs -0 chmod ???
-find . -type f -print0 | xargs -0 -n1 sh -c 'sed -i "s/\r\$//" "$1" && chmod a=r "$1"' --
+# set file-mode and replace CRLF in newly-fetched files
+find . -mindepth 1 -type d -print0 | xargs -0r -t chmod ???
+find . -type f -print0 | xargs -0r -n1 sh -cx 'sed -i "s/\r\$//" "$1" && chmod a=r "$1"' --
 
