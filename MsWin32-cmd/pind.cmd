@@ -1,5 +1,7 @@
-@if -%1-==-- runas /trustlevel:0x20000 "cmd /k \"\"%~0\"\" -" & goto:eof
-@if -%1-==--- title %~0&goto:dash
+@if -%1-==-- runas /trustlevel:0x20000 "cmd /k \"\"%~0\"\" - %~0" & goto:eof
+set @=%*
+set @=%@:~2%
+@if -%1-==--- title %@%&goto:dash
 cd /d %*
 @goto:exit%ErrorLevel%
 :exit0

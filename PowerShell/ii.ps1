@@ -9,3 +9,7 @@ LocalAddress, LocalPort, RemoteAddress, RemotePort `
 -join( 32..126 |% {[char]$_} | sort {$_.ToString()} )
 
 Get-PSProvider
+
+New-TemporaryDirectory | tee -Variable path
+Find-Module admin | Save-Module -Path $path
+
