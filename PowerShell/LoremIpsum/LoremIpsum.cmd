@@ -3,6 +3,8 @@
 @echo Launched on %date% at %time: =0%
 @prompt $$$+$G$S
 pushd "%~dp0"
+@if %ErrorLevel% NEQ 0 GoTo :lErr
 PowerShell.exe -NoProfile -ExecutionPolicy Bypass -File "%~n0.ps1"
 @echo exe.ExitCode=%ErrorLevel%
+:lErr
 pause
