@@ -1,0 +1,40 @@
+<!-- table-tricks.html -->
+
+read-only checkbox sans the disabled style
+<!--...-->
+<mat-checkbox [checked]="row.isChecked"
+      style="cursor: unset" disabled [class.mat-checkbox-disabled]="false"></mat-checkbox>
+
+
+entire-cell link
+<style>
+.mat-cell-link-parent { /* no-op? */
+  position: absolute;
+  top: 0;
+  width: 100%; height: 100%;
+}
+
+.mat-cell-link {
+  position: absolute;
+  top: 5%; height: 90%;
+  left: 5%; width: 90%;
+  /*text-align: right;*/
+  padding: 0.33em;
+  box-sizing: border-box;
+  border: 1px dashed Navy;
+  overflow-wrap: anywhere;
+  overflow: auto;
+}
+
+.mat-cell-link:hover {
+  background-color: GhostWhite;
+}
+</style>
+<!--...-->
+<td mat-cell *matCellDef="let row" style="position: relative">
+  <div class='mat-cell-link-parent'>
+    <a class='mat-cell-link' routerLink="/{{row.link}}">{{row.datum}}</a>
+  </div>
+</td>
+
+

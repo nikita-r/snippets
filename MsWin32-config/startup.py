@@ -42,7 +42,7 @@ def Sns2json(SnsO): return json.dumps(SnsO, sort_keys=True, indent=4
 
 #~|~#
 
-def MyBin(n):
+def _bin(n):
     a = []
     for b in str(n).split('.'):
         b = int(b)

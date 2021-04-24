@@ -1,5 +1,5 @@
 
-# > New-PSCustomObject @{f1=' a';f2=' b';f3=' c';meta='three little fields'} -DefProps f1,f2,f3
+# > New-PSCustomObject @{f1=' a';f2=' b';f3=' c';meta='three little fields'} -def f1,f2,f3
 
 function New-PSCustomObject {
 	[CmdletBinding()]
