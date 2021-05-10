@@ -1,5 +1,8 @@
 #·.gitignore
 
+# backup files created by git-mergetool or kdiff3
+*.orig
+
 # Python
 __pycache__/
 *.pyc
