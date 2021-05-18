@@ -7,15 +7,20 @@
 *.reg   diff=utf-16
 
 # graphics
-*.png   binary
+*.gif   binary
 *.ico   binary
+*.png   binary
 
 # archives
-*.zip   binary
 *.7z    binary
 *.gz    binary
 *.tar   binary
 *.tgz   binary
+*.zip   binary
+
+# exe
+*.dll   binary
+*.exe   binary
 
 # no markers and always conflict when merging
 #*.sln           merge=binary
