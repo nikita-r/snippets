@@ -1,4 +1,6 @@
 
+function logN(n: number) { return (text: any) => console.log(`|${n}>`, text) }
+
 /* (1) */
 
 const hello_world_t = (callback: (text: string) => void) => {
@@ -13,7 +15,7 @@ const hello_world_t = (callback: (text: string) => void) => {
   }, 1000);
 };
 
-hello_world_t(text => console.log('1>', text));
+hello_world_t(logN(1));
 
 
 /* (2) */
@@ -29,6 +31,6 @@ const hello_world_a = async (callback: (text: string) => void) => {
   callback('. . . to asynchronicity in TypeScript!');
 };
 
-hello_world_a(text => console.log('2>', text));
+hello_world_a(logN(2));
 
 
