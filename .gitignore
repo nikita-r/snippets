@@ -1,7 +1,8 @@
 #·.gitignore
 
-# backup files created by git-mergetool or kdiff3
-*.orig
+# dev tooling artifacts
+.vscode/
+*.orig # by git-mergetool or kdiff3
 
 # Python
 __pycache__/
