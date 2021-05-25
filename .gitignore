@@ -2,7 +2,7 @@
 
 # dev tooling artifacts
 .vscode/
-*.orig # by git-mergetool or kdiff3
+*.orig
 
 # Python
 __pycache__/
