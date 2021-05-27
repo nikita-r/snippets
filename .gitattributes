@@ -1,17 +1,26 @@
 #·.gitattributes
 
-# by default
+# end-of-line conversion is guessed by Git
 *       text=auto
 
 # UTF-16
 *.reg   diff=utf-16
+
+# particular format
+*.rtf diff=rtf
+
+# shell script
+*.bat eol=crlf
+*.cmd eol=crlf
+*.ps1   eol=lf
+*.sh    eol=lf
 
 # graphics
 *.gif   binary
 *.ico   binary
 *.png   binary
 
-# archives
+# archive file
 *.7z    binary
 *.gz    binary
 *.tar   binary
