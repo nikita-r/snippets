@@ -1,0 +1,85 @@
+
+#~.swaynag/config
+font=Carlito 16
+border-bottom=000000
+border-bottom-size=8
+
+#~.config/sway
+
+workspace_layout tabbed
+
+#$ swaymsg -t get_outputs
+output ??? scale 2
+
+input type:touchpad {
+  tap enabled
+  dwt enabled
+
+  middle_emulation enabled
+
+    scroll_factor 0.3
+    natural_scroll enabled
+
+    pointer_accel 0
+    accel_profile flat
+}
+
+#$ swaymsg -t get_inputs
+input ::Logitech_MX_Vertical {
+
+    scroll_factor 3
+
+    pointer_accel -0.75
+    accel_profile adaptive
+}
+
+seat seat0 xcursor_theme Breeze-Obsidian 40
+
+output * bg #RRGGBB solid_color
+
+set $term urxvt
+
+set $swaylock swaylock -lL -F -e -c 323232 --font Inter --font-size 18 -k --indicator-radius 72 --indicator-thickness 24
+
+# Kill focussed window.
+bindsym $mod+Shift+F9 kill
+
+#mouse_warping container
+focus_follows_mouse always
+
+tiling_drag disable
+
+# disable mouse-scroll over the title bar
+bindsym button4 nop
+bindsym button5 nop
+
+bindsym $mod+Shift+E exec swaynag -t warning -m 'Do you really want to quit sway?' -b 'Yes, quit!' 'swaymsg exit' -s 'X'
+
+bindsym $mod+Shift+1 move container to Workspace A; Workspace A
+bindsym $mod+Shift+2 move container to Workspace B; Workspace B
+bindsym $mod+Shift+3 move container to Workspace C; Workspace C
+bindsym $mod+Shift+4 move container to Workspace D; Workspace D
+bindsym $mod+Shift+5 move container to Workspace E; Workspace E
+bindsym $mod+Shift+6 move container to Workspace F; Workspace F
+bindsym $mod+Shift+7 move container to Workspace G; Workspace G
+bindsym $mod+Shift+8 move container to Workspace H; Workspace H
+bindsym $mod+Shift+9 move container to Workspace I; Workspace I
+bindsym $mod+Shift+0 move container to Workspace 0; Workspace 0
+
+bindsym $mod+Shift+X exec $swaylock
+
+bindsym $mod+Shift+S exec grimshot save screen ~/Pictures/screencapFull.$(date -u '+%Y-%m-%dT%TZ').png
+bindsym $mod+C focus child
+bindsym $mod+P focus parent
+bindsym $mod+A focus prev
+bindsym $mod+S focus next
+
+bindsym $mod+Tab workspace back_and_forth
+
+# disable Cut/Copy/Paste
+bindsym Shift+Delete nop
+bindsym Ctrl+Insert nop
+bindsym Shift+Insert nop
+
+include @sysconfdir@/sway/config.d/*
+

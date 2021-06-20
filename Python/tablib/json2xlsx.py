@@ -1,4 +1,4 @@
-# json2xlsx using tablib
+# json2xlsx via tablib
 #
 # Requirements:
 # - pip install tablib[xlsx]

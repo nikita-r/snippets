@@ -21,9 +21,6 @@ alias sudo='sudo '
 # highlight <word> in the <command> output in less
 command | grep --colour=always -e $ -e word | less -r
 
-# flush to the history file after each command
-export PROMPT_COMMAND='history -a'
-
 # eject media
 sudo mount -o remount,rw /media/kr/Verbatim
 sudo -s -- 'sync; umount /media/kr/Verbatim'

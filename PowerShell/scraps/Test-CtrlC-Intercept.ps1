@@ -11,16 +11,16 @@ function Catch-ControlC {
 
 trap [ExecutionEngineException] {
     Write-Host
-    Write-Host 'Exiting now!' -back DarkRed
+    Write-Host '^C caught!!!' -back DarkCyan -fore Cyan
     exit 1
 }
 
 $i=0
 while ($true) {
-    Write-Host -non ('Line #{0:d3}' -f ++$i) -back Black -fore Yellow
+    Write-Host -n ('Line #{0:d3}' -f ++$i) -back Black -fore Yellow
     1..3 |% {
-        sleep -mil $ms
-        Write-Host -non . -back Black -fore ([ConsoleColor]($_+12))
+        Start-Sleep -ms $ms
+        Write-Host -n . -back Black -fore ([ConsoleColor]($_+12))
         Catch-ControlC
     }
     Write-Host
