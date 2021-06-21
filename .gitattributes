@@ -3,6 +3,9 @@
 # end-of-line conversion is guessed by Git
 *       text=auto
 
+# list specific files
+LICENSE.txt eol=crlf
+
 # UTF-16
 *.reg   diff=utf-16
 
