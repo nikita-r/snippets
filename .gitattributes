@@ -3,9 +3,6 @@
 # end-of-line conversion is guessed by Git
 * text=auto
 
-# list specific files
-/LICENSE.txt eol=crlf
-
 # UTF-16
 *.reg diff=utf-16
 
@@ -34,7 +31,10 @@
 *.dll   binary
 *.exe   binary
 
-# no markers and always conflict when merging
-#*.sln           merge=binary
-#*.*proj         merge=binary
+# upon being merged, always just conflict
+*.sln   merge=binary
+*.*proj merge=binary
+
+# list specific files
+/LICENSE.txt eol=crlf
 
