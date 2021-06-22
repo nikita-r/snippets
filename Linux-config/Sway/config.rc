@@ -38,10 +38,10 @@ seat seat0 xcursor_theme Breeze-Obsidian 40
 output * bg #RRGGBB solid_color
 
 set $term urxvt
-
+set $menu dmenu_path | dmenu -fn mono -l 42 -i | xargs swaymsg exec --
 set $swaylock swaylock -lL -F -e -c 323232 --font Inter --font-size 18 -k --indicator-radius 72 --indicator-thickness 24
+set $screencap grimshot save screen
 
-# Kill focussed window.
 bindsym $mod+Shift+F9 kill
 
 #mouse_warping container
@@ -50,10 +50,10 @@ focus_follows_mouse always
 tiling_drag disable
 
 # disable mouse-scroll over the title bar
-bindsym button4 nop
-bindsym button5 nop
+bindsym ButtOn4 nop
+bindsym ButtOn5 nop
 
-bindsym $mod+Shift+E exec swaynag -t warning -m 'Do you really want to quit sway?' -b 'Yes, quit!' 'swaymsg exit' -s 'X'
+bindsym $mod+Shift+E exec swaynag -t warning -m 'Do you really wish to exit Sway?' -b 'Yes, quit!' 'swaymsg exit' -s 'X'
 
 bindsym $mod+Shift+1 move container to Workspace A; Workspace A
 bindsym $mod+Shift+2 move container to Workspace B; Workspace B
@@ -68,11 +68,14 @@ bindsym $mod+Shift+0 move container to Workspace 0; Workspace 0
 
 bindsym $mod+Shift+X exec $swaylock
 
-bindsym $mod+Shift+S exec grimshot save screen ~/Pictures/screencapFull.$(date -u '+%Y-%m-%dT%TZ').png
 bindsym $mod+C focus child
 bindsym $mod+P focus parent
 bindsym $mod+A focus prev
 bindsym $mod+S focus next
+bindsym $mod+Shift+S exec $screencap ~/Pictures/screencapFull.$(date -u '+%Y-%m-%dT%TZ').png
+
+bindsym $mod+Shift+Space floating toggle
+bindsym $mod+Space focus mode_toggle
 
 bindsym $mod+Tab workspace back_and_forth
 
@@ -81,5 +84,24 @@ bindsym Shift+Delete nop
 bindsym Ctrl+Insert nop
 bindsym Shift+Insert nop
 
-include @sysconfdir@/sway/config.d/*
+client.focused #RRGGBB #335577 #ffffff #335577 #335577
 
+# man 5 sway-bar
+bar {
+    position top
+
+    status_command while ~/.config/sway/status.sh; do sleep 6; done
+    status_padding 4
+    font pango: Carlito 16
+
+    colors {
+        statusline #f5f5f5
+        background #323232
+
+        inactive_workspace #32323200 #323232 #f5f5f5
+        focused_workspace #323232 #32323200 #323232
+    }
+}
+
+
+include @sysconfdir@/sway/config.d/*

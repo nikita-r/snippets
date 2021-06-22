@@ -1,13 +1,13 @@
 #·.gitattributes
 
 # end-of-line conversion is guessed by Git
-*       text=auto
+* text=auto
 
 # list specific files
-LICENSE.txt eol=crlf
+/LICENSE.txt eol=crlf
 
 # UTF-16
-*.reg   diff=utf-16
+*.reg diff=utf-16
 
 # particular format
 *.rtf diff=rtf
