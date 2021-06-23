@@ -15,6 +15,7 @@
          state('hide', style({
             height: '0',
             opacity: 0,
+            overflow: 'hidden',
          })),
          transition('show => hide', [
             animate('200ms ease-in'),
