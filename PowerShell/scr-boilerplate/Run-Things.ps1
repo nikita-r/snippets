@@ -6,12 +6,12 @@ Set-StrictMode -Version:Latest
 
 <# Prologue #>
 
-$ScrName = [io.path]::GetFileNameWithoutExtension($MyInvocation.MyCommand)
+$ScrName = [io.path]::GetFileNameWithoutExtension($PSCommandPath)
 
 $SysDir = [Environment]::CurrentDirectory
 if ($SysDir -ne (pwd).Path) { throw }
 
-$ScrDir = Split-Path -Resolve $MyInvocation.MyCommand -Parent
+$ScrDir = $PSScriptRoot
 if ($SysDir -ne $ScrDir) { throw }
 
 try {
@@ -19,7 +19,7 @@ try {
 } catch {
   $msg = 'Cannot acquire lock file: ' + $_.Exception.InnerException.Message
   Write-Error $msg
-  exit 1 # is superfluous when -ea 'Stop' is set for Write-Error above
+  exit 1 # is superfluous if -ea:Stop is in effect for `Write-Error`
 }
 
 $dlog = ".\logs\${ScrName}_D$((Get-Date -f s) -replace ':', '-' -replace '-')"

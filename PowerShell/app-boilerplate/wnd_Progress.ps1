@@ -6,12 +6,12 @@ Set-StrictMode -Version:Latest
 
 <# Prologue #>
 
-$AppName = [io.path]::GetFileNameWithoutExtension($MyInvocation.MyCommand)
+$AppName = [io.path]::GetFileNameWithoutExtension($PSCommandPath)
 
 $SysDir = [Environment]::CurrentDirectory
 if ($SysDir -ne (pwd).Path) { throw }
 
-$AppDir = Split-Path -Resolve $MyInvocation.MyCommand -Parent
+$AppDir = $PSScriptRoot
 if ($SysDir -ne $AppDir) { throw }
 
 function report_catch ([Management.Automation.ErrorRecord]$err) {
