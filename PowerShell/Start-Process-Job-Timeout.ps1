@@ -8,7 +8,7 @@ $argv = @()
 $i=0; $f=0
 while ($i -lt $argc) {
     if (!$f -and $args[$i] -eq '--') { $f = $true; $i += 1; continue }
-    if ($f -or $i+1 -eq $argc
+    if ($f -or $i+1 -eq $argc `
             -or $args[$i] -notlike '-*' -or $args[$i+1] -like '-*') {
         $argv += @($args[$i])
         $i += 1
@@ -46,9 +46,13 @@ $Job = Get-Job | Wait-Job -Any # Could return an array?
 $proc_id, $ExitCode = $null, $null
 if ($Job -eq $JobT) {
     Write-Host 'Time is out...'
-    $proc_id, $null = Receive-Job $JobA
+    $proc_id, $ExitCode = Receive-Job $JobA
     if ($null -eq $proc_id) {
-        Write-Host "Failed to Start-Process" -fore Red
+        Write-Host 'Timed out trying to Start-Process' -fore Red
+        throw
+    }
+    if ($null -ne $ExitCode) {
+        Write-Host '~ unfortunate timing' -fore Red
         throw
     }
     Write-Host "Kill PID=$proc_id"
@@ -62,8 +66,8 @@ if ($Job -eq $JobT) {
         $proc_id, $ExitCode = Receive-Job $JobA
         Write-Host ("PID=$proc_id" + ' ' + $JobA.State + '!')
     } else {
-        $msg = "Script Job $($JobA.State): $($JobA.ChildJobs[0].JobStateInfo.Reason.Message)"
-        Write-Host $msg -fore Red
+        Write-Host -fore Red ("Script Job $($JobA.State): " `
+            + $JobA.ChildJobs[0].JobStateInfo.Reason.Message)
         throw
     }
 } else {
