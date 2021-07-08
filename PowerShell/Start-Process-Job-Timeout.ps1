@@ -9,11 +9,11 @@ $i=0; $f=0
 while ($i -lt $argc) {
     if (!$f -and $args[$i] -eq '--') { $f = $true; $i += 1; continue }
     if ($f -or $i+1 -eq $argc `
-            -or $args[$i] -notlike '-*' -or $args[$i+1] -like '-*') {
-        $argv += @($args[$i])
+           -or $args[$i] -notLike '-*' -or $args[$i+1] -like '-*') {
+        $argv += @('"' + $args[$i] + '"')
         $i += 1
-    } else {
-        $argv += @($args[$i] + ':' + $args[$i+1])
+    } else { # if arg in the form "-a:1" is passed from cmd, it gets split
+        $argv += @('"' + $args[$i] + ':' + $args[$i+1] + '"')
         $i += 2
     }
 }
