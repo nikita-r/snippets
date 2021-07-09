@@ -12,7 +12,7 @@ while ($i -lt $argc) {
            -or $args[$i] -notLike '-*' -or $args[$i+1] -like '-*') {
         $argv += @('"' + $args[$i] + '"')
         $i += 1
-    } else { # if arg in the form "-a:1" is passed from cmd, it gets split
+    } else { # if an arg of the form "-a:1" is passed from cmd, it gets split
         $argv += @('"' + $args[$i] + ':' + $args[$i+1] + '"')
         $i += 2
     }
@@ -42,33 +42,41 @@ $JobA = Start-Job -ArgumentList $(if ([io.path]::IsPathRooted($cmd)) {"$cmd"}
         }
 
 $Job = Get-Job | Wait-Job -Any # Could return an array?
-#Receive-Job $Job -OutVariable out
-$proc_id, $ExitCode = $null, $null
-if ($Job -eq $JobT) {
-    Write-Host 'Time is out...'
-    $proc_id, $ExitCode = Receive-Job $JobA
-    if ($null -eq $proc_id) {
-        Write-Host 'Timed out trying to Start-Process' -fore Red
-        throw
-    }
-    if ($null -ne $ExitCode) {
-        Write-Host '~ unfortunate timing' -fore Red
-        throw
-    }
-    Write-Host "Kill PID=$proc_id"
-    (Get-Process -Id $proc_id).Kill()
-    Wait-Job $JobA | Out-Null
-    $ExitCode = Receive-Job $JobA
-    Remove-Job $JobA
-} elseif ($Job -eq $JobA) {
+
+if ($Job -eq $JobA) {
     Remove-Job $JobT -Force
+    $proc_id, $ExitCode = Receive-Job $JobA
     if ($JobA.State -eq 'Completed') {
-        $proc_id, $ExitCode = Receive-Job $JobA
         Write-Host ("PID=$proc_id" + ' ' + $JobA.State + '!')
     } else {
         Write-Host -fore Red ("Script Job $($JobA.State): " `
             + $JobA.ChildJobs[0].JobStateInfo.Reason.Message)
-        throw
+    }
+    Remove-Job $JobA
+    if (!$proc_id) {
+        throw 'Failed to Start-Process'
+    }
+    if ($null -eq $ExitCode) {
+        throw '~ unexpected error'
+    }
+} elseif ($Job -eq $JobT) {
+    Remove-Job $JobT
+    Write-Host 'Time is out...'
+    $proc_id, $ExitCode = Receive-Job $JobA
+    if (!$proc_id) {
+        Remove-Job $JobA -Force
+        throw 'Timed out trying to Start-Process'
+    }
+    if ($null -ne $ExitCode) {
+        Write-Host '~ unfortunate timing' -fore Red
+        Remove-Job $JobA
+    } else {
+        Write-Host "Kill PID=$proc_id"
+        (Get-Process -Id $proc_id).Kill()
+        Wait-Job $JobA | Out-Null
+        $ExitCode = Receive-Job $JobA
+        Remove-Job $JobA
+        throw "Timed out PID=$proc_id ExitCode=$ExitCode"
     }
 } else {
     throw
