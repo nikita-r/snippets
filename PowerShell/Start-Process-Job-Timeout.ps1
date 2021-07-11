@@ -39,6 +39,12 @@ $JobA = Start-Job -ArgumentList $(if ([io.path]::IsPathRooted($cmd)) {"$cmd"}
             $proc.ExitCode
         }
 
+function Dispose-of-JobA {
+    $proc_id, $ExitCode = Receive-Job $JobA
+    if ($proc_id -and $ExitCode -eq $null) { (Get-Process -Id $proc_id).Kill() }
+    Remove-Job $JobA -Force
+}
+
 $JobD = Start-Job `
         {
           $ErrorActionPreference='Stop'
@@ -93,6 +99,7 @@ $JobT = Start-Job { param ([int]$sec) Start-Sleep $sec } -ArgumentList $sec
 $Job = Get-Job | Wait-Job -Any # Could return an array?
 
 if ($Job -eq $JobD) {
+    Dispose-of-JobA
     (Get-Job) -ne $JobD | Remove-Job -Force
     $err = $JobD.ChildJobs[0].JobStateInfo.Reason.Message
     Remove-Job $JobD
@@ -135,6 +142,7 @@ if ($Job -eq $JobD) {
         throw "Timed out PID=$proc_id ExitCode=$ExitCode"
     }
 } else {
+    Dispose-of-JobA
     Get-Job | Remove-Job -Force
     throw
 }
