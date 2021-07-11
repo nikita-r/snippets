@@ -24,8 +24,6 @@ $argv | Write-Host
 $ErrorActionPreference='Stop'
 Set-StrictMode -Version:Latest
 
-$JobT = Start-Job { param ([int]$sec) Start-Sleep $sec } -ArgumentList $sec
-
 $JobA = Start-Job -ArgumentList $(if ([io.path]::IsPathRooted($cmd)) {"$cmd"}
                                 else {"$PsScriptRoot\$cmd"}), $argv `
         { param ([string]$cmd, [string[]]$argv)
@@ -41,9 +39,66 @@ $JobA = Start-Job -ArgumentList $(if ([io.path]::IsPathRooted($cmd)) {"$cmd"}
             $proc.ExitCode
         }
 
+$JobD = Start-Job `
+        {
+          $ErrorActionPreference='Stop'
+
+          # WinUser.h
+          Add-Type -Name User -Namespace Win32 -MemberDefinition @'
+[DllImport("User32")]
+public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+
+[DllImport("User32")]
+[return: MarshalAs(UnmanagedType.Bool)] // not strictly necessary
+public static extern bool PostMessage(IntPtr hWnd, uint Msg, uint wParam, IntPtr lParam);
+
+[DllImport("User32")]
+public static extern int GetWindowThreadProcessId(IntPtr hWnd, out IntPtr lpdwProcessId);
+
+public const uint WM_SYSCOMMAND = 0x0112;
+public const uint SC_CLOSE = 0xF060;
+
+public const uint WM_KEYDOWN = 0x0100;
+public const uint VK_RETURN = 0x0D;
+
+public const uint WM_CLOSE = 0x0010;
+'@
+          while (1) {
+
+            Start-Sleep -mil 333
+            [IntPtr]$hWnd = [Win32.User]::FindWindow('#32770', 'Dialog One')
+            if ($hWnd -eq [IntPtr]::Zero) { continue } # (!$hWnd) is always false for [IntPtr]
+
+            # FIXME: verify PID
+            #[IntPtr]$_pid = 0
+            #[void][Win32.User]::GetWindowThreadProcessId($hWnd, ([ref]$_pid));
+
+            # Dismiss Dialog One: try and press 'x' or 'okay'
+            [void][Win32.User]::PostMessage($hWnd
+                , [Win32.User]::WM_SYSCOMMAND, [Win32.User]::SC_CLOSE, [IntPtr]::Zero)
+            [void][Win32.User]::PostMessage($hWnd
+                , [Win32.User]::WM_KEYDOWN, [Win32.User]::VK_RETURN, [IntPtr]::Zero)
+
+            Start-Sleep -mil 333
+            $hWnd = [Win32.User]::FindWindow('#32770', 'Dialog Two')
+            if ($hWnd -eq [IntPtr]::Zero) { continue }
+
+            # Dismiss Dialog Two: able to post WM_CLOSE directly
+            [void][Win32.User]::PostMessage($hWnd, [Win32.User]::WM_CLOSE, 0, 0)
+          }
+        }
+
+$JobT = Start-Job { param ([int]$sec) Start-Sleep $sec } -ArgumentList $sec
+
 $Job = Get-Job | Wait-Job -Any # Could return an array?
 
-if ($Job -eq $JobA) {
+if ($Job -eq $JobD) {
+    (Get-Job) -ne $JobD | Remove-Job -Force
+    $err = $JobD.ChildJobs[0].JobStateInfo.Reason.Message
+    Remove-Job $JobD
+    throw $err
+} elseif ($Job -eq $JobA) {
+    Remove-Job $JobD -Force
     Remove-Job $JobT -Force
     $proc_id, $ExitCode = Receive-Job $JobA
     if ($JobA.State -eq 'Completed') {
@@ -60,6 +115,7 @@ if ($Job -eq $JobA) {
         throw '~ unexpected error'
     }
 } elseif ($Job -eq $JobT) {
+    Remove-Job $JobD -Force
     Remove-Job $JobT
     Write-Host 'Time is out...'
     $proc_id, $ExitCode = Receive-Job $JobA
@@ -79,6 +135,7 @@ if ($Job -eq $JobA) {
         throw "Timed out PID=$proc_id ExitCode=$ExitCode"
     }
 } else {
+    Get-Job | Remove-Job -Force
     throw
 }
 
