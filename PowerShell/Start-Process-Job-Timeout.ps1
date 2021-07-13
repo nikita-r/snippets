@@ -88,7 +88,7 @@ public const uint WM_CLOSE = 0x0010;
 
             Start-Sleep -mil 333
             $hWnd = [Win32.User]::FindWindow('#32770', 'Dialog Two')
-            if ($hWnd -eq [IntPtr]::Zero) { continue }
+            if ($hWnd -eq 0) { continue }
 
             # Dismiss Dialog Two: able to post WM_CLOSE directly
             [void][Win32.User]::PostMessage($hWnd, [Win32.User]::WM_CLOSE, 0, 0)
@@ -108,7 +108,7 @@ if ($Job -eq $JobD) {
 } elseif ($Job -eq $JobA) {
     Remove-Job $JobD -Force
     Remove-Job $JobT -Force
-    $proc_id, $ExitCode = Receive-Job $JobA
+    $proc_id, $ExitCode = Receive-Job $JobA -ea:Ignore
     if ($JobA.State -eq 'Completed') {
         Write-Host ("PID=$proc_id" + ' ' + $JobA.State + '!')
     } else {
