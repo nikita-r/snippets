@@ -1,3 +1,5 @@
+#Requires -Version 7.1
+
 param ( [int]$ms = 333 )
 
 [console]::TreatControlCAsInput = $true

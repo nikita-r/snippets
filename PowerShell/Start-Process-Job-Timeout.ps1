@@ -41,7 +41,7 @@ $JobA = Start-Job -ArgumentList $(if ([io.path]::IsPathRooted($cmd)) {"$cmd"}
 
 function Dispose-of-JobA {
     $proc_id, $ExitCode = Receive-Job $JobA
-    if ($proc_id -and $ExitCode -eq $null) { (Get-Process -Id $proc_id).Kill() }
+    if ($proc_id -and $null -eq $ExitCode) { (Get-Process -Id $proc_id).Kill() }
     Remove-Job $JobA -Force
 }
 
@@ -59,7 +59,7 @@ public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
 public static extern bool PostMessage(IntPtr hWnd, uint Msg, uint wParam, IntPtr lParam);
 
 [DllImport("User32")]
-public static extern int GetWindowThreadProcessId(IntPtr hWnd, out IntPtr lpdwProcessId);
+public static extern IntPtr GetWindowThreadProcessId(IntPtr hWnd, out int lpdwProcessId);
 
 public const uint WM_SYSCOMMAND = 0x0112;
 public const uint SC_CLOSE = 0xF060;
@@ -73,11 +73,12 @@ public const uint WM_CLOSE = 0x0010;
 
             Start-Sleep -mil 333
             [IntPtr]$hWnd = [Win32.User]::FindWindow('#32770', 'Dialog One')
-            if ($hWnd -eq [IntPtr]::Zero) { continue } # (!$hWnd) is always false for [IntPtr]
+            if ($hWnd -eq 0) { continue } # (!$hWnd) is always false for [IntPtr]
 
             # FIXME: verify PID
-            #[IntPtr]$_pid = 0
+            #$_pid=0
             #[void][Win32.User]::GetWindowThreadProcessId($hWnd, ([ref]$_pid));
+            #if ($_pid -lt 1) { throw }
 
             # Dismiss Dialog One: try and press 'x' or 'okay'
             [void][Win32.User]::PostMessage($hWnd

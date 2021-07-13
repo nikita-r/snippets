@@ -1,10 +1,16 @@
 #·.gitignore
 
+*~
+
 # dev tooling artifacts
 .vscode/
 *.orig
 
-# Python
+# build artifacts
+x64
+x86
+
+# Python c-files
 __pycache__/
 *.pyc
 

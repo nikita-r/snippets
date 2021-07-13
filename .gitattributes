@@ -20,6 +20,12 @@
 *.ico   binary
 *.png   binary
 
+# assets
+*.ot[fc] binary
+*.tt[fc] binary
+*.woff  binary
+*.woff2 binary
+
 # archive file
 *.7z    binary
 *.gz    binary
