@@ -88,7 +88,7 @@ public const uint WM_CLOSE = 0x0010;
 
             Start-Sleep -mil 333
             $hWnd = [Win32.User]::FindWindow('#32770', 'Dialog Two')
-            if ($hWnd -eq 0) { continue }
+            if ($hWnd -eq [IntPtr]::Zero) { continue }
 
             # Dismiss Dialog Two: able to post WM_CLOSE directly
             [void][Win32.User]::PostMessage($hWnd, [Win32.User]::WM_CLOSE, 0, 0)

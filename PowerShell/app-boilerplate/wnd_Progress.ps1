@@ -129,7 +129,7 @@ $MainForm.FindName('btn_A').Add_Click({
         if ($false) {
             return # like continue in ForEach-Object
         } else {
-            <# ToDo: actual work instead of #> sleep -mil 100
+            <# ToDo: actual work instead of #> Start-Sleep -ms 100
         }
 
         $vow = switch ($items[$_-1]) { default { $false }
@@ -185,10 +185,10 @@ $xaml.Window.Grid.Button.Name |% { $MainForm.FindName($_).add_Click({
 }) }
 
 
-<# menu items #>
+<# menu items events #>
 
 $MainForm.FindName('Grid_Menu_Exit_1').add_Click({
-    $App.myExitCode = 1
+    $App.myExitCode=1
     $MainForm.Close()
 })
 
@@ -197,6 +197,7 @@ $MainForm.FindName('DataGrid_Menu_Colour').Items.add_Click({
 })
 
 
+<# Epilogue #>
 
 $App.ShutdownMode = 'OnMainWindowClose'
 $ExitCode = $App.Run($MainForm)

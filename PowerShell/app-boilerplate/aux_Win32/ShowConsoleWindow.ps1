@@ -1,13 +1,18 @@
 param ( [switch]$Hide )
 
-$src = @'
-[DllImport("kernel32.dll")]
+Add-Type -TypeDefinition @'
+using System;
+using System.Runtime.InteropServices;
+
+public static class Win32 {
+
+[DllImport("Kernel32")]
 public static extern IntPtr GetConsoleWindow();
-[DllImport("user32.dll")]
+
+[DllImport("User32")]
 public static extern bool ShowWindow(IntPtr hWnd, Int32 nCmdShow);
+}
 '@
 
-Add-Type -Name Bar -Namespace Foo -MemberDefinition $src
-
-$hWnd = [Foo.Bar]::GetConsoleWindow()
-[void][Foo.Bar]::ShowWindow($hWnd, !$Hide)
+$hWnd = [Win32]::GetConsoleWindow()
+[void][Win32]::ShowWindow($hWnd, !$Hide)
