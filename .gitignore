@@ -1,10 +1,14 @@
 #·.gitignore
 
 *~
+*~.*
 
 # dev tooling artifacts
 .vscode/
 *.orig
+
+# logs
+*.log
 
 # build artifacts
 x64

@@ -52,6 +52,9 @@ $MainForm = [windows.markup.XamlReader]::Load([xml.XmlNodeReader] $xaml)
 
 $MainForm.Title = $AppName
 
+<# ToDo: specify which buttons #>
+$xName_AllBtn = $xaml.Window.Grid.Button.Name
+
 $ProgressBar, $DataGrid = 'ProgressBar', 'DataGrid' |% { $MainForm.FindName($_) }
 
 $DataGrid.add_AutoGeneratingColumn({
@@ -93,11 +96,11 @@ $DataGrid.add_AutoGeneratingColumn({
 <# Application logic begins #>
 
 function Buttons_Enable ($b = $true) {
-    $xaml.Window.Grid.Button.Name |% { $MainForm.FindName($_).IsEnabled = $b }
+    $xName_AllBtn |% { $MainForm.FindName($_).IsEnabled = $b }
     PumpMessages
 }
 
-$xaml.Window.Grid.Button.Name |% { $MainForm.FindName($_).add_Click({
+$xName_AllBtn |% { $MainForm.FindName($_).add_Click({
     $MainForm.Cursor = [Windows.Input.Cursors]::Wait
     Buttons_Enable $false
 }) }
@@ -152,6 +155,9 @@ $MainForm.FindName('btn_A').Add_Click({
 
 $MainForm.FindName('btn_B').Add_Click({
   try {
+    $r = [Windows.MessageBox]::Show('Really?', 'Are you sure?', 'YesNoCancel', 32)
+    if ($r -cne 'Yes') { return }
+    [void][Windows.MessageBox]::Show('Not Implemented', 'Expected Error', 'ok', 48)
     $DataGrid.SelectedItems |% { $c = $DataGrid.ItemContainerGenerator.ContainerFromItem($_); $c.Background = '#800000'; $c.Foreground = '#DCDCDC' }
     throw ('In the red now: count=' + $DataGrid.SelectedItems.Count)
   } catch {
@@ -179,7 +185,7 @@ $MainForm.FindName('btn_C').Add_Click({
   }
 })
 
-$xaml.Window.Grid.Button.Name |% { $MainForm.FindName($_).add_Click({
+$xName_AllBtn |% { $MainForm.FindName($_).add_Click({
     $MainForm.Cursor = [Windows.Input.Cursors]::Arrow
     Buttons_Enable
 }) }
@@ -197,7 +203,7 @@ $MainForm.FindName('DataGrid_Menu_Colour').Items.add_Click({
 })
 
 
-<# Epilogue #>
+<# Main.Run #>
 
 $App.ShutdownMode = 'OnMainWindowClose'
 $ExitCode = $App.Run($MainForm)
