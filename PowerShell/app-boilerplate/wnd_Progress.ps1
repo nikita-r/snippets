@@ -42,6 +42,17 @@ $App.add_Exit({ param ( $sender, [Windows.ExitEventArgs]$evtA )
     $evtA.ApplicationExitCode = $App.myExitCode
 })
 
+<# By default, a TextBox restores previous cursor position/selection upon focus
+ # ; change this behaviour Application-wide as follows:
+$tTextBox = [Windows.Controls.TextBox]
+[Windows.EventManager]::RegisterClassHandler($tTextBox, $tTextBox::GotFocusEvent
+                        , [Windows.RoutedEventHandler] {
+                            param ( $sender, [Windows.RoutedEventArgs]$evtArgs )
+                            $sender.SelectAll()
+                          })
+<#~#>
+
+
 <# init elements of form #>
 
 [xml]$xaml = [io.file]::ReadLines("$AppName.xaml") `
