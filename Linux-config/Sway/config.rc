@@ -8,6 +8,11 @@ border-bottom-size=8
 
 workspace_layout tabbed
 
+input type:keyboard {
+    xkb_layout us,ru
+    xkb_options grp:win_space_toggle
+}
+
 #$ swaymsg -t get_outputs
 output ??? scale 2
 
