@@ -42,13 +42,14 @@ $App.add_Exit({ param ( $sender, [Windows.ExitEventArgs]$evtA )
     $evtA.ApplicationExitCode = $App.myExitCode
 })
 
-<# By default, a TextBox restores previous cursor position/selection upon focus
- # ; change this behaviour Application-wide as follows:
+<# By default, a TextBox restores previous cursor position/selection when Tab is
+ # used to focus the control; change this behaviour Application-wide as follows:
 $tTextBox = [Windows.Controls.TextBox]
 [Windows.EventManager]::RegisterClassHandler($tTextBox, $tTextBox::GotFocusEvent
                         , [Windows.RoutedEventHandler] {
                             param ( $sender, [Windows.RoutedEventArgs]$evtArgs )
-                            $sender.SelectAll()
+if ([Windows.Input.Keyboard]::PrimaryDevice.IsKeyDown([Windows.Input.Key]::Tab))
+                            { $sender.SelectAll() }
                           })
 <#~#>
 
@@ -141,7 +142,7 @@ $MainForm.FindName('btn_A').Add_Click({
         'Is_a_Vowel', '?' |% { $dt.Columns[$_].DataType = 'bool' }
     } {
         if ($false) {
-            return # like continue in ForEach-Object
+            return # %-continue
         } else {
             <# ToDo: actual work instead of #> Start-Sleep -ms 100
         }
