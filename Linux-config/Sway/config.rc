@@ -99,6 +99,10 @@ bar {
     status_padding 4
     font pango: Carlito 16
 
+    # disable mouse-scroll (default op is to cycle thru workspaces)
+    bindsym ButtOn4 nop
+    bindsym ButtOn5 nop
+
     colors {
         statusline #f5f5f5
         background #323232
