@@ -65,25 +65,28 @@
         <StackPanel Orientation="Vertical" Grid.Row="1">
             <StackPanel Orientation="Horizontal" Margin="8">
                 <Label Content="argNum" Target="{Binding ElementName=txt_argNum}" />
-                <TextBox x:Name="txt_argNum" VerticalContentAlignment="Center" Padding="3,0" MinWidth="100"
-                        FontFamily="Consolas" FontSize="14" />
+                <TextBox x:Name="txt_argNum" FontFamily="Consolas" FontSize="14"
+                        VerticalContentAlignment="Center" Padding="3,0" MinWidth="100" />
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="8">
                 <Label Content="argA" Target="{Binding ElementName=txt_argA}" />
-                <TextBox x:Name="txt_argA" VerticalContentAlignment="Center" Padding="3,0" MinWidth="250"
-                        FontFamily="Consolas" FontSize="14" />
+                <TextBox x:Name="txt_argA"
+                        VerticalContentAlignment="Center" Padding="3,0" MinWidth="250" />
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="8">
                 <Label Content="utcDateTime" Target="{Binding ElementName=txt_utcDateTime}" />
-                <TextBox x:Name="txt_utcDateTime" VerticalContentAlignment="Center" Padding="3,0" MinWidth="100" />
+                <TextBox x:Name="txt_utcDateTime"
+                        VerticalContentAlignment="Center" Padding="3,0" MinWidth="100" />
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="8">
                 <Label Content="user" Target="{Binding ElementName=txt_user}" />
-                <TextBox x:Name="txt_user" VerticalContentAlignment="Center" Padding="3,0" MinWidth="100" />
+                <TextBox x:Name="txt_user"
+                        VerticalContentAlignment="Center" Padding="3,0" MinWidth="100" />
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="8">
                 <Label Content="host" Target="{Binding ElementName=txt_host}" />
-                <TextBox x:Name="txt_host" VerticalContentAlignment="Center" Padding="3,0" MinWidth="100" />
+                <TextBox x:Name="txt_host"
+                        VerticalContentAlignment="Center" Padding="3,0" MinWidth="100" />
             </StackPanel>
         </StackPanel>
         <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Grid.Row="2"
