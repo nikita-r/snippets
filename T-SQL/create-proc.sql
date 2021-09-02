@@ -15,10 +15,14 @@ BEGIN
       @var nchar(3) = '···',
       @cnt int = 0;
 
-    IF NOT @flag = 'True'
+    IF @flag = 'True'
+    BEGIN
+      NOOP:;
+    END -- ELSE IF
+    ELSE -- @flag='False' -- @flag is NULL
     BEGIN
       ;THROW 5####, 'Invalid @flag', 1;
-    END -- ELSE IF
+    END
 
     SELECT @var = 'abc', @cnt = 3;
 

@@ -48,7 +48,7 @@ $App.add_Exit({ param ( $sender, [Windows.ExitEventArgs]$evtA )
 $MainForm = [windows.markup.XamlReader]::Load([xml.XmlNodeReader] $xaml)
 #$MainForm.Title = $AppName
 
-$btnAll = 'btn_Request', 'btn_EchoFold'
+$btnAll = 'btn_ExecProc', 'btn_EchoFold'
 
 $txtAll = @(
         'txt_argNum'
@@ -95,7 +95,7 @@ $btnAll |% { $MainForm.FindName($_).add_Click({
     Buttons_Enable $false
 }) }
 
-$MainForm.FindName('btn_Request').Add_Click({
+$MainForm.FindName('btn_ExecProc').Add_Click({
   try {
     foreach ($f in 'argA', 'utcDateTime', 'host', 'user') {
         if ([string]::IsNullOrWhiteSpace($MainForm.FindName("txt_$f").Text)) {

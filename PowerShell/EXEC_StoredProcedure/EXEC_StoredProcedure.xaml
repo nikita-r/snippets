@@ -94,7 +94,7 @@
             <Button HorizontalAlignment="Left" MinWidth="100" Margin="8 0"
                     Name='btn_EchoFold' Content="Echo _Fold" />
             <Button HorizontalAlignment="Right" MinWidth="100" Margin="8 0"
-                    Name='btn_Request' Content="_Request" />
+                    Name='btn_ExecProc' Content="_Exec Proc" />
         </StackPanel>
     </Grid>
 </Window>
