@@ -1,0 +1,97 @@
+﻿<Window Title="EXEC_StoredProcedure"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        Width="360" Height="600" MinWidth="360" MinHeight="316"
+        FontFamily="Calibri" FontSize="16"
+        ResizeMode="CanResizeWithGrip" WindowStartupLocation="CenterScreen"
+        >
+    <Window.Resources>
+        <Style x:Key="custom_FocusVisualStyle">
+            <Setter Property="Control.Template"><Setter.Value><ControlTemplate>
+                <Rectangle Margin="-2" StrokeThickness="2">
+                    <Rectangle.Stroke>
+                        <SolidColorBrush x:Name="RectangleStroke" />
+                    </Rectangle.Stroke>
+                    <Rectangle.Triggers>
+                        <EventTrigger RoutedEvent="Rectangle.Loaded">
+                            <BeginStoryboard><Storyboard>
+                                <ColorAnimation From="CornflowerBlue" To="Azure"
+                                        Duration="0:0:0.5" RepeatBehavior="Forever"
+                                        Storyboard.TargetName="RectangleStroke"
+                                        Storyboard.TargetProperty="Color" />
+                            </Storyboard></BeginStoryboard>
+                        </EventTrigger>
+                    </Rectangle.Triggers>
+                </Rectangle>
+            </ControlTemplate></Setter.Value></Setter>
+        </Style>
+
+        <Style TargetType="{x:Type Button}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource custom_FocusVisualStyle}" />
+        </Style>
+
+        <LinearGradientBrush x:Key="grid_Brush" StartPoint="0,0" EndPoint="1,0">
+            <GradientStop Offset="0.25" Color="Black" />
+            <GradientStop Offset="1.00" Color="Transparent" />
+        </LinearGradientBrush>
+    </Window.Resources>
+
+    <Grid ShowGridLines="False">
+        <Grid.ContextMenu>
+            <ContextMenu>
+                <!--<MenuItem Header="Item" />-->
+                <MenuItem Header="Exit 1" x:Name="Grid_Menu_Exit_1" />
+            </ContextMenu>
+        </Grid.ContextMenu>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width='auto' />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="36" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="60" />
+        </Grid.RowDefinitions>
+
+        <Border Grid.Column="0" Grid.Row="0" BorderBrush="Black" BorderThickness="0,0,0,2"
+                OpacityMask="{StaticResource grid_Brush}" />
+        <Border Grid.Column="0" Grid.Row="1" BorderBrush="Black" BorderThickness="0,0,0,2"
+                OpacityMask="{StaticResource grid_Brush}" />
+
+        <TextBlock TextWrapping="Wrap" Text="EXEC Stored Procedure"
+                                Margin="8" Grid.Row="0" />
+        <StackPanel Orientation="Vertical" Grid.Row="1">
+            <StackPanel Orientation="Horizontal" Margin="8">
+                <Label Content="argNum" Target="{Binding ElementName=txt_argNum}" />
+                <TextBox x:Name="txt_argNum" VerticalContentAlignment="Center" Padding="3,0" MinWidth="100"
+                        FontFamily="Consolas" FontSize="14" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="8">
+                <Label Content="argA" Target="{Binding ElementName=txt_argA}" />
+                <TextBox x:Name="txt_argA" VerticalContentAlignment="Center" Padding="3,0" MinWidth="250"
+                        FontFamily="Consolas" FontSize="14" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="8">
+                <Label Content="utcDateTime" Target="{Binding ElementName=txt_utcDateTime}" />
+                <TextBox x:Name="txt_utcDateTime" VerticalContentAlignment="Center" Padding="3,0" MinWidth="100" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="8">
+                <Label Content="user" Target="{Binding ElementName=txt_user}" />
+                <TextBox x:Name="txt_user" VerticalContentAlignment="Center" Padding="3,0" MinWidth="100" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="8">
+                <Label Content="host" Target="{Binding ElementName=txt_host}" />
+                <TextBox x:Name="txt_host" VerticalContentAlignment="Center" Padding="3,0" MinWidth="100" />
+            </StackPanel>
+        </StackPanel>
+        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Grid.Row="2"
+                Margin="0 16 0 8">
+            <Button HorizontalAlignment="Left" MinWidth="100" Margin="8 0"
+                    Name='btn_EchoFold' Content="Echo _Fold" />
+            <Button HorizontalAlignment="Right" MinWidth="100" Margin="8 0"
+                    Name='btn_Request' Content="_Request" />
+        </StackPanel>
+    </Grid>
+</Window>
