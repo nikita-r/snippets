@@ -3,10 +3,12 @@
 -- EXEC @rc = [dbo].[sp_...] 1, @rez = @result OUTPUT;
 
 CREATE PROCEDURE [dbo].[sp_...]
+	@int int,
 	@flag bit = 'False',
 	@rez int OUTPUT
 AS
 BEGIN
+  DECLARE @msg nvarchar(max);
   SET XACT_ABORT, NOCOUNT ON;
   BEGIN TRY
     BEGIN TRAN;
@@ -21,7 +23,9 @@ BEGIN
     END -- ELSE IF
     ELSE -- @flag='False' -- @flag is NULL
     BEGIN
-      ;THROW 5####, 'Invalid @flag', 1;
+      SET @msg = '@int=' + Format(@int, 'N') + ' with invalid @flag';
+      SET @msg += ' rcvd at ' + Format(GetUtcDate(), 'yyyy-MM-ddThh:mm:ss.fffZ')
+      ;THROW 5####, @msg, 1;
     END
 
     SELECT @var = 'abc', @cnt = 3;
