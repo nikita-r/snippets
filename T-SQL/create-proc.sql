@@ -23,8 +23,8 @@ BEGIN
     END -- ELSE IF
     ELSE -- @flag='False' -- @flag is NULL
     BEGIN
-      SET @msg = '@int=' + Format(@int, 'N') + ' with invalid @flag';
-      SET @msg += ' rcvd at ' + Format(GetUtcDate(), 'yyyy-MM-ddThh:mm:ss.fffZ')
+      SET @msg = '@int=' + Format(@int, 'N0') + ' with invalid @flag';
+      SET @msg += ' rcvd at ' + Format(GetUtcDate(), 'yyyy-MM-ddTHH:mm:ss.fffZ')
       ;THROW 5####, @msg, 1;
     END
 
