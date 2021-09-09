@@ -38,3 +38,86 @@ entire-cell link
 </td>
 
 
+sortable table
+<style>
+table { width: 100%; }
+
+th.mat-header-cell {
+    padding-right: 1.25em; // give enough space for "arrowPosition='before'"
+    border-right: 1px solid gainsboro;
+}
+
+th.mat-sort-header {
+    cursor: pointer;
+}
+
+::ng-deep div.mat-sort-header-container {
+    place-content: center;
+}
+
+td.mat-cell {
+    padding-right: 1.00em;
+}
+
+td.number {
+    text-align: right;
+}
+
+td.mat-footer-cell {
+    padding-right: 1.00em;
+    text-align: right;
+    font-weight: bold;
+    text-decoration: overline;
+}
+</style>
+
+<table mat-table
+ [dataSource]="..."
+ matSort
+ matSortActive="id"
+ matSortDirection="desc"
+ matSortDisableClear
+ (matSortChange)="resetPaging()"
+>
+    <ng-container *ngFor="let ci of columnsInfo" matColumnDef="{{ ci.name }}">
+        <th
+         *matHeaderCellDef
+         mat-header-cell
+         mat-sort-header
+         arrowPosition='before'
+        >{{ ci.name }}</th>
+        <td
+         *matCellDef="let row"
+         mat-cell
+         [ngClass]="ci.name + (col_tot[ci.name] !== null ? ' number' : '')"
+         [ngStyle]="ci.type==='boolean' ? { 'text-align': 'center' } : {}"
+        >
+            <ng-container *ngIf="ci.type==='boolean'">
+                <mat-checkbox [checked]="row[ci.name]"
+                              disabled style="cursor: unset"
+                              [class.mat-checkbox-disabled]="false">
+                </mat-checkbox>
+            </ng-container>
+            <ng-container *ngIf="ci.type!=='boolean'">
+                {{ row[ci.name] }}
+            </ng-container>
+        </td>
+        <td *matFooterCellDef mat-footer-cell>
+            {{ col_tot[ci.name] | number }}
+        </td>
+    </ng-container>
+
+    <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+    <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
+    <tr *matFooterRowDef="displayedColumns" mat-footer-row></tr>
+
+    <tr *matNoDataRow class="mat-row">
+        <td class="mat-cell" colspan="3">
+            <!-- to warn that no data -->
+        </td>
+    </tr>
+</table>
+<!--...-->
+<mat-paginator ...></mat-paginator>
+
+
