@@ -23,10 +23,26 @@ Add-Type @'
         }
     }
 '@
-[Net.ServicePointManager]::CertificatePolicy = New-Object TrustAllCertsPolicy
+[Net.ServicePointManager]::CertificatePolicy = [TrustAllCertsPolicy]::new()
 
 # any protocol and not just [Net.SecurityProtocolType]::SystemDefault
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType] 'Ssl3, Tls, Tls11, Tls12, Tls13'
+
+# same as the above, but sans C♯
+class TrustAllCertsPolicy : Net.ICertificatePolicy {
+    [bool]CheckValidationResult([Net.ServicePoint]$a
+    , [Security.Cryptography.X509Certificates.X509Certificate]$b
+    , [Net.WebRequest]$c, [int]$d) {
+        return $true
+    }
+}
+[Net.ServicePointManager]::CertificatePolicy = New-Object TrustAllCertsPolicy
+
+
+# input secrets
+$strSecure = Read-Host 'Enter strSecure' -AsSecureString
+using namespace System.Runtime.InteropServices
+$str = [Marshal]::PtrToStringAuto([Marshal]::SecureStringToBSTR($strSecure))
 
 
 <# repo mem #>
