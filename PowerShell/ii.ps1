@@ -1,5 +1,7 @@
 ii $home
 
+notepad (Get-PSReadLineOption).HistorySavePath
+
 Get-NetTCPConnection |? OwningProcess -in ( Get-Process | Out-GridView -PassThru ).id `
 | select @{N='PID';E={'{0:d6}' -f $_.OwningProcess}}`
 , LocalAddress, LocalPort, State, RemoteAddress, RemotePort | sort PID, `
@@ -12,4 +14,11 @@ Get-PSProvider
 
 New-TemporaryDirectory | tee -Variable path
 Find-Module admin | Save-Module -Path $path
+
+Get-Module -list
+Get-ExecutionPolicy -list
+
+[AppDomain]::CurrentDomain.GetAssemblies()
+
+Update-Help -Force -Ea 0 -Ev errVar
 
