@@ -89,7 +89,9 @@ bindsym Shift+Delete nop
 bindsym Ctrl+Insert nop
 bindsym Shift+Insert nop
 
-client.focused #RRGGBB #335577 #ffffff #335577 #335577
+# #203040 == HSV(210/360, 2/4, 1/4)
+client.focused #F0B89C #102840 #ffffff #102840 #F0B89C
+client.focused_inactive #303840 #303840 #ffffff
 
 # man 5 sway-bar
 bar {
