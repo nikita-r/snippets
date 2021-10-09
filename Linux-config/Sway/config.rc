@@ -40,7 +40,7 @@ input ::Logitech_MX_Vertical {
 
 seat seat0 xcursor_theme Breeze-Obsidian 40
 
-output * bg #RRGGBB solid_color
+output * bg #6090c0 solid_color
 
 set $term urxvt
 set $menu dmenu_path | dmenu -fn mono -l 42 -i | xargs swaymsg exec --
