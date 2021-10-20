@@ -17,7 +17,7 @@ Add-Type @'
     using System.Security.Cryptography.X509Certificates;
     public class TrustAllCertsPolicy : ICertificatePolicy {
         public bool CheckValidationResult(
-                ServicePoint svcPoint, X509Certificate certificate,
+                ServicePoint srvPoint, X509Certificate certificate,
                 WebRequest request, int certificateProblem) {
             return true;
         }
@@ -25,8 +25,8 @@ Add-Type @'
 '@
 [Net.ServicePointManager]::CertificatePolicy = [TrustAllCertsPolicy]::new()
 
-# any protocol and not just [Net.SecurityProtocolType]::SystemDefault
-[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType] 'Ssl3, Tls, Tls11, Tls12, Tls13'
+# allow a less-secure protocol ([Net.SecurityProtocolType]::SystemDefault -eq 0)
+[Net.ServicePointManager]::SecurityProtocol += [Net.SecurityProtocolType] 'Ssl3'
 
 # same as the above, but sans C♯
 class TrustAllCertsPolicy : Net.ICertificatePolicy {
@@ -37,6 +37,9 @@ class TrustAllCertsPolicy : Net.ICertificatePolicy {
     }
 }
 [Net.ServicePointManager]::CertificatePolicy = New-Object TrustAllCertsPolicy
+
+# same as the above, C♯-only
+'System.Net.ServicePointManager.ServerCertificateValidationCallback += (a, b, c, d) => true;'
 
 
 # input secrets

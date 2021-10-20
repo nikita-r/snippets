@@ -15,7 +15,8 @@ Get-PSProvider
 New-TemporaryDirectory | tee -Variable path
 Find-Module admin | Save-Module -Path $path
 
-Get-Module -list
+Get-Module -ListAvailable
+Get-Module -list az.*
 Get-ExecutionPolicy -list
 
 [AppDomain]::CurrentDomain.GetAssemblies()
