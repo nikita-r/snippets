@@ -60,10 +60,27 @@ if ([string]::IsNullOrWhiteSpace($PossiblyNil)) { $ValueIfNil } else { $Possibly
 
 
 <# looking for the perfect exceptional one-liner #>
-try { throw } catch { # $_.ToString() is $_.Exception.ToString() sans exception type?
-'{0}:{1:d4}: {2}' -f (?? $_.InvocationInfo.ScriptName '<interactive>'), $_.InvocationInfo.ScriptLineNumber, $_.Exception
+try { throw } catch {
+'{0}:{1:d4}: {2}' -f (?? $_.InvocationInfo.ScriptName '<interactive>'), $_.InvocationInfo.ScriptLineNumber,
+$_.Exception.ToString() # type & message + StackTrace
 }
+
+
+<# dump to stdout all antecedent exceptions in chronological order #>
+$Error.Reverse()
+$Error |% {
+    if ($_ -is [Management.Automation.ErrorRecord]) {
+        Write-Host; Write-Host ('{0}:{1:d4}: [{2}] {3}' -f
+$_.InvocationInfo.ScriptName, $_.InvocationInfo.ScriptLineNumber,
+$_.FullyQualifiedErrorId,
 $(if ($_.Exception.InnerException) { $_.Exception.InnerException.Message } else { $_.Exception.Message })
+        )
+    } else {
+        Write-Host ('~: [{0}.{1}]' -f $_.GetType().BaseType, $_.GetType().Name)
+    }
+}
+$Error.Clear()
+Write-Host; throw 'Script aborted; see stdout for errors.'
 
 
 <# spoof profile-loading #>
