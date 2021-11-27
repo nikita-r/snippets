@@ -70,13 +70,17 @@ $_.Exception.ToString() # type & message + StackTrace
 $Error.Reverse()
 $Error |% {
     if ($_ -is [Management.Automation.ErrorRecord]) {
-        Write-Host; Write-Host ('{0}:{1:d4}: [{2}] {3}' -f
-$_.InvocationInfo.ScriptName, $_.InvocationInfo.ScriptLineNumber,
-$_.FullyQualifiedErrorId,
-$(if ($_.Exception.InnerException) { $_.Exception.InnerException.Message } else { $_.Exception.Message })
+        Write-Host; Write-Host ('{0}:{1:d4}: {{{2}}} {3}' -f
+            $_.InvocationInfo.ScriptName, $_.InvocationInfo.ScriptLineNumber,
+            $_.FullyQualifiedErrorId,
+            $(if (@($_.psobject.Properties |% Name) -eq 'InnerException') {
+                $_.InnerException.Message
+            } else {
+                $_.Exception.Message
+            })
         )
     } else {
-        Write-Host ('~: [{0}.{1}]' -f $_.GetType().BaseType, $_.GetType().Name)
+        Write-Host ('~: [' + $_.GetType().ToString() + ']')
     }
 }
 $Error.Clear()
