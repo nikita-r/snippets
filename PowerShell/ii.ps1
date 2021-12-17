@@ -27,3 +27,6 @@ Update-Help -Force -Ea 0 -Ev errVar
 
 (Join-Path (Get-Location) $null) # != [Environment]::CurrentDirectory
 
+$cred = [pscredential]::new($username, (Read-Host password -AsSecureString))
+New-PSSession -Credential $cred | Enter-PSSession
+

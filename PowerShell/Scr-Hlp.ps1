@@ -61,7 +61,8 @@ if ([string]::IsNullOrWhiteSpace($PossiblyNil)) { $ValueIfNil } else { $Possibly
 
 <# looking for the perfect exceptional one-liner #>
 try { throw } catch {
-'{0}:{1:d4}: {2}' -f (?? $_.InvocationInfo.ScriptName '<interactive>'), $_.InvocationInfo.ScriptLineNumber,
+'{0}:{1:d4}: {2}' -f (?? $_.InvocationInfo.ScriptName '<interactive>'),
+$_.InvocationInfo.ScriptLineNumber,
 $_.Exception.ToString() # type & message + StackTrace
 }
 
@@ -72,13 +73,7 @@ $Error |% {
     if ($_ -is [Management.Automation.ErrorRecord]) {
         Write-Host; Write-Host ('{0}:{1:d4}: {{{2}}} {3}' -f
             $_.InvocationInfo.ScriptName, $_.InvocationInfo.ScriptLineNumber,
-            $_.FullyQualifiedErrorId,
-            $(if (@($_.psobject.Properties |% Name) -eq 'InnerException') {
-                $_.InnerException.Message
-            } else {
-                $_.Exception.Message
-            })
-        )
+            $_.FullyQualifiedErrorId, $_.Exception.Message)
     } else {
         Write-Host ('~: [' + $_.GetType().ToString() + ']')
     }
