@@ -6,15 +6,23 @@ border-bottom-size=8
 
 #~.config/sway
 
-workspace_layout tabbed
-
 input type:keyboard {
     xkb_layout us,ru
     xkb_options grp:win_space_toggle
 }
 
+workspace_layout tabbed
+tiling_drag disable
+
+# disable mouse-scroll over the title bar
+bindsym ButtOn4 nop
+bindsym ButtOn5 nop
+
 #$ swaymsg -t get_outputs
 output ??? scale 2
+output eDP-1 position 0,0
+output HDMI-A-1 position 1920,0
+output * bg #6090c0 solid_color
 
 input type:touchpad {
   tap enabled
@@ -39,24 +47,21 @@ input ::Logitech_MX_Vertical {
 }
 
 seat seat0 xcursor_theme Breeze-Obsidian 40
+#mouse_warping container
+focus_follows_mouse always
 
-output * bg #6090c0 solid_color
+
+bindsym --to-code $mod+Shift+c reload
+
+bindsym $mod+Shift+F9 kill
 
 set $term urxvt
 set $menu dmenu_path | dmenu -fn mono -l 42 -i | xargs swaymsg exec --
 set $swaylock swaylock -lL -F -e -c 323232 --font Inter --font-size 18 -k --indicator-radius 72 --indicator-thickness 24
 set $screencap grimshot save screen
 
-bindsym $mod+Shift+F9 kill
-
-#mouse_warping container
-focus_follows_mouse always
-
-tiling_drag disable
-
-# disable mouse-scroll over the title bar
-bindsym ButtOn4 nop
-bindsym ButtOn5 nop
+#$ wev | grep --colour=never -oP 'sym: \K[^\r]+$'
+bindsym $mod+grave exec $menu
 
 bindsym $mod+Shift+E exec swaynag -t warning -m 'Do you really wish to exit Sway?' -b 'Yes, quit!' 'swaymsg exit' -s 'X'
 
@@ -71,13 +76,17 @@ bindsym $mod+Shift+8 move container to Workspace H; Workspace H
 bindsym $mod+Shift+9 move container to Workspace I; Workspace I
 bindsym $mod+Shift+0 move container to Workspace 0; Workspace 0
 
-bindsym $mod+Shift+X exec $swaylock
+bindsym --to-code $mod+Shift+x exec $swaylock
 
-bindsym $mod+C focus child
-bindsym $mod+P focus parent
-bindsym $mod+A focus prev
-bindsym $mod+S focus next
-bindsym $mod+Shift+S exec $screencap ~/Pictures/screencapFull.$(date -u '+%Y-%m-%dT%TZ').png
+bindsym --to-code $mod+p focus parent
+bindsym --to-code $mod+c focus child
+bindsym --to-code $mod+a focus prev
+bindsym --to-code $mod+s focus next
+
+bindsym --to-code $mod+Shift+s nop
+bindsym --release --to-code $mod+Shift+s exec $screencap ~/Pictures/screencapFull.$(date -u '+%Y-%m-%dT%TZ').png
+
+bindsym --to-code $mod+f fullscreen
 
 bindsym $mod+Shift+Space floating toggle
 bindsym $mod+Space focus mode_toggle
