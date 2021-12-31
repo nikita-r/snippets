@@ -14,7 +14,6 @@ input type:keyboard {
 workspace_layout tabbed
 
 #$ swaymsg -t get_outputs
-output ??? scale 2
 output eDP-1 position 0,0
 output HDMI-A-1 position 1920,0
 output * bg #6090c0 solid_color
@@ -22,6 +21,7 @@ output * bg #6090c0 solid_color
 # #203040 == HSV(210/360, 2/4, 1/4)
 client.focused #F0B89C #102840 #ffffff #102840 #F0B89C
 client.focused_inactive #303840 #303840 #ffffff
+hide_edge_borders smart
 
 
 input type:touchpad {
@@ -68,7 +68,7 @@ set $menu dmenu_path | dmenu -m 0 -fn mono -l 42 -i | xargs swaymsg exec --
 set $swaylock swaylock -lL -F -e -c 323232 --font Inter --font-size 18 -k --indicator-radius 72 --indicator-thickness 24
 set $screencap grimshot save screen
 
-#$ wev | grep --colour=never -oP 'sym: \K[^\r]+$'
+#$ wev | sed s/[^[:print:]]/?/g | grep --colour=never -oP ' sym: \K.+'
 bindsym $mod+grave exec $menu
 
 bindsym $mod+Shift+E exec swaynag -t warning -m 'Do you really wish to exit Sway?' -b 'Yes, quit!' 'swaymsg exit' -s 'X'
@@ -86,8 +86,18 @@ bindsym $mod+Shift+0 move container to Workspace 0; Workspace 0
 
 bindsym --to-code $mod+Shift+x exec $swaylock
 
+bindsym --to-code $mod+Shift+s nop
+bindsym --release --to-code $mod+Shift+s exec $screencap ~/Pictures/screencapFull.$(date -u '+%Y-%m-%dT%TZ').png
+
+bindsym --to-code $mod+Shift+a nop
+bindsym --to-code $mod+d nop
+bindsym --to-code $mod+Shift+d nop
+
 bindsym --to-code $mod+q [con_mark="◯"] focus
 bindsym --to-code $mod+Shift+q mark --toggle ◯
+
+bindsym --to-code $mod+w [con_mark="ʍ"] focus
+bindsym --to-code $mod+Shift+w mark --toggle ʍ
 
 bindsym --to-code $mod+p focus parent
 bindsym --to-code $mod+c focus child
@@ -103,13 +113,12 @@ bindsym --to-code $mod+z focus mode_toggle
 bindsym --to-code $mod+e layout tabbed
 bindsym --to-code $mod+x layout toggle split
 
-bindsym --to-code $mod+Shift+s nop
-bindsym --release --to-code $mod+Shift+s exec $screencap ~/Pictures/screencapFull.$(date -u '+%Y-%m-%dT%TZ').png
 
 # disable Cut/Copy/Paste
 bindsym Shift+Delete nop
 bindsym Ctrl+Insert nop
 bindsym Shift+Insert nop
+
 
 # man 5 sway-bar
 bar {
