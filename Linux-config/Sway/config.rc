@@ -14,9 +14,9 @@ input type:keyboard {
 workspace_layout tabbed
 tiling_drag disable
 
-# disable mouse-scroll over the title bar
-bindsym ButtOn4 nop
-bindsym ButtOn5 nop
+# #203040 == HSV(210/360, 2/4, 1/4)
+client.focused #F0B89C #102840 #ffffff #102840 #F0B89C
+client.focused_inactive #303840 #303840 #ffffff
 
 #$ swaymsg -t get_outputs
 output ??? scale 2
@@ -50,13 +50,18 @@ seat seat0 xcursor_theme Breeze-Obsidian 40
 #mouse_warping container
 focus_follows_mouse always
 
+# disable mouse-scroll over the title bar
+bindsym ButtOn4 nop
+bindsym ButtOn5 nop
+
+set $mod Mod4
 
 bindsym --to-code $mod+Shift+c reload
 
 bindsym $mod+Shift+F9 kill
 
 set $term urxvt
-set $menu dmenu_path | dmenu -fn mono -l 42 -i | xargs swaymsg exec --
+set $menu dmenu_path | dmenu -m 0 -fn mono -l 42 -i | xargs swaymsg exec --
 set $swaylock swaylock -lL -F -e -c 323232 --font Inter --font-size 18 -k --indicator-radius 72 --indicator-thickness 24
 set $screencap grimshot save screen
 
@@ -83,24 +88,22 @@ bindsym --to-code $mod+c focus child
 bindsym --to-code $mod+a focus prev
 bindsym --to-code $mod+s focus next
 
-bindsym --to-code $mod+Shift+s nop
-bindsym --release --to-code $mod+Shift+s exec $screencap ~/Pictures/screencapFull.$(date -u '+%Y-%m-%dT%TZ').png
+bindsym $mod+Tab workspace back_and_forth
 
 bindsym --to-code $mod+f fullscreen
 
-bindsym $mod+Shift+Space floating toggle
-bindsym $mod+Space focus mode_toggle
+bindsym --to-code $mod+Shift+q floating toggle
+bindsym --to-code $mod+q focus mode_toggle
+bindsym --to-code $mod+w layout tabbed
+bindsym --to-code $mod+e layout toggle split
 
-bindsym $mod+Tab workspace back_and_forth
+bindsym --to-code $mod+Shift+s nop
+bindsym --release --to-code $mod+Shift+s exec $screencap ~/Pictures/screencapFull.$(date -u '+%Y-%m-%dT%TZ').png
 
 # disable Cut/Copy/Paste
 bindsym Shift+Delete nop
 bindsym Ctrl+Insert nop
 bindsym Shift+Insert nop
-
-# #203040 == HSV(210/360, 2/4, 1/4)
-client.focused #F0B89C #102840 #ffffff #102840 #F0B89C
-client.focused_inactive #303840 #303840 #ffffff
 
 # man 5 sway-bar
 bar {
