@@ -12,17 +12,17 @@ input type:keyboard {
 }
 
 workspace_layout tabbed
-tiling_drag disable
-
-# #203040 == HSV(210/360, 2/4, 1/4)
-client.focused #F0B89C #102840 #ffffff #102840 #F0B89C
-client.focused_inactive #303840 #303840 #ffffff
 
 #$ swaymsg -t get_outputs
 output ??? scale 2
 output eDP-1 position 0,0
 output HDMI-A-1 position 1920,0
 output * bg #6090c0 solid_color
+
+# #203040 == HSV(210/360, 2/4, 1/4)
+client.focused #F0B89C #102840 #ffffff #102840 #F0B89C
+client.focused_inactive #303840 #303840 #ffffff
+
 
 input type:touchpad {
   tap enabled
@@ -47,12 +47,15 @@ input ::Logitech_MX_Vertical {
 }
 
 seat seat0 xcursor_theme Breeze-Obsidian 40
+
 #mouse_warping container
 focus_follows_mouse always
+tiling_drag disable
 
 # disable mouse-scroll over the title bar
 bindsym ButtOn4 nop
 bindsym ButtOn5 nop
+
 
 set $mod Mod4
 
@@ -83,6 +86,9 @@ bindsym $mod+Shift+0 move container to Workspace 0; Workspace 0
 
 bindsym --to-code $mod+Shift+x exec $swaylock
 
+bindsym --to-code $mod+q [con_mark="◯"] focus
+bindsym --to-code $mod+Shift+q mark --toggle ◯
+
 bindsym --to-code $mod+p focus parent
 bindsym --to-code $mod+c focus child
 bindsym --to-code $mod+a focus prev
@@ -92,10 +98,10 @@ bindsym $mod+Tab workspace back_and_forth
 
 bindsym --to-code $mod+f fullscreen
 
-bindsym --to-code $mod+Shift+q floating toggle
-bindsym --to-code $mod+q focus mode_toggle
-bindsym --to-code $mod+w layout tabbed
-bindsym --to-code $mod+e layout toggle split
+bindsym --to-code $mod+Shift+z floating toggle
+bindsym --to-code $mod+z focus mode_toggle
+bindsym --to-code $mod+e layout tabbed
+bindsym --to-code $mod+x layout toggle split
 
 bindsym --to-code $mod+Shift+s nop
 bindsym --release --to-code $mod+Shift+s exec $screencap ~/Pictures/screencapFull.$(date -u '+%Y-%m-%dT%TZ').png
