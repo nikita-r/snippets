@@ -1,0 +1,14 @@
+
+• round ratio of the selected values
+Sum_FilteredByDate := CALCULATE( SUM('bi_rpt DataTable'[Value]), FILTER(ALL('bi_rpt DataTable'), 'bi_rpt DataTable'[Type] = "Target Type"), FILTER(ALLSELECTED('bi_rpt DataTable'[Date]), TRUE()) )
+Ratio_AllFiltersOn := FORMAT( ROUNDDOWN(ROUND(DIVIDE(SUM('bi_rpt DataTable'[Value]), [Sum_filteredByDate]), 8), 4), "0.00%" )
+
+• YoY delta
+Texty_Delta :=
+VAR
+prev_value = CALCULATE( SUM('bi_rpt DataTable'[Value]), FILTER(DATEADD('bi_rpt DataTable'[Date], -1, YEAR), TRUE()) )
+VAR
+delta = DIVIDE( SUM('bi_rpt DataTable'[Value]) - prev_value, prev_value )
+RETURN
+FORMAT( delta, "[Color3]+0%;[Color43]−0%;[Color55]""no change"";[magenta]@" )
+

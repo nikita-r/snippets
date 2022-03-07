@@ -23,7 +23,7 @@
             </Canvas>
         </ControlTemplate>
 
-        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="CornflowerBlue" />
+        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="DodgerBlue" />
         <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="#D8E8F8" />
 
         <Style x:Key="custom_FocusVisualStyle">
@@ -36,7 +36,7 @@
                     <Rectangle.Triggers>
                         <EventTrigger RoutedEvent="Rectangle.Loaded">
                             <BeginStoryboard><Storyboard>
-                                <ColorAnimation From="CornflowerBlue" To="Azure"
+                                <ColorAnimation From="DodgerBlue" To="Azure"
                                         Duration="0:0:0.5" RepeatBehavior="Forever"
                                         Storyboard.TargetName="RectangleStroke"
                                         Storyboard.TargetProperty="Color" />
