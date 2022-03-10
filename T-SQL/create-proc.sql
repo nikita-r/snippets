@@ -18,13 +18,11 @@ BEGIN
       @var nchar(3) = '···',
       @cnt int = 0;
 
-    IF @flag = 'True'
-    BEGIN
+    IF ( @flag = 'True'
+    ) BEGIN
       NOOP00:;
-    END -- ELSE IF
-    ELSE -- @flag='False' -- @flag is NULL
-    BEGIN
-      SET @msg = '@int=' + Format(@int, 'N0') + ' with invalid @flag';
+    END ELSE BEGIN -- @flag is either 'False' or NULL
+      SET @msg = '@int=' + Format(@int, 'N0') + ' with invalid @flag at 100%%';
       SET @msg += ' rcvd at ' + Format(GetUtcDate(), 'yyyy-MM-ddTHH:mm:ss.fffZ')
       ;THROW 5xxxx, @msg, 1;
     END;
