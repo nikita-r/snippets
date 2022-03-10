@@ -1,11 +1,12 @@
 /* create-proc.sql */
 
--- EXEC @rc = [dbo].[sp_...] 1, @rez = @result OUTPUT;
+-- EXEC @rc = [dbo].[sp_...] 1, @iReturn = @n OUTPUT;
 
-CREATE PROCEDURE [dbo].[sp_...]
+CREATE OR ALTER PROCEDURE [dbo].[sp_...]
 	@int int,
 	@flag bit = 'False',
-	@rez int OUTPUT
+	@patLiteral nvarchar(max) = '',
+	@iReturn int OUTPUT
 AS
 BEGIN
   DECLARE @msg nvarchar(max);
@@ -19,16 +20,20 @@ BEGIN
 
     IF @flag = 'True'
     BEGIN
-      NOOP:;
+      NOOP00:;
     END -- ELSE IF
     ELSE -- @flag='False' -- @flag is NULL
     BEGIN
       SET @msg = '@int=' + Format(@int, 'N0') + ' with invalid @flag';
       SET @msg += ' rcvd at ' + Format(GetUtcDate(), 'yyyy-MM-ddTHH:mm:ss.fffZ')
-      ;THROW 5####, @msg, 1;
-    END
+      ;THROW 5xxxx, @msg, 1;
+    END;
 
-    SELECT @var = 'abc', @cnt = 3;
+    SELECT TOP 1 @var = Value FROM DataTable
+     WHERE Name LIKE '%' + REPLACE(REPLACE(REPLACE(@patLiteral, '[', '[[]'), '_', '[_]'), '%', '[%]') + '%'
+     ORDER BY id desc;
+
+    SELECT @cnt = @@ROWCOUNT;
 
     DECLARE @Inserted TABLE (ID int NOT NULL);
 
@@ -36,7 +41,7 @@ BEGIN
     OUTPUT INSERTED.ID INTO @Inserted (ID)
     VALUES (), (), ...;
 
-    SET @rez = @@ROWCOUNT;
+    SET @iReturn = @@ROWCOUNT;
 
     SELECT @var;
 
