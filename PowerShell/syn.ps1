@@ -45,7 +45,8 @@ $hash.Count -eq ( compare ($hash | select -Expand Values) ($hash.GetEnumerator()
 compare @() @() -IncludeEqual -ExcludeDifferent -PassThru
 [linq.enumerable]::Intersect([object[]]@(), [object[]]@())
 
-[System.IO.File]::ReadLines('d:\Absolute\Path\to\theFile.txt') |% {}
+[io.file]::ReadAllLines('d:\Absolute\Path\to\theFile.txt') |% {}
+[io.file]::WriteAllLines('d:\Absolute\Path\to\theFile.txt', $content) # utf8 by default (even in PowerShell v5)
 
 $str = [io.StreamWriter] 'tmp.txt'
 $str.WriteLine
