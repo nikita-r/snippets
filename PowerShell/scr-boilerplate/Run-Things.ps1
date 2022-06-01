@@ -14,6 +14,17 @@ if ($SysDir -ne (pwd).Path) { throw }
 $ScrDir = $PSScriptRoot
 if ($SysDir -ne $ScrDir) { throw }
 
+$logsDir = ".\logs\${ScrName}-D*"
+$o=Get-ChildItem (Split-Path $logsDir) -Directory (Split-Path $logsDir -Leaf) `
+|? CreationTime -lt (Get-Date).AddDays(-33)
+
+$logsDir = $logsDir -replace '\*$', ((Get-Date -f s)-replace':','-'-replace'-')
+ni -Type Directory $logsDir | out-null
+
+Start-Transcript $logsDir\Transcript.txt
+$o | Remove-Item -Recurse -ea:Continue
+try { # finally Stop-Transcript
+
 try {
   $flock = [io.file]::Open("$ScrDir\$ScrName.lock", 'Create', 'Write')
 } catch {
@@ -21,12 +32,6 @@ try {
   Write-Error $msg
   exit 1 # is superfluous if -ea:Stop is in effect for `Write-Error`
 }
-
-$dlog = ".\logs\${ScrName}_D$((Get-Date -f s) -replace ':', '-' -replace '-')"
-ni -Type Directory "$dlog" | out-null
-
-Start-Transcript "$dlog\Transcript.txt"
-try {
 
 <# Logs ini #>
 
@@ -43,7 +48,7 @@ try {
 } finally {
 
 $dtLog.Select("", 'when, what deSC, why') `
-| ConvertTo-Csv -NoType | Set-Content "$dlog\Log.csv"
+| ConvertTo-Csv -NoType | Set-Content $logsDir\Log.csv
 
 }
 
