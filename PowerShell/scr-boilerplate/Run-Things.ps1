@@ -30,7 +30,7 @@ try {
 } catch {
   $msg = 'Cannot acquire lock file: ' + $_.Exception.InnerException.Message
   Write-Error $msg
-  exit 1 # is superfluous if -ea:Stop is in effect for `Write-Error`
+  exit 1 # not reachable once -ea:Stop is in effect for `Write-Error` above
 }
 
 <# Logs ini #>
