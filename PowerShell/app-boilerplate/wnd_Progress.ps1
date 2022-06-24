@@ -74,6 +74,9 @@ $DataGrid.add_AutoGeneratingColumn({
 
     $e.Column.IsReadOnly = $e.Column.Header -ne '?'
 
+    #$e.Column.Width = [Windows.Controls.DataGridLength]::new(1, [Windows.Controls.DataGridLengthUnitType]::Star) # proportional
+    $e.Column.MaxWidth = 356
+
     $e.Column.Header = $e.Column.Header -replace '_', '__' # emulate RecognizesAccessKey="False"
 <#
     if ($e.PropertyType -eq [Boolean]) {
@@ -93,7 +96,9 @@ $DataGrid.add_AutoGeneratingColumn({
         $ns.Setters.Add([Windows.Setter]::new(    [Windows.Controls.CheckBox]::FocusVisualStyleProperty
                                              ,  $MainForm.FindResource('custom_FocusVisualStyle') ))
         $e.Column."${Editing}ElementStyle" = $ns
-    } }
+    } } else {
+        $e.Column.MinWidth = 36
+    }
 
     $TyAlign = @{ [int]='Right'; [char]='Center'; }; $Property = 'HorizontalAlignment'
     if ($e.PropertyType -in $TyAlign.Keys) {
