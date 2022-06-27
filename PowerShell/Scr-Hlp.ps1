@@ -5,11 +5,6 @@ function Get-FileName_LineNo {
 "$($MyInvocation.ScriptName):$($MyInvocation.ScriptLineNumber)"
 }
 
-
-(Get-Date (Get-Date).ToUniversalTime() -f s) + '.000Z'
-"D$((Get-Date -f s) -replace ':', '-' -replace '-')"
-
-
 <# bypass TLS cert validation #>
 # pwsh: -SkipCertificateCheck
 Add-Type @'

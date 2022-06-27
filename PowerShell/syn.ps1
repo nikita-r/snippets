@@ -11,39 +11,46 @@ function ?? ( [scriptblock]$PossiblyNil, [scriptblock]$ExecIfNil = $(throw) ) {
 
 Get-Process |? Name -eq 'system' | select @{N='PID';E={$_.id}}, handles | ConvertTo-Csv -NoTypeInformation
 
-[].DeclaredProperties | sort Name | select Name, Can*
-[].DeclaredFields | sort Name | select IsPublic, Name, IsStatic, FieldType
-[].DeclaredMethods | sort Name | select IsPublic, Name, IsStatic, ReturnType
+[].DeclaredProperties | Sort-Object Name | select Name, Can*
+[].DeclaredFields | Sort-Object Name | select IsPublic, Name, IsStatic, FieldType
+[].DeclaredMethods | Sort-Object Name | select IsPublic, Name, IsStatic, ReturnType
 
-foreach ($property in ($object.PSObject.Properties.Name | sort)) {
+foreach ($property in ($object.PSObject.Properties.Name | Sort-Object)) {
     Write-Host; Write-Host ('~' * $property.Length)
     Write-Host $property
     Write-Host $object.$property
 } ; Write-Host
 
-gci $· |% LastWriteTime |% { '{0:yyyy-MM-dd}' -f $_ } | sort -Unique
+gci $· |% LastWriteTime |% { '{0:yyyy-MM-dd}' -f $_ } | Sort-Object -Unique
 gci $· |% Extension |% ToUpper | sort -u
-gci $· | group Extension -NoElement | sort Name
+gci $· | group Extension -NoElement | Sort-Object Name
 
 gc Function:\prompt
 
-$list = New-Object Collections.Generic.List[Object]
-$list.Add
-$list.ToArray()
-
+<# modify Hashtable keys in-place #>
 $dict = [Collections.Generic.Dictionary`2[string,string]]::new()
-$($dict.GetEnumerator()) |% {
+$($dict.GetEnumerator()) |% { # without $(), the IEnumerator would be invalidated upon iteration
     $arr = $_.Key.ToCharArray()
     [array]::Reverse($arr)
     $dict.Add(-join($arr), $_.Value) # $arr -join $null
     [void]$dict.Remove($_.Key)
 }
 
+<# modify values #>
+$hsh = @{ aud="https://management.core.windows.net/" }
+<# A #> $hsh = $hsh.Keys |% { $rez = @{} }{ $rez[$_] = [Net.WebUtility]::UrlEncode($hsh[$_]) }{ $rez }
+<# B #> foreach ($key in $($hsh.Keys)) { $hsh[$key] = [Net.WebUtility]::UrlEncode($hsh[$key]) }
+
+
+$list = New-Object Collections.Generic.List[Object]
+$list.Add
+$list.ToArray()
+
 $A += ,@($AinA)
 
-$hash.Count -eq ( compare ($hash | select -Expand Values) ($hash.GetEnumerator() | select -Expand Value) -IncludeEqual ).Count
-compare @() @() -IncludeEqual -ExcludeDifferent -PassThru
+Compare-Object @() @() -IncludeEqual -ExcludeDifferent -PassThru
 [linq.enumerable]::Intersect([object[]]@(), [object[]]@())
+
 
 [io.file]::ReadAllLines('d:\Absolute\Path\to\theFile.txt') |% {}
 [io.file]::WriteAllLines('d:\Absolute\Path\to\theFile.txt', $content) # utf8 by default (even in PowerShell v5)
@@ -65,44 +72,32 @@ Get-Date -Hour 0 -Minute 0 -Second 0 -Millisecond 0
 [datetime]::Today
 
 
-# modify hashtable values in-place
-$hsh = @{ aud="https://management.core.windows.net/" }
-# opt A
-$hsh = $hsh.Keys |% { $rez = @{} }{ $rez[$_] = [Net.WebUtility]::UrlEncode($hsh[$_]) }{ $rez }
-# opt B
-foreach ($key in $($hsh.Keys)) { $hsh[$key] = [Net.WebUtility]::UrlEncode($hsh[$key]) }
-# end opt
-
-
-#Requires -Version 5
 using namespace System.Management.Automation.Internal
 [AutomationNull]::Value -is [psobject]
 @([AutomationNull]::Value).Count -eq 0
 [AutomationNull]::Value -isNot [AutomationNull]
 [AutomationNull]::Value -eq $null
 
-<# all the pretty nulls #>
 [System.DBNull]::Value -isNot [psobject]
-@( $null ).Count -eq 1
 [System.DBNull]::Value -is [System.DBNull]
 [System.DBNull]::Value -ne $null
-
-[System.DBNull]::Value -ne [NullString]::Value
-
 [System.DBNull]::Value -ne [string]::Empty
-[NullString]::Value -ne [string]::Empty
-<#~cmp~#>
 [string]::Empty -eq [System.DBNull]::Value
+
 [string]::Empty -ne [NullString]::Value
 
-<# see https://github.com/PowerShell/PowerShell/pull/9794 #>
+<# After merging of https://github.com/PowerShell/PowerShell/pull/9794
+   was #> 1 -eq -not [DBNull]::Value
+<# But reverted by https://github.com/PowerShell/PowerShell/pull/11648
+   so #> 0 -eq -not [DBNull]::Value
 
 
 $head, $null = $a # or $head = @($a)[0]; thou shalt not rely on $a[0]
 
 
-<# regex #>
-[regex]::Match($str, [regex]::Escape($LiteralPattern) + '(?:)', [Text.RegularExpressions.RegexOptions] 'IgnoreCase, CultureInvariant').Groups[1].Value
+$reOpt = [Text.RegularExpressions.RegexOptions] 'IgnoreCase, CultureInvariant'
+$rePat = [regex]::Escape($LiteralPattern) + '(?:)'
+[regex]::Match($str, $rePat, $reOpt).Groups[1].Value
 
 
 1.49999999999999989 -as 'int-apprx' -eq 2
