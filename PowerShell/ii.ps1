@@ -30,3 +30,6 @@ Update-Help -Force -Ea 0 -Ev errVar
 $cred = [pscredential]::new($username, (Read-Host password -AsSecureString))
 New-PSSession -Credential $cred | Enter-PSSession
 
+$choice = $host.ui.PromptForChoice('[ prompt title ]', 'Is it safe to proceed?', ('&Yes', '&No'), 1)
+if ($choice -ne 0) { throw }
+

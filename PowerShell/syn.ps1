@@ -73,8 +73,8 @@ Get-Date -Hour 0 -Minute 0 -Second 0 -Millisecond 0
 
 
 using namespace System.Management.Automation.Internal
-[AutomationNull]::Value -is [psobject]
 @([AutomationNull]::Value).Count -eq 0
+[AutomationNull]::Value -is [psobject]
 [AutomationNull]::Value -isNot [AutomationNull]
 [AutomationNull]::Value -eq $null
 
@@ -96,8 +96,9 @@ $head, $null = $a # or $head = @($a)[0]; thou shalt not rely on $a[0]
 
 
 $reOpt = [Text.RegularExpressions.RegexOptions] 'IgnoreCase, CultureInvariant'
-$rePat = [regex]::Escape($LiteralPattern) + '(?:)'
-[regex]::Match($str, $rePat, $reOpt).Groups[1].Value
+$rePat = [regex]::Escape($LiteralPattern) + '(?<rep>\W+)' + '(?:)' + '\k<rep>'
+$value = [regex]::Match($str, $rePat, $reOpt).Groups[1].Value
+$value -is [string] # $value='' if group does not exist
 
 
 1.49999999999999989 -as 'int-apprx' -eq 2
