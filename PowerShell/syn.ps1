@@ -11,9 +11,12 @@ function ?? ( [scriptblock]$PossiblyNil, [scriptblock]$ExecIfNil = $(throw) ) {
 
 Get-Process |? Name -eq 'system' | select @{N='PID';E={$_.id}}, handles | ConvertTo-Csv -NoTypeInformation
 
-[].DeclaredProperties | Sort-Object Name | select Name, Can*
-[].DeclaredFields | Sort-Object Name | select IsPublic, Name, IsStatic, FieldType
-[].DeclaredMethods | Sort-Object Name | select IsPublic, Name, IsStatic, ReturnType
+function Get-StrictMode { # Set-StrictMode -Version:0
+  try { $arr=@(1); $arr[1] } catch { return 3 } # -Version:Latest
+  try { "Not-a-Date".Year } catch { return 2 }
+  try { $local:undefined } catch { return 1 }
+  return 0 # Set-StrictMode -Off
+}
 
 foreach ($property in ($object.PSObject.Properties.Name | Sort-Object)) {
     Write-Host; Write-Host ('~' * $property.Length)
@@ -24,8 +27,6 @@ foreach ($property in ($object.PSObject.Properties.Name | Sort-Object)) {
 gci $· |% LastWriteTime |% { '{0:yyyy-MM-dd}' -f $_ } | Sort-Object -Unique
 gci $· |% Extension |% ToUpper | sort -u
 gci $· | group Extension -NoElement | Sort-Object Name
-
-gc Function:\prompt
 
 <# modify Hashtable keys in-place #>
 $dict = [Collections.Generic.Dictionary`2[string,string]]::new()

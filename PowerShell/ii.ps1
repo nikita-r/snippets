@@ -2,6 +2,8 @@ ii $home
 
 notepad (Get-PSReadLineOption).HistorySavePath
 
+gc Function:\prompt
+
 Get-NetTCPConnection |? OwningProcess -in ( Get-Process | Out-GridView -PassThru ).id `
 | select @{N='PID';E={'{0:d6}' -f $_.OwningProcess}}`
 , LocalAddress, LocalPort, State, RemoteAddress, RemotePort | Sort-Object PID, `
@@ -26,6 +28,7 @@ $env:PSModulePath -split ';'
 Update-Help -Force -Ea 0 -Ev errVar
 
 (Join-Path (Get-Location) $null) # != [Environment]::CurrentDirectory
+[Environment]::CurrentDirectory = pwd
 
 $cred = [pscredential]::new($username, (Read-Host password -AsSecureString))
 New-PSSession -Credential $cred | Enter-PSSession

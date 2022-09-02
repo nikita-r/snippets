@@ -12,6 +12,12 @@ select connect_time, client_net_address--, program_name
   left join sys.sysprocesses ON spid = session_id
  order by connect_time desc, session_id asc;
 
+/* my_who */
+SELECT login_time, spid, last_batch, [status], loginame, hostname, program_name, cmd
+  FROM sys.sysprocesses
+ -- WHERE hostname = ''
+ ORDER BY login_time aSC, spid aSC;
+
 exec sp_who2;
 exec sp_lock;
 
