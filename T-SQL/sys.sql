@@ -13,8 +13,10 @@ select connect_time, client_net_address--, program_name
  order by connect_time desc, session_id asc;
 
 /* my_who */
-SELECT login_time, spid, last_batch, [status], loginame, hostname, program_name, cmd
-  FROM sys.sysprocesses
+SELECT DB_NAME(t.dbid) as DB, t.text as [SQL], cmd
+     , login_time, spid, last_batch, [status], loginame, hostname, program_name
+  FROM sys.sysprocesses AS p
+  CROSS APPLY sys.dm_exec_sql_text(p.[sql_handle]) AS t
  -- WHERE hostname = ''
  ORDER BY login_time aSC, spid aSC;
 
