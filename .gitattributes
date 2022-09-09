@@ -29,6 +29,7 @@
 # archive file
 *.7z    binary
 *.gz    binary
+*.msu   binary
 *.tar   binary
 *.tgz   binary
 *.zip   binary

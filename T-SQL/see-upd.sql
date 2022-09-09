@@ -3,14 +3,6 @@
 DECLARE @TableName varchar(max);
 SET @TableName = '';
 
-select OBJECT_NAME(object_id) as TableName
-     , last_user_update
-  -- , *
-  from sys.dm_db_index_usage_stats
- where database_id = DB_ID('')
- and object_id = object_id(@TableName)
-;
-
 EXEC (
 'select max(Date) as max_Date from ' + QUOTENAME(@TableName)
 +';'

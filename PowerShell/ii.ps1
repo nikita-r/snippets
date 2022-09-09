@@ -4,6 +4,14 @@ notepad (Get-PSReadLineOption).HistorySavePath
 
 gc Function:\prompt
 
+Update-Help -Force -Ea 0 -Ev errVar
+
+(Join-Path (Get-Location) $null) # != [Environment]::CurrentDirectory
+[Environment]::CurrentDirectory = pwd
+if ($PSVersionTable.PSVersion.Major -gt 6) {
+$ExecutionContext.SessionState.InvokeCommand.LocationChangedAction += { [Environment]::CurrentDirectory = $pwd.Path }
+}
+
 Get-NetTCPConnection |? OwningProcess -in ( Get-Process | Out-GridView -PassThru ).id `
 | select @{N='PID';E={'{0:d6}' -f $_.OwningProcess}}`
 , LocalAddress, LocalPort, State, RemoteAddress, RemotePort | Sort-Object PID, `
@@ -24,11 +32,6 @@ Get-ExecutionPolicy -list
 $env:PSModulePath -split ';'
 
 [AppDomain]::CurrentDomain.GetAssemblies()
-
-Update-Help -Force -Ea 0 -Ev errVar
-
-(Join-Path (Get-Location) $null) # != [Environment]::CurrentDirectory
-[Environment]::CurrentDirectory = pwd
 
 $cred = [pscredential]::new($username, (Read-Host password -AsSecureString))
 New-PSSession -Credential $cred | Enter-PSSession
