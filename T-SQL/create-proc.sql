@@ -1,8 +1,8 @@
 /* create-proc.sql */
 
--- EXEC @rc = [dbo].[sp_...] 1, @iReturn = @n OUTPUT;
+-- EXEC @rc = [dbo].[PROC_...] 1, @iReturn = @n OUTPUT;
 
-CREATE OR ALTER PROCEDURE [dbo].[sp_...]
+CREATE OR ALTER PROCEDURE [dbo].[PROC_...]
 	@int int,
 	@flag bit = 'False',
 	@patLiteral nvarchar(max) = '',
@@ -51,3 +51,7 @@ BEGIN
   END CATCH
 END
 ;
+GO
+
+GRANT EXECUTE ON [dbo].[PROC_...] TO [Proc-User];
+GO

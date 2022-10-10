@@ -5,6 +5,17 @@ function Get-FileName_LineNo {
 "$($MyInvocation.ScriptName):$($MyInvocation.ScriptLineNumber)"
 }
 
+function Get-ScriptDirectory {
+  Split-Path $(
+    if ($host.Name -clike '* ISE Host') {
+      $global:psISE.CurrentFile.FullPath
+    } else {
+      $global:PSCommandPath
+    }
+  )
+}
+
+
 <# bypass TLS cert validation #>
 # pwsh: -SkipCertificateCheck
 Add-Type @'
