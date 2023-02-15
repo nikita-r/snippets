@@ -16,6 +16,21 @@ function Get-ScriptDirectory {
 }
 
 
+# Bitmask the selection of TLS versions.
+# [Net.SecurityProtocolType]::SystemDefault -eq 0
+
+# force SSL 3.0
+[Net.ServicePointManager]::SecurityProtocol = 'Ssl3'
+
+# disallow TLS 1.0
+[Net.ServicePointManager]::SecurityProtocol = `
+[Net.ServicePointManager]::SecurityProtocol -bAnd -bNot [Net.SecurityProtocolType] 'Tls'
+
+# allow TLS 1.2
+[Net.ServicePointManager]::SecurityProtocol = `
+[Net.ServicePointManager]::SecurityProtocol -bOr 'Tls12'
+
+
 <# bypass TLS cert validation #>
 # pwsh: -SkipCertificateCheck
 Add-Type @'
@@ -30,9 +45,6 @@ Add-Type @'
     }
 '@
 [Net.ServicePointManager]::CertificatePolicy = [TrustAllCertsPolicy]::new()
-
-# allow a less-secure protocol ([Net.SecurityProtocolType]::SystemDefault -eq 0)
-[Net.ServicePointManager]::SecurityProtocol += [Net.SecurityProtocolType] 'Ssl3'
 
 # same as the above, but sans C♯
 class TrustAllCertsPolicy : Net.ICertificatePolicy {
