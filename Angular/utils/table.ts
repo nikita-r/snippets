@@ -8,19 +8,13 @@ export class TableUtil {
       for (const { field: orderBy, descending } of orderBys) {
         const a = row_a[orderBy];
         const b = row_b[orderBy];
+
         if (a === undefined || b === undefined) {
           throw new Error(`rows_compare: unable to sort by "${orderBy}"`);
         }
-
         if (a === b) { continue; }
-
-        if (a == null || b == null) {
-          if (descending) {
-            return a == null ? -1 : 1;
-          } else {
-            return b == null ? -1 : 1;
-          }
-        }
+        if (a == null) return descending ? -1 : 1;
+        if (b == null) return descending ? 1 : -1;
 
         if (isFinite(a) && isFinite(b)) {
           if (descending) {
@@ -42,10 +36,10 @@ export class TableUtil {
       /* use [id] to break tie */
       const descending = orderBys[0]?.descending ?? true; // most-recent by default
       if (descending) {
-        return Number(row_b['id'] ?? 0) - Number(row_a['id'] ?? 0);
+        return row_b.id - row_a.id;
       } else {
-        return Number(row_a['id'] ?? 0) - Number(row_b['id'] ?? 0);
+        return row_a.id - row_b.id;
       }
     };
-  };
+  }
 }

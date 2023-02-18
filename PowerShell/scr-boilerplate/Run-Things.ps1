@@ -9,20 +9,21 @@ Set-StrictMode -Version:Latest
 $ScrName = [io.path]::GetFileNameWithoutExtension($PSCommandPath)
 
 $SysDir = [Environment]::CurrentDirectory
-if ($SysDir -ne (pwd).Path) { throw }
+if ($SysDir -ne (Get-Location).Path) { throw }
 
 $ScrDir = $PSScriptRoot
 if ($SysDir -ne $ScrDir) { throw }
 
 $logsDir = ".\logs\${ScrName}-D*"
-$o=Get-ChildItem (Split-Path $logsDir) -Directory (Split-Path $logsDir -Leaf) `
-|? CreationTime -lt (Get-Date).AddDays(-33)
+$oldies = Get-ChildItem (Split-Path $logsDir) `
+             -Directory (Split-Path $logsDir -Leaf) `
+          |? CreationTime -lt (Get-Date).AddDays(-33)
 
 $logsDir = $logsDir -replace '\*$', ((Get-Date -f s)-replace':','-'-replace'-')
-ni -Type Directory $logsDir | out-null
+New-Item -Type Directory $logsDir | Out-Null
 
 Start-Transcript $logsDir\Transcript.txt
-$o | Remove-Item -Recurse -ea:Continue
+$oldies | Remove-Item -Recurse -ea:Continue
 try { # finally Stop-Transcript
 
 try {
@@ -54,6 +55,8 @@ $dtLog.Select("", 'when, what deSC, why') `
 
 <# Epilogue #>
 
+} catch {
+$Error[0]
 } finally {
 Stop-Transcript
 }
