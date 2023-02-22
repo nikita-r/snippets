@@ -6,17 +6,17 @@ export class TableUtil {
       let rez = 0;
 
       for (const { field: orderBy, descending } of orderBys) {
-        const a = row_a[orderBy];
-        const b = row_b[orderBy];
+        const [ a, b ] = [ row_a[orderBy], row_b[orderBy] ];
 
         if (a === undefined || b === undefined) {
           throw new Error(`rows_compare: unable to sort by "${orderBy}"`);
         }
         if (a === b) { continue; }
-        if (a == null) return descending ? -1 : 1;
-        if (b == null) return descending ? 1 : -1;
+        if (a == null) { return descending ? -1 : 1; }
+        if (b == null) { return descending ? 1 : -1; }
 
-        if (isFinite(a) && isFinite(b)) {
+        if ( !/^\s*$/.test(a) && !/^\s*$/.test(b)
+            && isFinite(a) && isFinite(b) ) {
           if (descending) {
             rez = Number(b) - Number(a);
           } else {

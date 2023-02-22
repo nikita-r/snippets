@@ -5,10 +5,10 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class Pipe_customNumber extends DecimalPipe implements PipeTransform {
     transform(value: any, args?: any): any {
         if (value == null) { return 'N/A'; }
-        let result = super.transform(value, args);
         if (value < 0) {
-            result = '\u2212' + result.slice(1);
+            return '\u2212' + super.transform(-value, args);
+        } else {
+            return super.transform(value, args);
         }
-        return result;
     }
 }

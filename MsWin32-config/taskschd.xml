@@ -10,7 +10,7 @@
   </Query>
 </QueryList>
 
-<!-- non-zero Last Run Result -->
+<!-- Action completed *not* with return code 0. -->
 <QueryList>
   <Query Id="0" Path="Microsoft-Windows-TaskScheduler/Operational">
     <Select Path="Microsoft-Windows-TaskScheduler/Operational">
@@ -22,26 +22,26 @@
   </Query>
 </QueryList>
 
-<!-- Task Start Failed: Launch Failure -->
+<!-- Task Start Failed: File Not Found -->
 <QueryList>
   <Query Id="0" Path="Microsoft-Windows-TaskScheduler/Operational">
     <Select Path="Microsoft-Windows-TaskScheduler/Operational">
      *[System[(EventID=101)]]
       and
-     *[EventData[Data[@Name='ResultCode'] and (Data='2147943726')]]
+     *[EventData[Data[@Name='ResultCode'] and (Data='2147942402')]] <!-- 0x80070002 -->
     </Select>
   </Query>
 </QueryList>
 
-<!-- ○ -->
+<!-- 01 -->
 <QueryList>
   <Query Id="0" Path="Microsoft-Windows-TaskScheduler/Operational">
     <Select Path="Microsoft-Windows-TaskScheduler/Operational">
-     *[System[(EventID=201)]] <!-- Action completed -->
+     *[System[(EventID=201)]] <!-- Task Scheduler successfully completed task -->
       and
      *[EventData[Data[@Name='ResultCode'] and (Data='2147942401')]] <!-- exit code is 1 -->
       and
-     *[EventData[Data[@Name='ActionName'] and (Data='c:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe')]] <!-- where powershell ( not "powershell.exe" ) -->
+     *[EventData[Data[@Name='ActionName'] and (Data='c:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe')]] <!-- where PowerShell ( not "powershell.exe" ) -->
     </Select>
   </Query>
   <Query Id="1" Path="Microsoft-Windows-TaskScheduler/Operational">
