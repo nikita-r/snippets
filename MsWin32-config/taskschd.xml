@@ -1,4 +1,21 @@
 
+<!-- Errors of PowerShell -->
+<QueryList>
+  <Query Id="0" Path="Microsoft-Windows-TaskScheduler/Operational">
+    <Select Path="Microsoft-Windows-TaskScheduler/Operational">
+     *[System[(EventID=201)]] <!-- «Action completed» -->
+      and
+     *[EventData[Data[@Name='ActionName'] and (Data='C:\Windows\System32\WindowsPowerShell\v1.0\PowerShell.EXE')]] <!-- where PowerShell ( not "powershell.exe" ) -->
+    </Select>
+    <Suppress Path="Microsoft-Windows-TaskScheduler/Operational">
+     *[EventData[Data[@Name='ResultCode'] and (Data='0')]] <!-- exit code is 0 -->
+    </Suppress>
+    <Suppress Path="Microsoft-Windows-TaskScheduler/Operational">
+     *[EventData[Data[@Name='ResultCode'] and (Data='2147943691')]] <!-- To be followed by Event 111 (Task Scheduler terminated . . . task.) -->
+    </Suppress>
+  </Query>
+</QueryList>
+
 <!-- Last Run Result (0x1) -->
 <QueryList>
   <Query Id="0" Path="Microsoft-Windows-TaskScheduler/Operational">
@@ -17,7 +34,7 @@
      *[System[(EventID=201)]]
     </Select>
     <Suppress Path="Microsoft-Windows-TaskScheduler/Operational">
-     *[EventData[Data[@Name='ResultCode'] and (Data='0')]]
+     *[EventData[Data[@Name='ResultCode'] and (Data='0')]] <!-- exit code is 0 -->
     </Suppress>
   </Query>
 </QueryList>
@@ -36,7 +53,7 @@
 <!-- 01 -->
 <QueryList>
   <Query Id="0" Path="Microsoft-Windows-TaskScheduler/Operational">
-    <Select Path="Microsoft-Windows-TaskScheduler/Operational">
+    <Select>
      *[System[(EventID=201)]] <!-- Task Scheduler successfully completed task -->
       and
      *[EventData[Data[@Name='ResultCode'] and (Data='2147942401')]] <!-- exit code is 1 -->
@@ -45,7 +62,7 @@
     </Select>
   </Query>
   <Query Id="1" Path="Microsoft-Windows-TaskScheduler/Operational">
-    <Select Path="Microsoft-Windows-TaskScheduler/Operational">
+    <Select>
      *[System[(EventID=101)]] <!-- Task Start Failed -->
     </Select>
   </Query>
