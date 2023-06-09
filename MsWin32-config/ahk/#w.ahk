@@ -8,17 +8,17 @@ FlashW(hWnd)
   FirstOff := -7 ; invisible 7px border
 
   Off := FirstOff
-  if ((WinX - Off) < 0) {
-    Off -= ScreensWidth
-  } else {
-    while ((WinX - Off) > ScreensWidth) {
-      Off += ScreensWidth
-    }
+  ;if ((WinX - Off) < 1) {
+  ;  Off -= ScreensWidth
+  ;} else {
+  while ((WinX - Off) > ScreensWidth) {
+    Off += ScreensWidth
   }
+  ;}
 
   WinX -= Off
   if (WinX = 1 and WinY = 1) {
-    WinX := ScreensWidth - (WinWidth + FirstOff)
+    WinX := ScreensWidth - (WinWidth + 2 * FirstOff) - 1
     WinY := 1
   } else {
     WinX := 1
