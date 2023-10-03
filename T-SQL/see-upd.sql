@@ -16,8 +16,9 @@ select OBJECT_NAME(i.object_id) as TableName, i.index_id
   from sys.indexes AS i
   JOIN sys.partitions AS p ON i.object_id = p.object_id AND i.index_id = p.index_id
   JOIN sys.allocation_units AS a ON a.container_id = p.partition_id
+  --JOIN INFORMATION_SCHEMA.TABLES t ON t.TABLE_TYPE='BASE TABLE' AND t.TABLE_SCHEMA = 'dbo' AND OBJECT_NAME(i.object_id) = t.TABLE_NAME
  where OBJECT_NAME(i.object_id) = @TableName
- group by i.object_id, i.index_id, Name, i.type_desc
+ group by i.object_id, i.index_id, [Name], i.type_desc
  order by TableName, i.index_id
 ;
 

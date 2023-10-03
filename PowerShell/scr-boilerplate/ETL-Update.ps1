@@ -13,7 +13,7 @@ Start-Transcript "$PSCommandPath.Transcript.log"
 cd (Split-Path $PSCommandPath)
 [Environment]::CurrentDirectory = (Split-Path $PSCommandPath)
 
-#Find-Module SqlServer -MaximumVersion 21.1.18256 | Save-Module -Path .
+#!Find-Module SqlServer -MinimumVersion 21.1.18256 -MaximumVersion 21.1.18256 | Save-Module -Path .
 $env:PSModulePath = '.'
 Import-Module SqlServer
 
@@ -30,7 +30,7 @@ GO
 "@
 
 
-$sqlDML = ''
+$sqlDML = "`n"
 $data |% {
 $sqlDML += @"
 INSERT INTO dbo.ETL_Table ( ) VALUES (
