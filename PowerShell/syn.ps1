@@ -93,7 +93,16 @@ using namespace System.Management.Automation.Internal
    so #> 0 -eq -not [DBNull]::Value
 
 
-$head, $null = $a # or $head = @($a)[0]; thou shalt not rely on $a[0]
+[version] '0.0' -lt [version] '0.0.0' # better supply all four numbers
+# Major  Minor  Build  Revision
+# -----  -----  -----  --------
+#     0      0     -1        -1
+
+
+<# Only 'select' would work as expected with any kind of Collection #>
+$head, $null = $a # thou shalt not rely on $a[0]
+$head = @($a)[0]
+$rest = $a | select -Skip 1
 
 
 $reOpt = [Text.RegularExpressions.RegexOptions] 'IgnoreCase, CultureInvariant'
