@@ -102,7 +102,7 @@ using namespace System.Management.Automation.Internal
 <# Only 'select' would work as expected with any kind of Collection #>
 $head, $null = $a # thou shalt not rely on $a[0]
 $head = @($a)[0]
-$rest = $a | select -Skip 1
+$rest = @($a | select -Skip 1) #.GetType().ToString() -ceq 'System.Object[]'
 
 
 $reOpt = [Text.RegularExpressions.RegexOptions] 'IgnoreCase, CultureInvariant'
