@@ -1,8 +1,8 @@
 import re
 
-reWSEmbed = re.compile('[\x09\x20\xA0]+')
-reWSPrefix = re.compile(r'^\s+', re.MULTILINE)
-reWSPostfix = re.compile(r'\s+$', re.MULTILINE)
+reLeadingWhite = re.compile(r'^\s+', re.MULTILINE)
+reTrailingWhite = re.compile(r'\s+$', re.MULTILINE)
+reInlineWhite = re.compile('[\x09\x20\xA0]+')
 
 text = 'vertical\n\nspacing'
-collapsed = reWSEmbed.sub(' ', reWSPrefix.sub('', reWSPostfix.sub('', text)))
+collapsed = reInlineWhite.sub(' ', reTrailingWhite.sub('', reLeadingWhite.sub('', text)))
