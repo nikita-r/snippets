@@ -52,6 +52,20 @@ $A += ,@($AinA)
 Compare-Object @() @() -IncludeEqual -ExcludeDifferent -PassThru
 [linq.enumerable]::Intersect([object[]]@(), [object[]]@())
 
+$idx = 0; $series = New-Object Collections.Generic.List[PSCustomObject]
+while (1) {
+    sleep 1
+    Write-Host (++$idx).ToString('00000')
+    $object = Get-Object ... -ea:Continue
+    if (!$?) { continue }
+    $series.Add(($object | Select-Object *))
+    if ($series.Count -le 1) { continue }
+    $comparison = Compare-Object -ReferenceObject @($series[-2]) -DifferenceObject @($series[-1]) `
+            -Property <#Id,#>Name,Type,...
+    $isDifferent = !!(@($comparison.SideIndicator) -ne '==')
+    if ($isDifferent) { Write-Host Difference at $series.Count }
+}
+
 
 [io.file]::ReadAllLines('d:\Absolute\Path\to\theFile.txt') |% {}
 [io.file]::WriteAllLines('d:\Absolute\Path\to\theFile.txt', $content) # utf8 by default (even in PowerShell v5)
