@@ -15,7 +15,7 @@ function Get-ScriptDirectory {
   )
 }
 
-Start-Transcript ($PSCommandPath + '.' + $env:ClientName + '[' + $env:UserName + '@' + $env:ComputerName + '.' + $env:UserDnsDomain + ']' + '.Transcript.log')
+Start-Transcript -LiteralPath ($PSCommandPath + '.' + $env:ClientName + '[' + $env:UserDomain + '+' + $env:UserName + '@' + $env:ComputerName + '.' + $env:UserDnsDomain + ']' + '.Transcript.log')
 
 
 # Bitmask the selection of TLS versions.
