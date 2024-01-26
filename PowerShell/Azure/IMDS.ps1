@@ -8,13 +8,14 @@ function Get-IMDS-AccessToken ( $AppID = $(throw) ) {
     # sql server #$AppID = 'https://database.windows.net'
     #
     $uri = 'http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource='
-    $response = try {
-        Invoke-WebRequest -UseBasicParsing -Method Get -Headers @{ Metadata = 'true' } -Uri $uri$AppID
-    } catch [System.Net.WebException] {
-        $HttpErrorStatusCode = [int] $_.Exception.Response.StatusCode
-        $HttpErrorStatusMessage = $_.Exception.Response.StatusDescription
-        throw $_.Exception.Message
-        $_.Exception.Response
+    try {
+        $response = Invoke-WebRequest -UseBasicParsing -Method Get -Headers @{ Metadata = 'true' } -Uri $uri$AppID
+    } catch [net.WebException] {
+        if ($_.Exception.Status -eq [net.WebExceptionStatus]::ProtocolError) {
+            Write-Host "HTTP $([int] $_.Exception.Response.StatusCode): $($_.Exception.Response.StatusDescription)" -ForegroundColor Yellow
+            Write-Host $_.ErrorDetails.Message
+        }
+        throw
     }
     $AccessToken = $response.Content | ConvertFrom-Json |% access_token
     return $AccessToken
@@ -28,5 +29,4 @@ function Get-KvSecretValue ( $kv = $(throw), $secretName = $(throw), $secretVers
     $value = ConvertFrom-Json $response |% value
     return $value
 }
-
 

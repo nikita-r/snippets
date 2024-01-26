@@ -1,9 +1,10 @@
 
-function Expand-Archive ( $Path, $DestinationPath ) {
+function Expand-Archive ( [string]$Path, [string]$DestinationPath ) {
     Write-Host " $((Get-Date -Format s) -replace 'T', ' ') . . . Commenced * Expand-Archive -Path `"$Path`" -DestinationPath `"$DestinationPath`""
 
-    if ($Path -match '[][*`?]') { throw "Unacceptable wildcard characters in arg: $Path" }
-    if ($DestinationPath -match '[][*`?]') { throw "Unacceptable wildcard characters in arg: $DestinationPath" }
+    $err = 'Unacceptable wildcard characters in arg'
+    if ($Path -match '[][*`?]') { throw "${err}: $Path" }
+    if ($DestinationPath -match '[][*`?]') { throw "${err}: $DestinationPath" }
 
     if (-not (Test-Path $Path -PathType Leaf) -or -not ([io.path]::GetExtension($Path) -eq '.zip')) { throw "`"$Path`" does not exist / not a `".zip`" file" }
     if (-not (Test-Path $DestinationPath -PathType Container)) { throw "`"$DestinationPath`" does not exist / not a folder" }
@@ -20,4 +21,5 @@ function Expand-Archive ( $Path, $DestinationPath ) {
 
     Write-Host " $((Get-Date -Format s) -replace 'T', ' ') . . . Completed * Expand-Archive"
 }
+
 
