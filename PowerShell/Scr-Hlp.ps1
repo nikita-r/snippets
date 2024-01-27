@@ -6,13 +6,8 @@ function Get-FileName_LineNo {
 }
 
 function Get-ScriptDirectory {
-  Split-Path $(
-    if ($host.Name -clike '* ISE Host') {
-      $global:psISE.CurrentFile.FullPath
-    } else {
-      $global:PSCommandPath
-    }
-  )
+  $pathnameFile = if ($host.Name -clike '* ISE Host') { $global:psISE.CurrentFile.FullPath } else { $global:PSCommandPath }
+  Split-Path $(if (Split-Path $pathnameFile -IsAbsolute) { $pathnameFile } else { Join-Path ([environment]::CurrentDirectory) . })
 }
 
 Start-Transcript -LiteralPath ($PSCommandPath + '.' + $env:ClientName + '[' + $env:UserDomain + '+' + $env:UserName + '@' + $env:ComputerName + '.' + $env:UserDnsDomain + ']' + '.Transcript.log')
@@ -102,13 +97,6 @@ $Error.Clear()
 Write-Host; throw 'Script aborted; see stdout for errors.'
 
 
-<# spoof profile-loading #>
-if ($host.Name -clike '* ISE *' -and -not $global:is_host_profile_loaded) {
-    . ($profile -creplace 'ISE')
-    $global:is_host_profile_loaded = $true
-}
-
-
 <# re-try #>
 [int]$cntTry = $maxTry
 $errorEx = $null
@@ -170,4 +158,9 @@ $proc = { "${_}: " + $datetime.ToString([cultureinfo]::CreateSpecificCulture($_)
 [Data.SqlClient.SqlConnection]$cnxn
 Write-Host ('SQL Server Connection timeout=' + $cnxn.ConnectionTimeout)
 if ($cnxn.State -ne 1) { $cnxn.Open(); Write-Host ('SQL Server Connection re-opened') }
+
+
+<# Web #>
+iwr $url -UseBasicParsing |% Links |% href
+
 

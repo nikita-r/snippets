@@ -1,4 +1,4 @@
-#·syn.psh
+# syn.ps1
 
 Get-TypeName -f $v
 ??{}{}{}
@@ -19,14 +19,15 @@ function Get-StrictMode { # Set-StrictMode -Version:0
 }
 
 foreach ($property in ($object.PSObject.Properties.Name | Sort-Object)) {
-    Write-Host; Write-Host ('~' * $property.Length)
+    Write-Host ( '_' * <#$property.Length#>77 )
     Write-Host $property
+    Write-Host ( '-' * <#$property.Length#>77 )
     Write-Host $object.$property
-} ; Write-Host
+} ; Write-Host ( '~' + '*~*~' * 19 )
 
-gci $· |% LastWriteTime |% { '{0:yyyy-MM-dd}' -f $_ } | Sort-Object -Unique
-gci $· |% Extension |% ToUpper | sort -u
-gci $· | group Extension -NoElement | Sort-Object Name
+gci $_ |% LastWriteTime |% { '{0:yyyy-MM-dd}' -f $_ } | Sort-Object -Unique
+gci $_ |% Extension |% ToUpper | sort -u
+gci $_ | group Extension -NoElement | Sort-Object Name
 
 <# modify Hashtable keys in-place #>
 $dict = [Collections.Generic.Dictionary`2[string,string]]::new()
