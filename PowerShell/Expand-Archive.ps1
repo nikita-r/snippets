@@ -1,5 +1,11 @@
-
-function Expand-Archive ( [string]$Path, [string]$DestinationPath ) {
+<#
+Expand-Archive -ea:0 …
+if (-not $?) { . . . }
+#>
+function Expand-Archive {
+  [CmdletBinding()]
+  param ( [string]$Path, [string]$DestinationPath )
+  try {
     Write-Host " $((Get-Date -Format s) -replace 'T', ' ') . . . Commenced * Expand-Archive -Path `"$Path`" -DestinationPath `"$DestinationPath`""
 
     $err = 'Unacceptable wildcard characters in arg'
@@ -20,6 +26,7 @@ function Expand-Archive ( [string]$Path, [string]$DestinationPath ) {
     $dir.CopyHere($zip.Items(), 0x14) # &H10& "Yes to All" | &H4& without progress dialog
 
     Write-Host " $((Get-Date -Format s) -replace 'T', ' ') . . . Completed * Expand-Archive"
+  } catch {
+    $psCmdlet.WriteError($_)
+  }
 }
-
-

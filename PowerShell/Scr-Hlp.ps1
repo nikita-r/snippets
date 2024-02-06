@@ -6,8 +6,8 @@ function Get-FileName_LineNo {
 }
 
 function Get-ScriptDirectory {
-  $pathnameFile = if ($host.Name -clike '* ISE Host') { $global:psISE.CurrentFile.FullPath } else { $global:PSCommandPath }
-  Split-Path $(if (Split-Path $pathnameFile -IsAbsolute) { $pathnameFile } else { Join-Path ([environment]::CurrentDirectory) . })
+  $pathnameCurrentFile = if ($host.Name -clike '* ISE Host') { $global:psISE.CurrentFile.FullPath } else { $global:PSCommandPath }
+  Split-Path $(if (Split-Path $pathnameCurrentFile -IsAbsolute) { $pathnameCurrentFile } else { Join-Path ([environment]::CurrentDirectory) . })
 }
 
 Start-Transcript -LiteralPath ($PSCommandPath + '.' + $env:ClientName + '[' + $env:UserDomain + '+' + $env:UserName + '@' + $env:ComputerName + '.' + $env:UserDnsDomain + ']' + '.Transcript.log')
@@ -131,8 +131,8 @@ while (1) { # once a minute
 
 $obj = ConvertFrom-Json '{}' # [pscustomobject]
 $obj.{row·id} = [string][char]0xd8 # Ø
-if (!@($obj.psobject.Properties).Count -or $kv.Key -notIn $obj.psobject.Properties.Name) {
-    $obj | Add-Member -MemberType NoteProperty -Name $kv.Key -Value $kv.Value.Clone() # ? Value.PSObject.Copy()
+if (!@($obj.psObject.Properties).Count -or $kv.Key -notIn $obj.psObject.Properties.Name) {
+    $obj | Add-Member -MemberType NoteProperty -Name $kv.Key -Value $kv.Value.Clone() # ? Value.psObject.Copy()
 } else {
     $obj.$($kv.Key) | Should -Be $kv.Value
 }

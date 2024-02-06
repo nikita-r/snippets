@@ -15,8 +15,8 @@ function Post-Request ([string]$uri, [hashtable]$body, [string]$ContentType, [ha
         Write-Host $_.ErrorDetails.Message
         if ($_.Exception.Response.ContentType -match '^[^;]+/json\b') {
             $details = $_.ErrorDetails.Message | ConvertFrom-Json
-            if ('error' -in $details.PSObject.Properties.Name) {
-                if ('message' -in $details.error.PSObject.Properties.Name) {
+            if ('error' -in $details.psObject.Properties.Name) {
+                if ('message' -in $details.error.psObject.Properties.Name) {
                     Write-Host $details.error.message -ForegroundColor Red
                 } else {
                     Write-Host $details.error -ForegroundColor Red
@@ -32,7 +32,7 @@ function Post-Request ([string]$uri, [hashtable]$body, [string]$ContentType, [ha
 function Fetch-Data ( [string]$uri, [hashtable]$body
                     , [string]$ContentType = 'application/json; charset=utf-8', [hashtable]$headers = $null ) {
     $response = Post-Request $uri $body $ContentType $headers
-    if ($response.StatusCode -eq [net.HttpStatusCode]::OK) { # 'Content' -in $response.PSObject.Properties.Name
+    if ($response.StatusCode -eq [net.HttpStatusCode]::OK) { # 'Content' -in $response.psObject.Properties.Name
         return,@(ConvertFrom-Json $response |% data)
     }
     Write-Output -NoEnumerate @()
