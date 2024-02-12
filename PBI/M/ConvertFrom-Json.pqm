@@ -1,0 +1,8 @@
+
+/* array of objects */
+let
+	Source = Json.Document(File.Contents("D:\array.json")),
+	Tabled = Table.FromRecords(Source)
+in
+	Tabled
+

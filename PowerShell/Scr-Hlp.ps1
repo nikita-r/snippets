@@ -10,7 +10,13 @@ function Get-ScriptDirectory {
   Split-Path $(if (Split-Path $pathnameCurrentFile -IsAbsolute) { $pathnameCurrentFile } else { Join-Path ([environment]::CurrentDirectory) . })
 }
 
+
+<# ad-logging #>
+
 Start-Transcript -LiteralPath ($PSCommandPath + '.' + $env:ClientName + '[' + $env:UserDomain + '+' + $env:UserName + '@' + $env:ComputerName + '.' + $env:UserDnsDomain + ']' + '.Transcript.log')
+
+cmd.exe /c "echo $name on %date% at %time: =0%>C:\ad-logs\$name.log"
+cmd.exe /c ($line + ' 2>&1') | Out-File -Append C:\ad-logs\$name.log -Encoding ascii
 
 
 # Bitmask the selection of TLS versions.
