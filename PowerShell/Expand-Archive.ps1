@@ -28,5 +28,6 @@ function Expand-Archive {
     Write-Host " $((Get-Date -Format s) -replace 'T', ' ') . . . Completed * Expand-Archive"
   } catch {
     $psCmdlet.WriteError($_)
+    Write-Host unreachable
   }
 }

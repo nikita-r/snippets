@@ -18,7 +18,7 @@ function Get-StrictMode { # Set-StrictMode -Version:0
   return 0 # Set-StrictMode -Off
 }
 
-foreach ($property in ($object.PSObject.Properties.Name | Sort-Object)) {
+foreach ($property in ($object.psObject.Properties.Name | Sort-Object)) {
     Write-Host ( '_' * <#$property.Length#>77 )
     Write-Host $property
     Write-Host ( '-' * <#$property.Length#>77 )
@@ -48,7 +48,24 @@ $list = New-Object Collections.Generic.List[Object]
 $list.Add
 $list.ToArray()
 
-$A += ,@($AinA)
+
+<# on System.Array wrapping antics #>
+
+$A += ,@($AinA) # comma prevents unwrap
+
+<#
+## ',' binds tighter than '/' when constructing @(), but
+## not in a method call; [type] is tighter in both cases
+#>
+
+Remove-TypeData System.Array # avoid "value"/"Count" in `ConvertTo-Json` output
+<# alternatively #> ($array | ...).psObject.BaseObject | ConvertTo-Json
+
+<# and generally,
+## for the output of `ConvertFrom-Json`, make sure to access the underlying
+## dotnet object, so that eg Select-Object works as expected #>
+(... | ConvertFrom-Json).psObject.BaseObject
+
 
 Compare-Object @() @() -IncludeEqual -ExcludeDifferent -PassThru
 [linq.enumerable]::Intersect([object[]]@(), [object[]]@())
