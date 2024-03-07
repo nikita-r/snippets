@@ -5,6 +5,7 @@
 
 # traces
 *.log
+*.History.txt
 
 # env
 .devcontainer
