@@ -10,3 +10,5 @@ net user nr /domain
 dir %WinDir%\Logs\WindowsUpdate /O-D /A-D /B
 PowerShell Get-WindowsUpdateLog
 
+PowerShell "(New-Object Security.Principal.WindowsPrincipal ([Security.Principal.WindowsIdentity]::GetCurrent())).IsInRole('Domain Admins')"
+
