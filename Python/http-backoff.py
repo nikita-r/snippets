@@ -32,25 +32,29 @@ def plog(line):
     print(text, file=flog, flush=True)
 
 plog()
-backoff, backoff_max, backoff_sec = 0, 8, 15
+backoff, backoff_max, backoff_sec = -1, 7, 15
 for din in dgiven[len(dresults):]:
     print(din['id'])
     while True:
         try:
             rdata = fetch_('', din)
-            dresults.append(json.loads(rdata))
+            dresults.append(rdata)
             #sleep(0.25)
-            backoff = 0
+            backoff = -1
         except AssertionError as e:
             plog(str(e))
             if not e.args[0].startswith('HTTP 429: '): raise
             if backoff > backoff_max:
                 e.args += (f'{backoff=}',)
                 raise
-            timespan = 1 + backoff_sec * 2**backoff
+            if backoff < 0:
+                timespan = 1
+                backoff = 0
+            else:
+                timespan = backoff_sec * 2**backoff
+                backoff += 1
             plog(f'backoff {timespan=}')
             sleep(timespan)
-            backoff += 1
         else:
             break
 
