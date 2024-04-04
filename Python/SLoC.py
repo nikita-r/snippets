@@ -6,6 +6,7 @@ if sys.version_info[0:2] < (3,6):
     exit(-1)
 
 import os
+from typing import List
 
 def split_path(path):
     rez = []
@@ -58,7 +59,7 @@ def iter_files_lines(files_list):
         for line in line_iter:
             yield ( fileinput.filename(), fileinput.filelineno(), line )
 
-def lines_skip_empty(t_lines):
+def lines_skip_empty(t_lines: List[str]):
     for t_line in t_lines:
         line = t_line[2]
         if line.isspace():

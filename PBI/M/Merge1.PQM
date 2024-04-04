@@ -1,0 +1,8 @@
+
+/* [sup_id] may have dups */
+let
+	Compound = Table.NestedJoin(Query1, {"sup_id", "sub_id"}, Query2, {"sup_id", "sub_id"}, "Query2", JoinKind.Inner),
+	Expanded = Table.ExpandTableColumn(Compound, "Query2", {"Column1", "Column2"}, {"Query2.Column1", "Query2.Column2"})
+in
+	Expanded
+
