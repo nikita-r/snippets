@@ -28,6 +28,7 @@ foreach ($property in ($object.psObject.Properties.Name | Sort-Object)) {
 gci $_ |% LastWriteTime |% { '{0:yyyy-MM-dd}' -f $_ } | Sort-Object -Unique
 gci $_ |% Extension |% ToUpper | sort -u
 gci $_ | group Extension -NoElement | Sort-Object Name
+gci . -File |? Extension -eq '.dll' |% { [psCustomObject] @{ Pathname = $_.FullName; Version = [version] $_.VersionInfo.ProductVersion; Date = (Get-Date $_.LastWriteTimeUTC -f s).Substring(0, 10); Attributes = $_.Attributes } } | group Date, Attributes | Sort-Object Name -Descending | select Values, Count, Group
 
 <# modify Hashtable keys in-place #>
 $dict = [Collections.Generic.Dictionary`2[string,string]]::new()

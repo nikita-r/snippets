@@ -129,6 +129,8 @@ while (1) { # once a minute
   sleep (61 - (Get-Date -f:ss))
   try {
   } catch {
+    $_
+    continue mainLoop
   }
 }
 
