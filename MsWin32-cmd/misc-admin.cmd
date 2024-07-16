@@ -12,3 +12,6 @@ PowerShell Get-WindowsUpdateLog
 
 PowerShell "(New-Object Security.Principal.WindowsPrincipal ([Security.Principal.WindowsIdentity]::GetCurrent())).IsInRole('Domain Admins')"
 
+Start-Process cmd.exe /c -Credential (Get-Credential)
+$credential | Export-CLIXML C:\Secrets\CR01#$env:UserDomain+$env:UserName@$(hostname.exe).credential.xml
+
