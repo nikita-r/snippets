@@ -31,6 +31,10 @@ Get-ExecutionPolicy -list
 
 $env:PSModulePath -split ';'
 
+$env:PSModulePath = '.'
+Import-Module $env:WinDir\System32\WindowsPowerShell\v1.0\Modules\NetTCPIP\Test-NetConnection.psm1
+Test-NetConnection sql.url -Port 1433
+
 [AppDomain]::CurrentDomain.GetAssemblies()
 
 $cred = [pscredential]::new($username, (Read-Host password -AsSecureString))

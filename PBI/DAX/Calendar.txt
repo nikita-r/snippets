@@ -1,0 +1,15 @@
+
+Calendar = CALENDAR(DATE(2024,1,1), DATE(2024,6,30))
+isoDate = FORMAT([Date], "yyyy-MM-dd")
+
+Year = YEAR([Date])
+QuarterNo = QUARTER([Date])
+Quarter = "Q" & [QuarterNo]
+Year Q = [Year] & " " & [Quarter]
+
+MonthNo = MONTH([Date])
+Month = FORMAT([Date], "MMM")
+Day = DAY([Date])
+
+idxDay = DATEDIFF([Date], DATE(2024,1,1), DAY) * -1 + 1
+

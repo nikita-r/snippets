@@ -1,0 +1,3 @@
+
+#"With Joiner" = Table.AddColumn(Source, "Joiner", each Text.Combine({ (if [Key1] is null then "" else Text.Lower([Key1])), (if [Key2] is null then "" else Text.Lower([Key2])) }, ":"))
+
