@@ -5,9 +5,9 @@ from time import sleep
 
 headers = { 'api-key': '' }
 
-def get_body(din):
+def get_body(input):
   return {
-    'input': din,
+    'input': input,
   }
 
 def fetch_(uri, din, good_status_codes = [ 200 ]):
@@ -17,12 +17,6 @@ def fetch_(uri, din, good_status_codes = [ 200 ]):
     data = response.json()['data']#.get('data')
     return data
 
-dgiven = []
-
-with open(R'*.dgiven.json', encoding='utf-8') as fin:
-    dgiven = json.load(fin)
-
-dresults = []
 
 flog = open(R'*.log', 'w', encoding='utf-8')
 def plog(line):
@@ -31,16 +25,26 @@ def plog(line):
         text += ': ' + line
     print(text, file=flog, flush=True)
 
+
+d_given = []
+
+with open(R'*.dGiven.json', encoding='utf-8') as fin:
+    d_given = json.load(fin)
+
+d_rez = []
+
+backoff_init, backoff_max = -1, 7
+regular_step, backoff_step = 0, 15 # seconds
+
 plog()
-backoff, backoff_max, backoff_sec = -1, 7, 15
-for din in dgiven[len(dresults):]:
-    print(din['id'])
+for d in d_given[len(d_rez):]:
+    print(d['id'])
+    backoff = backoff_init
     while True:
         try:
-            rdata = fetch_('', din)
-            dresults.append(rdata)
-            #sleep(0.25)
-            backoff = -1
+            r = fetch_('', d)
+            d_rez.append(r)
+            regular_step and sleep(regular_step)
         except AssertionError as e:
             plog(str(e))
             if not e.args[0].startswith('HTTP 429: '): raise
@@ -48,10 +52,10 @@ for din in dgiven[len(dresults):]:
                 e.args += (f'{backoff=}',)
                 raise
             if backoff < 0:
-                timespan = 1
+                timespan = regular_step + 1
                 backoff = 0
             else:
-                timespan = backoff_sec * 2**backoff
+                timespan = backoff_step * 2**backoff
                 backoff += 1
             plog(f'backoff {timespan=}')
             sleep(timespan)
@@ -61,6 +65,6 @@ for din in dgiven[len(dresults):]:
 plog()
 flog.close()
 
-with open(R'*.dresults.json', 'w', encoding='utf-8') as fout:
-    json.dump(dresults, fout, indent='\t')
+with open(R'*.dResults.json', 'w', encoding='utf-8') as fout:
+    json.dump(d_rez, fout, indent='\t')
 

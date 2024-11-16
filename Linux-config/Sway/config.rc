@@ -19,7 +19,7 @@ output HDMI-A-1 position 1920,0
 output * bg #6090c0 solid_color
 
 # #203040 == HSV(210/360, 2/4, 1/4)
-client.focused #F0B89C #102840 #ffffff #102840 #F0B89C
+client.focused #CC9999 #102840 #ffffff #102840 #F08048
 client.focused_inactive #303840 #303840 #ffffff
 hide_edge_borders smart
 
@@ -59,6 +59,11 @@ bindsym ButtOn5 nop
 
 set $mod Mod4
 
+set $left h
+set $down j
+set $up k
+set $right l
+
 bindsym --to-code $mod+Shift+c reload
 
 bindsym $mod+Shift+F9 kill
@@ -69,9 +74,50 @@ set $swaylock swaylock -lL -F -e -c 323232 --font Inter --font-size 18 -k --indi
 set $screencap grimshot save screen
 
 #$ wev | sed s/[^[:print:]]/?/g | grep --colour=never -oP ' sym: \K.+'
-bindsym $mod+grave exec $menu
+#bindsym $mod+grave exec $menu
 
-bindsym $mod+Shift+E exec swaynag -t warning -m 'Do you really wish to exit Sway?' -b 'Yes, quit!' 'swaymsg exit' -s 'X'
+bindsym $mod+Return exec $term
+
+bindsym --to-code $mod+Shift+e exec swaynag -t warning -m 'Do you really wish to exit Sway?' -b 'Yes, quit!' 'swaymsg exit' -s '✘'
+bindsym $mod+Shift+x exec $swaylock
+
+bindsym --to-code $mod+d exec $menu
+#bindsym --release Super_L exec $menu
+bindsym --to-code $mod+grave exec $menu
+
+# Drag floating windows with left mouse button by holding down $mod; resize with right mouse button.
+floating_modifier $mod normal
+
+bindsym $mod+$left focus left
+bindsym $mod+$down focus down
+bindsym $mod+$up focus up
+bindsym $mod+$right focus right
+
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+bindsym $mod+Shift+$left move left
+bindsym $mod+Shift+$down move down
+bindsym $mod+Shift+$up move up
+bindsym $mod+Shift+$right move right
+
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+bindsym $mod+1 Workspace A
+bindsym $mod+2 Workspace B
+bindsym $mod+3 Workspace C
+bindsym $mod+4 Workspace D
+bindsym $mod+5 Workspace E
+bindsym $mod+6 Workspace F
+bindsym $mod+7 Workspace G
+bindsym $mod+8 Workspace H
+bindsym $mod+9 Workspace I
+bindsym $mod+0 Workspace 0
 
 bindsym $mod+Shift+1 move container to Workspace A; Workspace A
 bindsym $mod+Shift+2 move container to Workspace B; Workspace B
@@ -84,13 +130,13 @@ bindsym $mod+Shift+8 move container to Workspace H; Workspace H
 bindsym $mod+Shift+9 move container to Workspace I; Workspace I
 bindsym $mod+Shift+0 move container to Workspace 0; Workspace 0
 
-bindsym --to-code $mod+Shift+x exec $swaylock
+bindsym $mod+Shift+minus move scratchpad
+bindsym $mod+minus scratchpad show
 
 bindsym --to-code $mod+Shift+s nop
 bindsym --release --to-code $mod+Shift+s exec $screencap ~/Pictures/screencapFull.$(date -u '+%Y-%m-%dT%TZ').png
 
 bindsym --to-code $mod+Shift+a nop
-bindsym --to-code $mod+d nop
 bindsym --to-code $mod+Shift+d nop
 
 bindsym --to-code $mod+q [con_mark="◯"] focus
@@ -114,6 +160,27 @@ bindsym --to-code $mod+e layout tabbed
 bindsym --to-code $mod+x layout toggle split
 
 
+bindsym $mod+r mode "resize"
+
+mode "resize" {
+
+    bindsym $mod+r mode "default"
+
+    bindsym $left resize shrink width 24px
+    bindsym $down resize grow height 24px
+    bindsym $up resize shrink height 24px
+    bindsym $right resize grow width 24px
+
+    bindsym Left resize shrink width 24px
+    bindsym Down resize grow height 24px
+    bindsym Up resize shrink height 24px
+    bindsym Right resize grow width 24px
+
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+
 # disable Cut/Copy/Paste
 bindsym Shift+Delete nop
 bindsym Ctrl+Insert nop
@@ -128,7 +195,7 @@ bar {
     status_padding 4
     font pango: Carlito 16
 
-    # disable mouse-scroll (default op is to cycle thru workspaces)
+    # disable mouse-scroll (defaults to cycle workspaces)
     bindsym ButtOn4 nop
     bindsym ButtOn5 nop
 
@@ -137,7 +204,7 @@ bar {
         background #323232
 
         inactive_workspace #32323200 #323232 #f5f5f5
-        focused_workspace #323232 #32323200 #323232
+        focused_workspace #323232 #CC9999 #323232
     }
 }
 
