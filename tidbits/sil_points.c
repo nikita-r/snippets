@@ -1,18 +1,11 @@
 
 int get_points(int stat)
 {
-    int points = 20;
+    int points = 20, i = stat;
 
-    if (stat < 0) {
-        for (int i = stat, k = 4; i && k; ++i, --k) {
-            points -= k;
-        }
-        return points;
-    }
+    if (stat < 0) for (int k = 4; i && k; ++i, --k) points -= k;
+    else for (; i; --i) points += (points + 2) / 5;
 
-    for (int i = 0; i < stat; ++i) {
-        points += (points + 2) / 5;
-    }
     return points;
 }
 
