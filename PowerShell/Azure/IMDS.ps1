@@ -6,6 +6,7 @@ function Get-IMDS-AccessToken ( $AppID = $(throw) ) {
     # App ID URI of the target resource (aud in JWT)
     # key vault #$AppID = 'https://vault.azure.net'
     # sql server #$AppID = 'https://database.windows.net'
+    # storage blob #$AppID = 'https://storage.azure.com/'
     #
     $uri = 'http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource='
     try {
@@ -28,5 +29,13 @@ function Get-KvSecretValue ( $kv = $(throw), $secretName = $(throw), $secretVers
     $response = iwr -UseBasicParsing $uri -Headers @{ Authorization = 'Bearer ' + $AccessToken }
     $value = ConvertFrom-Json $response |% value
     return $value
+}
+
+function Download-Blob ( $sa = $(throw), $container = $(throw), $blob = $(throw), $pathOut ) {
+    $AccessToken = Get-IMDS-AccessToken https://storage.azure.com/
+    $uri = "https://$sa.blob.core.windows.net/$container/$blob"
+    $headers = @{ Authorization = 'Bearer ' + $AccessToken; 'x-ms-version' = '2019-02-02' }
+    if (-not $pathOut) { $pathOut = $blob }
+    Invoke-WebRequest -OutFile $pathOut -Uri $uri -Headers $headers
 }
 

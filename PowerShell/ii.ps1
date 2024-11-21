@@ -43,3 +43,17 @@ New-PSSession -Credential $cred | Enter-PSSession
 $choice = $host.ui.PromptForChoice('[ prompt title ]', 'Is it safe to proceed?', ('&Yes', '&No'), 1)
 if ($choice -ne 0) { throw }
 
+<# Web #>
+
+function Get-RedirectedUrl ($url) {
+    $request = [net.WebRequest]::Create($url)
+    $request.AllowAutoRedirect = $false
+    $response = $request.GetResponse()
+
+    if ($response.StatusCode -in 'Found', 'MovedPermanently' ) {
+        $response.GetResponseHeader('Location')
+    } else {
+        '(' + $response.StatusCode + ')'
+    }
+}
+
