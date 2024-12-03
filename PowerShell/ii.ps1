@@ -77,17 +77,25 @@ $jobs = $machines |% { Invoke-Command -AsJob -Credential $cred -ComputerName $_ 
 
 Get-EventSubscriber -SourceIdentifier DataAdded-* | Unregister-Event -ea:0
 $jobsCount = 0
-$jobs |% { Register-ObjectEvent -InputObject $_.ChildJobs[0].Output -EventName DataAdded `
-                                                            -SourceIdentifier "DataAdded-$((++$jobsCount).ToString().PadLeft(3, '0'))" -MessageData $jobsCount }
+$jobs |% { Register-ObjectEvent -InputObject $_.ChildJobs[0].Output -EventName 'DataAdded' -MessageData $jobsCount `
+                                                            -SourceIdentifier ('DataAdded-{0:D3}' -f ++$jobsCount) }
 $jobs |% { Register-ObjectEvent -InputObject $_ -EventName StateChanged }
 
-while ($jobs |? State -eq 'Running') {
-    Wait-Event |? SourceIdentifier -like 'DataAdded-*' `
-    |% { $output = Receive-Job $jobs[$_.MessageData - 1]
-        Write-Host @($output).Count; $_ } | Remove-Event
+function handle ($output, $idx) {
+    Write-Host @($output).Count
 }
 
-$jobs | Receive-Job
+while ($jobs |? State -eq 'Running') {
+    Wait-Event |
+    % { Write-Host $_.SourceIdentifier
+        if ($_.SourceIdentifier -like 'DataAdded-*') {
+            $output = Receive-Job $jobs[$_.MessageData]
+            handle $output $_.MessageData
+        }
+        $_ } | Remove-Event
+}
+
+1..$jobsCount |% { handle (Receive-Job $jobs[$_-1]) ($_-1) }
 
 $jobs |? State -eq 'Failed' |% {
     Write-Host 'Failed:' $_.ChildJobs[0].Location $_.ChildJobs[0].Command
@@ -97,6 +105,7 @@ $jobs |? State -eq 'Failed' |% {
 }
 
 $jobs | Remove-Job -Force
+Get-EventSubscriber | Unregister-Event
 Get-Event | Remove-Event
 
 

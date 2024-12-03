@@ -1,5 +1,7 @@
 
 Calendar = CALENDAR(DATE(2024,1,1), DATE(2024,6,30))
+Calendar = CALENDAR(minX('dbo DataView', DateValue("2024-"&LEFT([MmDd],2)&"-"&RIGHT([MmDd],2))), maxX('dbo DataView', DateValue("2024-"&LEFT([MmDd],2)&"-"&RIGHT([MmDd],2))))
+
 isoDate = FORMAT([Date], "yyyy-MM-dd")
 
 Year = YEAR([Date])
