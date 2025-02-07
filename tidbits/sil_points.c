@@ -3,7 +3,7 @@ int get_points(int stat)
 {
 	int points = 20, i = stat < -4 ? -4 : stat;
 
-	if (i < 0) for (; i; ++i) points += i;
+	if (i < 0) do points -= 5 + i++; while (i);
 	else for (; i; --i) points += (points + 2) / 5;
 
 	return points;
