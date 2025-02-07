@@ -1,9 +1,9 @@
 
 int get_points(int stat)
 {
-	int points = 20, i = stat;
+	int points = 20, i = stat < -4 ? -4 : stat;
 
-	if (stat < 0) for (int k = 4; i && k; ++i, --k) points -= k;
+	if (i < 0) for (; i; ++i) points += i;
 	else for (; i; --i) points += (points + 2) / 5;
 
 	return points;
