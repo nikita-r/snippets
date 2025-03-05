@@ -15,6 +15,13 @@ function Get-ScriptDirectory {
 
 Start-Transcript -LiteralPath ($PSCommandPath + '.' + $env:ClientName + '[' + $env:UserDomain + '+' + $env:UserName + '@' + $env:ComputerName + '.' + $env:UserDnsDomain + ']' + '.Transcript.log')
 
+function Write-Log {
+    $infix = '. . .'
+    if ($args.Count -eq 0) { $infix = '~ ~ ~' }
+    if ($args.Count -eq 1) { $args = $args[0] }
+    Write-Host '' ((Get-Date -f s) -replace 'T', ' ') $infix ($args -join ' ')
+}
+
 cmd.exe /c "echo $name on %date% at %time: =0%>C:\ad-logs\$name.log"
 cmd.exe /c ($line + ' 2>&1') | Out-File -Append C:\ad-logs\$name.log -Encoding ascii
 
