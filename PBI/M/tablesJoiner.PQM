@@ -1,3 +1,6 @@
 
 #"With Joiner" = Table.AddColumn(Source, "Joiner", each Text.Combine({ (if [Key1] is null then "" else Text.Lower([Key1])), (if [Key2] is null then "" else Text.Lower([Key2])) }, ":"))
 
+//SOURCE_INPUT = Table.DuplicateColumn(SOURCE_INPUT, "json", "Parsed JSON", Json.Document)
+OUTPUT_FIELD = Table.AddColumn(SOURCE_INPUT, "NewKey", each if Text.Contains(([json] ?? ""), """NewKey""") then Record.Field([Parsed JSON], "NewKey") else if [Relevance] = null then null else if Text.StartsWith(([Name] ?? ""), "id-", Comparer.OrdinalIgnoreCase) then Text.Range([Name], 3) else [OldKey], type nullable text)
+
