@@ -65,7 +65,7 @@ Import-Module SqlServer -Version 21.1.18256
 $rows = @(Invoke-Sqlcmd <#..#> -ServerInstance SI -Database DB -Query @"
 "@)
 Write-Host $rows.Count
-$rows | Out-GridView -Title <#..#> -PassThru | Format-Table
+$rows | Out-GridView -Title <#..#> -PassThru | Format-List
 
 
 <# Parallel Jobs #>

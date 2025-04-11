@@ -3,7 +3,7 @@ param ( $subject = $(throw), $body = $(throw)
 , $addrTo=( 'Nikita.Retyunskiy@outlook.com' )
 , $attachments = @()
 )
-$addrFrom = $env:UserName + '|' + [net.dns]::GetHostName() + '@' + $env:UserDnsDomain
+$addrFrom = [net.dns]::GetHostName() + '|' + $env:UserDomain + '+' + $env:UserName + '@' + $env:UserDnsDomain
 
 [string]::IsNullOrWhiteSpace($subject) -and $(throw) | out-null
 
