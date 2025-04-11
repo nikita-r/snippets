@@ -175,7 +175,7 @@ $proc = { "${_}: " + $datetime.ToString([cultureinfo]::CreateSpecificCulture($_)
 'fr-FR', 'fr-CA', 'en-US', 'en-GB', 'ru-RU' |% $init $proc
 
 # align utilization percentages
-$psItem |% { if ($null -eq $_) { 0 } elseif ([double] $_ -lt 1e-4) { 1 / 100 / 100 } else { [double] $_ } } |% ToString('000.00%;;~ N/A ~') |% {$_-replace'^0',' '}
+$psItem |% { if ([string]::IsNullOrEmpty($_)) { 0 } elseif ([double] $_ -lt 1e-4) { 1 / 100 / 100 } else { [double] $_ } } |% ToString('000.00%;;~ N/A ~') |% {$_-replace'^0',' '}
 
 
 # MS SQL Server
