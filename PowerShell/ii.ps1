@@ -68,6 +68,15 @@ Write-Host $rows.Count
 $rows | Out-GridView -Title <#..#> -PassThru | Format-List
 
 
+<# Invoke-Command #>
+
+$filepath = 'c$\Windows\System32\drivers\etc\hosts'
+$dirpath = Split-Path ($filepath -replace '^c\$\\', 'C:\')
+Write-Host cmd.exe /c "rd/s/q $local:dirpath"
+Invoke-Command -ComputerName $hostname -ScriptBlock { cmd.exe /c "rd/s/q $using:dirpath" }
+Write-Host DONE cmd.exe
+
+
 <# Parallel Jobs #>
 <# Remotely Echo #>
 
