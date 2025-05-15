@@ -118,3 +118,15 @@ Get-EventSubscriber | Unregister-Event
 Get-Event | Remove-Event
 
 
+<# 32-bit PoSh #>
+$wd = 'C:\Scripts'
+$splat = @{
+    ArgumentList = '[environment]::Is64BitProcess -eq $false'
+    UseNewEnvironment = $true
+
+    RedirectStandardInput = "$wd\stdin.txt" # must exist
+    RedirectStandardOutput = "$wd\stdout.txt"
+    RedirectStandardError = "$wd\stderr.txt"
+}
+Start-Process -Wait @splat -WorkingDirectory $wd -FilePath $env:SystemRoot/SysWOW64/WindowsPowerShell/v1.0/powershell.exe
+
