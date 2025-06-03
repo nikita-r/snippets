@@ -22,6 +22,15 @@ function Get-IMDS-AccessToken ( $AppID = $(throw) ) {
     return $AccessToken
 }
 
+$cached_BearerTokens = @{}
+function Get-Az-AccessToken ( $url = $(throw) ) {
+    if (-not $cached_BearerTokens[$url]) {
+        $cached_BearerTokens[$url] = Get-AzAccessToken -ResourceUrl $url -AsSecureString
+    }
+    Write-Host "Bearer for `"$url`" expires" ((Get-Date $cached_BearerTokens[$url].ExpiresOn.UtcDateTime -f s) + 'Z')
+    return ConvertFrom-SecureString $cached_BearerTokens[$url].Token -AsPlainText #Requires -Version 7.0
+}
+
 function Get-KvSecretValue ( $kv = $(throw), $secretName = $(throw), $secretVersion = '' ) {
     $uriBaseKV = 'vault.azure.net'
     $AccessToken = Get-IMDS-AccessToken "https://$uriBaseKV"

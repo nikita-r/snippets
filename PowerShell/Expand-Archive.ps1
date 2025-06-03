@@ -23,6 +23,8 @@ function Expand-Archive {
     $dir = $app.NameSpace($DestinationPath)
     if (-not $dir.Self.IsFolder) { throw "`"$DestinationPath`" is not a folder" }
 
+    # 0x414 would suppress "There is not enough space on …" and copy until the disk is full
+    # PowerShell.exe -NonInteractive does not suppress that pop-up
     $dir.CopyHere($zip.Items(), 0x14) # &H10& "Yes to All" | &H4& without progress dialog
 
     Write-Host " $((Get-Date -Format s) -replace 'T', ' ') . . . Completed * Expand-Archive"

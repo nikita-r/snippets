@@ -59,13 +59,26 @@ function Get-RedirectionUrl ($url) {
     }
 }
 
+
 <# Invoke-Sqlcmd #>
 
 Import-Module SqlServer -Version 21.1.18256
+
+<# Out-GridView #>
 $rows = @(Invoke-Sqlcmd <#..#> -ServerInstance SI -Database DB -Query @"
 "@)
 Write-Host $rows.Count
 $rows | Out-GridView -Title <#..#> -PassThru | Format-List
+
+<# INSERT with OUTPUT #>
+$sql = "INSERT [Table] ( [ColA], [ColN] )"
+$sql += ' OUTPUT Inserted.ID'
+$sql += " VALUES ( '$valA', '$valN' );"
+Write-Host "$sql"
+$id = 0
+$id = Invoke-Sqlcmd <#..#> -ServerInstance SI -Database DB -Query $sql -ea:Continue
+<# `$id -eq $null` upon SQL error; `$id -eq 0` if login failed #>
+if ($id) { Write-Host "[ ID: $($id.ID) ]" }
 
 
 <# Invoke-Command #>
