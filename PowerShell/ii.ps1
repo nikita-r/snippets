@@ -80,6 +80,21 @@ $id = Invoke-Sqlcmd <#..#> -ServerInstance SI -Database DB -Query $sql -ea:Conti
 <# `$id -eq $null` upon SQL error; `$id -eq 0` if login failed #>
 if ($id) { Write-Host "[ ID: $($id.ID) ]" }
 
+<# serialize table data in ASCII #>
+$outs = @()
+foreach ($row in $rows) {
+    [ordered]$out = @{}
+    foreach ($c in ($row.Table.Columns |% Caption)) {
+        if ($row.$c -is [datetime]) {
+            $out.$c = (Get-Date $row.$c -f s) + (Get-Date $row.$c -F.fff)
+        } else {
+            $out.$c = ([string] $row.$c) -replace '[^\x09\x20-\x7E\x0d\x0a]','?'
+        }
+    }
+    $outs += @($out)
+}
+$text = $outs | ConvertTo-Csv -NoHeader #Requires -Version 7.4
+
 
 <# Invoke-Command #>
 

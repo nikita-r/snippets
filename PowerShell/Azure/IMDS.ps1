@@ -24,7 +24,7 @@ function Get-IMDS-AccessToken ( $AppID = $(throw) ) {
 
 $cached_BearerTokens = @{}
 function Get-Az-AccessToken ( $url = $(throw) ) {
-    if (-not $cached_BearerTokens[$url]) {
+    if (-not $cached_BearerTokens[$url] -or ($cached_BearerTokens[$url].ExpiresOn.UtcDateTime - (Get-Date).ToUniversalTime()).Hours -lt 1) {
         $cached_BearerTokens[$url] = Get-AzAccessToken -ResourceUrl $url -AsSecureString
     }
     Write-Host "Bearer for `"$url`" expires" ((Get-Date $cached_BearerTokens[$url].ExpiresOn.UtcDateTime -f s) + 'Z')
@@ -35,9 +35,9 @@ function Get-KvSecretValue ( $kv = $(throw), $secretName = $(throw), $secretVers
     $uriBaseKV = 'vault.azure.net'
     $AccessToken = Get-IMDS-AccessToken "https://$uriBaseKV"
     $uri = 'https://' + $kv + '.' + $uriBaseKV + '/secrets/' + $secretName + '/' + $secretVersion + '?api-version=7.4'
-    $response = iwr -UseBasicParsing $uri -Headers @{ Authorization = 'Bearer ' + $AccessToken }
-    $value = ConvertFrom-Json $response |% value
-    return $value
+    $secret = Invoke-RestMethod $uri -Headers @{ Authorization = 'Bearer ' + $AccessToken }
+    Write-Host "Fetched secret: $($secret.id) (updated $(Get-Date (Get-Date 1970-1-1).AddSeconds($secret.attributes.updated) -f s)Z)"
+    return $secret.value
 }
 
 function Download-Blob ( $sa = $(throw), $container = $(throw), $blob = $(throw), $pathOut ) {

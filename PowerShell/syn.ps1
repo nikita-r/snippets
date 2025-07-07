@@ -1,6 +1,5 @@
 # syn.ps1
 
-Get-TypeName -f $v
 ??{}{}{}
 function ?? ( [scriptblock]$PossiblyNil, [scriptblock]$ExecIfNil = $(throw) ) {
     ${??}=@(Invoke-Command $PossiblyNil) |? {![string]::IsNullOrWhiteSpace($_)}
