@@ -1,5 +1,5 @@
-#Requires -PSEdition Core
-#Requires -Version 7.1
+#Requires -PSEdition Desktop
+#Requires -Version 5.1
 
 $ErrorActionPreference='Stop'
 Set-StrictMode -Version:Latest
@@ -42,15 +42,14 @@ $App.add_Exit({ param ( $sender, [Windows.ExitEventArgs]$evtA )
     $evtA.ApplicationExitCode = $App.myExitCode
 })
 
-<# By default, a TextBox restores previous cursor position/selection when Tab is
- # used to focus the control; change this behaviour Application-wide as follows:
-$tTextBox = [Windows.Controls.TextBox]
-[Windows.EventManager]::RegisterClassHandler($tTextBox, $tTextBox::GotFocusEvent
-                        , [Windows.RoutedEventHandler] {
-                            param ( $sender, [Windows.RoutedEventArgs]$evtArgs )
-if ([Windows.Input.Keyboard]::PrimaryDevice.IsKeyDown([Windows.Input.Key]::Tab))
-                            { $sender.SelectAll() }
-                          })
+# By default, a TextBox restores previous cursor position/selection when Tab is
+# used to focus the control; change this behaviour Application-wide as follows:
+[Windows.EventManager]::RegisterClassHandler(
+    [Windows.Controls.TextBox], [Windows.Controls.TextBox]::GotFocusEvent, [Windows.RoutedEventHandler] {
+        param ( $sender, [Windows.RoutedEventArgs]$argsRoutedEvent )
+        if ([Windows.Input.Keyboard]::PrimaryDevice.IsKeyDown([Windows.Input.Key]::Tab)) { $sender.SelectAll() }
+    }
+)
 <#~#>
 
 
@@ -135,7 +134,7 @@ $MainForm.FindName('btn_A').Add_Click({
 
     if ($total -eq 0) {
         $ProgressBar.Value = 100
-        [void][Windows.MessageBox]::Show('0 items found', $this, 'ok', 64)
+        [void] [Windows.MessageBox]::Show('0 items found', $this, 'ok', 64)
         return
     }
 
@@ -156,17 +155,17 @@ $MainForm.FindName('btn_A').Add_Click({
               { $_ -in 'yeaiou'.ToCharArray() } { $true }
               { $_ -eq 'w' } { $null } }
 
-        [void]$dt.Rows.Add(@( [int]$_, $null, $items[$_-1], [int]$items[$_-1], $vow ))
+        [void] $dt.Rows.Add(@( [int]$_, $null, $items[$_-1], [int]$items[$_-1], $vow ))
 
         $ProgressBar.Value = 100 * $_ / $total
         PumpMessages
 
     } { $DataGrid.ItemsSource = $dt.DefaultView }
 
-    #[void][Windows.MessageBox]::Show($this, 'Action Completed', 'ok', 64)
+    #[void] [Windows.MessageBox]::Show($this, 'Action Completed', 'ok', 64)
   } catch {
     report_catch $_
-    [void][Windows.MessageBox]::Show('Exception caught!' + "`n"*2 + $this, 'Unexpected Error', 'ok', 16)
+    [void] [Windows.MessageBox]::Show('Exception caught!' + "`n"*2 + $this, 'Unexpected Error', 'ok', 16)
   }
 })
 
@@ -174,12 +173,12 @@ $MainForm.FindName('btn_B').Add_Click({
   try {
     $r = [Windows.MessageBox]::Show('Really?', 'Are you sure?', 'YesNoCancel', 32)
     if ($r -cne 'Yes') { return }
-    [void][Windows.MessageBox]::Show('Not Implemented', 'Expected Error', 'ok', 48)
+    [void] [Windows.MessageBox]::Show('Not Implemented', 'Expected Error', 'ok', 48)
     $DataGrid.SelectedItems |% { $c = $DataGrid.ItemContainerGenerator.ContainerFromItem($_); $c.Background = '#800000'; $c.Foreground = '#DCDCDC' }
     throw ('In the red now: count=' + $DataGrid.SelectedItems.Count)
   } catch {
     report_catch $_
-    [void][Windows.MessageBox]::Show('Exception caught!' + "`n"*2 + $this, 'Unexpected Error', 'ok', 16)
+    [void] [Windows.MessageBox]::Show('Exception caught!' + "`n"*2 + $this, 'Unexpected Error', 'ok', 16)
   }
 })
 
@@ -198,7 +197,7 @@ $MainForm.FindName('btn_C').Add_Click({
     sleep 1
   } catch {
     report_catch $_
-    [void][Windows.MessageBox]::Show('Exception caught!' + "`n"*2 + $this, 'Unexpected Error', 'ok', 16)
+    [void] [Windows.MessageBox]::Show('Exception caught!' + "`n"*2 + $this, 'Unexpected Error', 'ok', 16)
   }
 })
 
@@ -224,5 +223,5 @@ $MainForm.FindName('DataGrid_Menu_Colour').Items.add_Click({
 
 $App.ShutdownMode = 'OnMainWindowClose'
 $ExitCode = $App.Run($MainForm)
-Write-Host ('App.ExitCode='+$ExitCode)
+Write-Host "ApplicationExitCode=$ExitCode"
 exit $ExitCode

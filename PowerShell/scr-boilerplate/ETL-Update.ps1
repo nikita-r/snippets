@@ -13,7 +13,7 @@ Start-Transcript "$PSCommandPath.Transcript.log"
 cd (Split-Path $PSCommandPath)
 [Environment]::CurrentDirectory = (Split-Path $PSCommandPath)
 
-#!Find-Module SqlServer -MinimumVersion 21.1.18256 -MaximumVersion 21.1.18256 | Save-Module -Path .
+#!Find-Module SqlServer -RequiredVersion 21.1.18256 | Save-Module -Path .
 $env:PSModulePath = '.'
 Import-Module SqlServer
 

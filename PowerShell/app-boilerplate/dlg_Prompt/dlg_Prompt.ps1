@@ -1,7 +1,31 @@
-param ( $xaml_file, $ParentWindow )
+﻿param ( $xaml_file, $ParentWindow )
 
 $dlg_Prompt = [windows.markup.XamlReader]::Load([xml.XmlNodeReader] [xml] [io.file]::ReadLines($xaml_file))
 $dlg_Prompt.Owner = $ParentWindow
+
+#$dlg_Prompt.WindowStyle = 'None'
+Add-Type @"
+using System;
+using System.Runtime.InteropServices;
+public class Win32 {
+    public const int GWL_STYLE = -16;
+    public const int WS_SYSMENU = 0x80000;
+    public const int WS_MINIMIZEBOX = 0x20000;
+    public const int WS_MAXIMIZEBOX = 0x10000;
+    [DllImport("User32")]
+    public static extern IntPtr GetWindowLongPtr(IntPtr hWnd, int nIndex);
+    [DllImport("User32")]
+    public static extern IntPtr SetWindowLongPtr(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
+}
+"@
+$dlg_Prompt.add_ContentRendered({
+    # Remove minimize/maximize/close buttons using Win32 API
+    $windowHandle = (New-Object System.Windows.Interop.WindowInteropHelper $this).Handle # $dlg_Prompt is not accessible here as this block is executed within "parent context"
+    $style = [Win32]::GetWindowLongPtr($windowHandle, [Win32]::GWL_STYLE)
+    $newStyle = $style -bAnd (-bNot ([Win32]::WS_MINIMIZEBOX + [Win32]::WS_MAXIMIZEBOX + [Win32]::WS_SYSMENU))
+    [Win32]::SetWindowLongPtr($windowHandle, [Win32]::GWL_STYLE, $newStyle)
+})
+
 
 $dlg_Prompt.add_KeyDown({ param ($sender, [Windows.Input.KeyEventArgs]$e)
   if ($e.Key -eq 'Escape') {

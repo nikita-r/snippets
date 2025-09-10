@@ -62,6 +62,7 @@ function Get-RedirectionUrl ($url) {
 
 <# Invoke-Sqlcmd #>
 
+Install-Module SqlServer -Scope CurrentUser
 Import-Module SqlServer -Version 21.1.18256
 
 <# Out-GridView #>
