@@ -63,7 +63,14 @@ $dlg_Prompt.FindName("dlg_Prompt_txt_C").Add_SelectionChanged({
 
     if ($this.SelectedItem -eq $null) { return }
 
-    # …
+    <#
+    ## • validate value outside of this handler: $_.Text -eq $_.SelectedItem.Content
+    ## • provided the item was added programmatically
+    ##    $item = New-Object Windows.Controls.ComboBoxItem
+    ##    $item.Content = $
+    ##    $item.Tag = $
+    ##    $_.Items.Add($item) | Out-Null
+    #>
 })
 
 return $dlg_Prompt
