@@ -9,6 +9,7 @@ title %*
 :dash
 cls
 @echo CMD reset on %date% at %time: =0%
+@chcp 65001
 @prompt $$$+$G$S
 @goto:eof
 :exit1

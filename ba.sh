@@ -46,3 +46,10 @@ du -b -x / | awk '{ $1=sprintf("%015d", $1) }1' | sort -r | more
 find . -mindepth 1 -type d -print0 | xargs -0r -t chmod ???
 find . -type f -print0 | xargs -0r -n1 sh -cx 'sed -i "s/\r\$//" "$1" && chmod a=r "$1"' --
 
+# read lines from a CRLF file
+while IFS=$' \t' read -r field1 field2 fieldz; do
+    #field1=${field1%$'\r'}
+    #field2=${field2%$'\r'}
+    fieldz=${fieldz%$'\r'}
+done < /path/to/file
+

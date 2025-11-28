@@ -1,10 +1,10 @@
 
-function Get-Subject ($folder, $msi) {
+function Get-Subject ($folder, $file) {
     $sh = New-Object -COM Shell.Application
     $ns = $sh.NameSpace($folder)
-    $Subject = $null
-    if (Test-Path $msi) {
-        $Subject = $ns.GetDetailsOf(($ns.Items() |? Name -eq $msi), 22)
+    $Subject = @()
+    $ns.Items() |? Path -like (Join-Path $folder $file) |% {
+        $Subject += ,@( $_.Name, $ns.GetDetailsOf($_, 22) ) # Name may lack file extension depending on Windows Explorer config
     }
     return $Subject
 }

@@ -32,6 +32,16 @@ cmd.exe /c "echo $name on %date% at %time: =0%>C:\ad-logs\$name.log"
 cmd.exe /c ($line + ' 2>&1') | Out-File -Append C:\ad-logs\$name.log -Encoding ascii
 
 
+<# bulk copy #>
+
+#
+# if the "$dirTarget" folder already exists, it will be counted as "Skipped" in the tabular output
+#
+& $env:SystemRoot\System32\Robocopy.exe $dirSource $dirTarget /E /MT:4 /R:5 /W:17 /NP /NFL /NDL | Out-Host
+Write-Host Robocopy.exe: $LASTEXITCODE
+if ($LASTEXITCODE -ge 8) { throw "Robocopy.exe encountered serious error" }
+
+
 # Bitmask the selection of TLS versions.
 # [Net.SecurityProtocolType]::SystemDefault -eq 0
 

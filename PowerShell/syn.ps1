@@ -24,10 +24,20 @@ foreach ($property in ($object.psObject.Properties.Name | Sort-Object)) {
     Write-Host $object.$property
 } ; Write-Host ( '~' + '*~*~' * 19 )
 
+
+<# files listing #>
+
 gci $_ |% LastWriteTime |% { '{0:yyyy-MM-dd}' -f $_ } | Sort-Object -Unique
 gci $_ |% Extension |% ToUpper | sort -u
 gci $_ | group Extension -NoElement | Sort-Object Name
 gci . -File |? Extension -eq '.dll' |% { [psCustomObject] @{ Pathname = $_.FullName; Version = [version] $_.VersionInfo.ProductVersion; Date = (Get-Date $_.LastWriteTimeUTC -f s).Substring(0, 10); Attributes = $_.Attributes } } | group Date, Attributes | Sort-Object Name -Descending | select Values, Count, Group
+
+(Get-Item -Force ~/.profile -ea:Stop).Attributes -bAnd [io.FileAttributes]::Hidden # without "-Force", Exception.Message for hidden file is like "Could not find item *" (inexistent arg would give "Cannot find path '*' because it does not exist.")
+
+
+<# Associative array #>
+
+$map = [hashtable]::new() # case-sensitive
 
 <# modify Hashtable keys in-place #>
 $dict = [Collections.Generic.Dictionary`2[string,string]]::new()
