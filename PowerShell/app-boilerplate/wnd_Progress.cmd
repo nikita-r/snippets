@@ -7,7 +7,7 @@ pushd "%~dp0"
 PowerShell.exe -WindowStyle Hidden -NoProfile -ExecutionPolicy Bypass -File "%~n0.ps1"
 @echo ErrorLevel=%ErrorLevel%
 @if %ErrorLevel% EQU 0 exit
-@if %ErrorLevel% EQU -1073741819 exit
+@rem @if %ErrorLevel% EQU -1073741819 exit
 @PowerShell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0\aux_Win32\ShowConsoleWindow.ps1"
 :lErr
 pause
