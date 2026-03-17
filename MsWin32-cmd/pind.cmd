@@ -1,4 +1,4 @@
-@if -%1-==-- runas /trustlevel:0x20000 "cmd /k \"\"%~0\"\" - %~n0" & goto:eof
+@if -%1-==-- runas /trustlevel:0x20000 "cmd /k for %%F in (.) do \"\"%~0\"\" - %%~nxF" & goto:eof
 set @=%*
 @set @=%@:~2%
 @if -%1-==--- title %@%&goto:dash
