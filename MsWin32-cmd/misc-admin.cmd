@@ -15,3 +15,8 @@ PowerShell "(New-Object Security.Principal.WindowsPrincipal ([Security.Principal
 Start-Process cmd.exe /c -Credential (Get-Credential)
 $credential | Export-CLIXML C:\Secrets\CR01#$env:UserDomain+$env:UserName@$(hostname.exe).credential.xml
 
+echo %SystemRoot%\System32\LogFiles\Firewall\pfirewall.log
+PowerShell "Set-NetFirewallProfile -Profile Domain,Private,Public -LogAllowed True -LogBlocked True"
+rem Events 5156/5157 in "Windows Logs\Security"
+auditpol /set /subcategory:"Filtering Platform Connection" /success:enable /failure:enable
+
