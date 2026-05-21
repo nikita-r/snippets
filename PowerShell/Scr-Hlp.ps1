@@ -1,4 +1,4 @@
-#·Scr-Hlp.ps1
+#|Scr-Hlp.ps1
 throw
 
 function Get-FileName_LineNo {
@@ -13,12 +13,12 @@ function Get-ScriptDirectory {
 
 <# ad-logging #>
 
-Start-Transcript -LiteralPath ($PSCommandPath + '.' + $env:ClientName + '[' + $env:UserDomain + '+' + $env:UserName + '@' + $env:ComputerName + '.' + $env:UserDnsDomain + ']' + '.Transcript.log')
+Start-Transcript -LiteralPath ($PSCommandPath + '.' + $env:ClientName + "[$env:UserDomain+$env:UserName@$env:ComputerName.$env:UserDnsDomain]" + '.Transcript.log')
 # or #
 $dirTranscripts = (hostname) + '.' + "$PSCommandPath.Transcripts.d"
 New-Item -ItemType Directory $dirTranscripts -ea:0 | Out-Null
-Start-Transcript ( $dirTranscripts + '\' + ((Get-Date -f s)-replace'T','-'-replace':','-') + '.' + $env:ClientName + '.' + $env:UserDomain + '+' + $env:UserName + '.' + 'Transcript.log' )
-$oldies = Get-Item "$dirTranscripts\*.Transcript.log" |? CreationTime -lt (Get-Date).AddDays(-33)
+Start-Transcript ( Join-Path $dirTranscripts (((Get-Date -f s)-replace'T','-'-replace':','-') + '.' + $env:ClientName + '.' + "$env:UserDomain+$env:UserName" + '.' + 'Transcript.log') )
+$oldies = Get-Item(Join-Path $dirTranscripts *.Transcript.log) |? CreationTime -lt (Get-Date).AddDays(-33)
 $oldies | Remove-Item -ea:Continue
 
 function Write-Log {

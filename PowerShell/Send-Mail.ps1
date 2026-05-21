@@ -1,9 +1,10 @@
 #·Send-Mail.ps1
 param ( $subject = $(throw), $body = $(throw)
 , $addrTo=( 'Nikita.Retyunskiy@outlook.com' )
-, $attachments = @()
-)
-$addrFrom = [net.dns]::GetHostName() + '|' + $env:UserDomain + '+' + $env:UserName + '@' + $env:UserDnsDomain
+, $attachments = @() )
+
+$hostMon = [net.dns]::GetHostName()
+$addrFrom = "$env:UserDomain+$env:UserName@$hostMon.$env:UserDnsDomain"
 
 [string]::IsNullOrWhiteSpace($subject) -and $(throw) | out-null
 
@@ -12,7 +13,7 @@ $body=@"
 <html>
 <head>
 </head>
-<body>
+<body bgcolor=Azure>
 $([Security.SecurityElement]::Escape($body))
 <br />
 <hr color='Navy' style='height:8px' />
