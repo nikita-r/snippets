@@ -2,6 +2,7 @@
 set @=%*
 @set @=%@:~2%
 @if -%1-==--- title %@%&goto:dash
+@if -%1-==-.- for %%F in (.) do title %%~nxF&goto:dash
 cd /d %*
 @goto:exit%ErrorLevel%
 :exit0
