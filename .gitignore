@@ -25,6 +25,7 @@ __pycache__/
 .DS_Store
 Thumbs.db
 
-# npm
+# package managers
 node_modules/
+*.egg-info/
 
