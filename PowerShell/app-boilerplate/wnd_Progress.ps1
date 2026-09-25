@@ -23,7 +23,7 @@ function report_catch ([Management.Automation.ErrorRecord]$err) {
 
 $AppData = Get-Content "$AppName.json" | ConvertFrom-Json
 
-if ('error' -in ( $AppData.psobject.Properties |% Name )) {
+if ('error' -in ( $AppData.psObject.Properties |% Name )) {
     throw $AppData.error
 }
 
@@ -56,8 +56,7 @@ $App.add_Exit({ param ( $sender, [Windows.ExitEventArgs]$evtA )
 <# init elements of form #>
 
 [xml]$xaml = [io.file]::ReadLines("$AppName.xaml") `
-                        -replace '^<Window.+', '<Window' `
-                        -notMatch '^\s+mc:Ignorable="d"$' -notMatch '^\s+xmlns:local="[^"]+"$'
+                        -replace '^<Window.+', '<Window'
 
 $MainForm = [windows.markup.XamlReader]::Load([xml.XmlNodeReader] $xaml)
 
@@ -148,7 +147,7 @@ $MainForm.FindName('btn_A').Add_Click({
         if ($false) {
             return # %-continue
         } else {
-            <# ToDo: actual work instead of #> Start-Sleep -ms 100
+            <# ToDo: actual work instead of #> Start-Sleep -Milliseconds 100
         }
 
         $vow = switch ($items[$_-1]) { default { $false }
@@ -217,6 +216,18 @@ $MainForm.FindName('Grid_Menu_Exit_1').add_Click({
 $MainForm.FindName('DataGrid_Menu_Colour').Items.add_Click({
     $DataGrid.SelectedItems |% { $c = $DataGrid.ItemContainerGenerator.ContainerFromItem($_); $c.Background = $this.Header }
 })
+
+function Copy-DataGridCell ($Grid) {
+    $cell = $Grid.CurrentCell
+    if (-not $cell.IsValid) { return }
+    $Value = $cell.Item[$cell.Column.Binding.Path.Path]
+    [Windows.Clipboard]::SetText([string] $Value)
+}
+
+'DataGrid_Menu_CopyCell' |% {
+    $Grid = $MainForm.FindName(($_ -replace '_Menu_CopyCell$'))
+    $MainForm.FindName($_).Add_Click({ Copy-DataGridCell $Grid }.GetNewClosure())
+}
 
 
 <# Main.Run #>

@@ -1,23 +1,25 @@
 
-function MergeData-PSCustom2Hashtable {
+function MergeData-psCustom2Hashtable {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory)]
-        [PSCustomObject]
+        [psCustomObject]
         $InputObject
         ,
         [Parameter(Mandatory)]
         [hashtable]
-        $OutputObject
+        $rzlt = @{}
     )
 
-    $InputObject.PSObject.Properties |% {
-        if ($_.Value -is [PSCustomObject]) {
-            $OutputObject[$_.Name] = @{}
-            MergeData-PSCustom2Hashtable $_.Value $OutputObject[$_.Name]
+    $InputObject.psObject.Properties |% {
+        if ($_.Value -is [psCustomObject]) {
+            $rzlt[$_.Name] = @{}
+            MergeData-PSCustom2Hashtable $_.Value $rzlt[$_.Name]
         } else {
-            $OutputObject[$_.Name] = $_.Value
+            $rzlt[$_.Name] = $_.Value
         }
     }
+
+    return $rzlt
 }
 

@@ -117,11 +117,11 @@ Get-Date -Hour 0 -Minute 0 -Second 0 -Millisecond 0
 
 using namespace System.Management.Automation.Internal
 @([AutomationNull]::Value).Count -eq 0
-[AutomationNull]::Value -is [psobject]
+[AutomationNull]::Value -is [psObject]
 [AutomationNull]::Value -isNot [AutomationNull]
 [AutomationNull]::Value -eq $null
 
-[System.DBNull]::Value -isNot [psobject]
+[System.DBNull]::Value -isNot [psObject]
 [System.DBNull]::Value -is [System.DBNull]
 [System.DBNull]::Value -ne $null
 [System.DBNull]::Value -ne [string]::Empty
@@ -130,9 +130,9 @@ using namespace System.Management.Automation.Internal
 [string]::Empty -ne [NullString]::Value
 
 <# After merging of https://github.com/PowerShell/PowerShell/pull/9794
-   was #> 1 -eq -not [DBNull]::Value
+   was #> 1 -eq -not [dbNull]::Value
 <# But reverted by https://github.com/PowerShell/PowerShell/pull/11648
-   so #> 0 -eq -not [DBNull]::Value
+   so #> 0 -eq -not [dbNull]::Value
 
 
 [version] '0.0' -lt [version] '0.0.0' # better supply all four numbers

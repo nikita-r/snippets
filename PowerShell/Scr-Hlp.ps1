@@ -1,14 +1,39 @@
 #|Scr-Hlp.ps1
 throw
 
+<# my Invocation #>
+
 function Get-FileName_LineNo {
 "$($MyInvocation.ScriptName):$($MyInvocation.ScriptLineNumber)"
+}
+
+function Write-Log {
+    $ts = (Get-Date -f s) -replace 'T', ' '
+    if ($args.Count -eq 0) {
+        Write-Host '' $ts '~ ~ ~' (Get-FileName_LineNo)
+        return
+    }
+    if ($args.Count -eq 1) { $args = $args[0] }
+    Write-Host '' $ts '. . .' ($args -join ' ')
 }
 
 function Get-ScriptDirectory {
   $pathnameCurrentFile = if ($host.Name -clike '* ISE Host') { $global:psISE.CurrentFile.FullPath } else { $global:PSCommandPath }
   Split-Path $(if (Split-Path $pathnameCurrentFile -IsAbsolute) { $pathnameCurrentFile } else { Join-Path ([environment]::CurrentDirectory) . })
 }
+
+function Main {
+    Start-Transcript
+    $stepProgress = ''
+    try {
+    } catch {
+        Write-Log "exception raised @ $stepProgress"; Write-Host ---; Write-Host $_
+        exit 1
+    } finally {
+        Stop-Transcript
+    }
+}
+if ($MyInvocation.InvocationName -ne '.') { Main }
 
 
 <# ad-logging #>
@@ -160,7 +185,7 @@ while (1) { # once a minute
 
 <# dict.update #>
 
-$obj = ConvertFrom-Json '{}' # [pscustomobject]
+$obj = ConvertFrom-Json '{}' # [psCustomObject]
 $obj.{row·id} = [string][char]0xd8 # Ø
 if (!@($obj.psObject.Properties).Count -or $kv.Key -notIn $obj.psObject.Properties.Name) {
     $obj | Add-Member -MemberType NoteProperty -Name $kv.Key -Value $kv.Value.Clone() # ? Value.psObject.Copy()
