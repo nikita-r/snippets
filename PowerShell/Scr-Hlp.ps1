@@ -10,11 +10,11 @@ function Get-FileName_LineNo {
 function Write-Log {
     $ts = (Get-Date -f s) -replace 'T', ' '
     if ($args.Count -eq 0) {
-        Write-Host '' $ts '~ ~ ~' (Get-FileName_LineNo)
-        return
+        Write-Host '' $ts '~ ~ ~' "$($MyInvocation.ScriptName):$($MyInvocation.ScriptLineNumber)"
+    } else {
+        if ($args.Count -eq 1) { $args = $args[0] }
+        Write-Host '' $ts '. . .' ($args -join ' ')
     }
-    if ($args.Count -eq 1) { $args = $args[0] }
-    Write-Host '' $ts '. . .' ($args -join ' ')
 }
 
 function Get-ScriptDirectory {

@@ -8,6 +8,8 @@ function ?? ( [scriptblock]$PossiblyNil, [scriptblock]$ExecIfNil = $(throw) ) {
     return ${??}
 }
 
+function Get-sbExecResultOrNull ([scriptblock]$sb) { try { & $sb } catch { $null } }
+
 Get-Process |? Name -eq 'system' | select @{N='PID';E={$_.id}}, handles | ConvertTo-Csv -NoTypeInformation
 
 function Get-StrictMode { # Set-StrictMode -Version:0
@@ -17,56 +19,55 @@ function Get-StrictMode { # Set-StrictMode -Version:0
   return 0 # Set-StrictMode -Off
 }
 
-foreach ($property in ($object.psObject.Properties.Name | Sort-Object)) {
-    Write-Host ( '_' * <#$property.Length#>77 )
+foreach ($property in ($object.psObject.Properties.Name | Sort-Object { [regex]::Replace($_, '\d+', { $args[0].Value.PadLeft(20, '0') }) })) {
+    Write-Host ( '_' * 77 )
     Write-Host $property
-    Write-Host ( '-' * <#$property.Length#>77 )
+    Write-Host ( '-' * $property.Length )
     Write-Host $object.$property
 } ; Write-Host ( '~' + '*~*~' * 19 )
 
 
 <# files listing #>
 
-gci $_ |% LastWriteTime |% { '{0:yyyy-MM-dd}' -f $_ } | Sort-Object -Unique
-gci $_ |% Extension |% ToUpper | sort -u
-gci $_ | group Extension -NoElement | Sort-Object Name
-gci . -File |? Extension -eq '.dll' |% { [psCustomObject] @{ Pathname = $_.FullName; Version = [version] $_.VersionInfo.ProductVersion; Date = (Get-Date $_.LastWriteTimeUTC -f s).Substring(0, 10); Attributes = $_.Attributes } } | group Date, Attributes | Sort-Object Name -Descending | select Values, Count, Group
+gci <$> |% LastWriteTime |% { '{0:yyyy-MM-dd}' -f $_ } | Sort-Object -Unique
+gci <$> |% Extension |% ToUpper | sort -u
+gci <$> | group Extension -NoElement | Sort-Object Name
 
 (Get-Item -Force ~/.profile -ea:Stop).Attributes -bAnd [io.FileAttributes]::Hidden # without "-Force", Exception.Message for hidden file is like "Could not find item *" (inexistent arg would give "Cannot find path '*' because it does not exist.")
 
 
 <# Associative array #>
 
-$map = [hashtable]::new() # case-sensitive
+$hashtable = [hashtable]::new() # case-sensitive
 
-<# modify Hashtable keys in-place #>
 $dict = [Collections.Generic.Dictionary`2[string,string]]::new()
 $($dict.GetEnumerator()) |% { # without $(), the IEnumerator would be invalidated upon iteration
     $arr = $_.Key.ToCharArray()
     [array]::Reverse($arr)
     $dict.Add(-join($arr), $_.Value) # $arr -join $null
-    [void]$dict.Remove($_.Key)
+    $dict.Remove($_.Key) | Out-Null
 }
 
-<# modify values #>
 $hsh = @{ aud="https://management.core.windows.net/" }
 <# A #> $hsh = $hsh.Keys |% { $rez = @{} }{ $rez[$_] = [Net.WebUtility]::UrlEncode($hsh[$_]) }{ $rez }
 <# B #> foreach ($key in $($hsh.Keys)) { $hsh[$key] = [Net.WebUtility]::UrlEncode($hsh[$key]) }
 
 
+<# System.Array #>
+
 $list = New-Object Collections.Generic.List[Object]
-$list.Add
+$list.Add(<$>)
 $list.ToArray()
 
-
-<# on System.Array wrapping antics #>
-
-$A += ,@($AinA) # comma prevents unwrap
+<# to prevent enumerable-like values from unrolling #>
+$A += ,@($AinA) # to nest in an array
+return ,$A # Write-Output -NoEnumerate
 
 <#
 ## ',' binds tighter than '/' when constructing @(), but
 ## not in a method call; [type] is tighter in both cases
 #>
+
 
 Remove-TypeData System.Array # avoid "value"/"Count" in `ConvertTo-Json` output
 <# alternatively #> ($array | ...).psObject.BaseObject | ConvertTo-Json
@@ -74,7 +75,7 @@ Remove-TypeData System.Array # avoid "value"/"Count" in `ConvertTo-Json` output
 <# and generally,
 ## for the output of `ConvertFrom-Json`, make sure to access the underlying
 ## dotnet object, so that eg Select-Object works as expected #>
-(... | ConvertFrom-Json).psObject.BaseObject
+($psItem | ConvertFrom-Json).psObject.BaseObject
 
 
 Compare-Object @() @() -IncludeEqual -ExcludeDifferent -PassThru
@@ -84,12 +85,11 @@ $idx = 0; $series = New-Object Collections.Generic.List[PSCustomObject]
 while (1) {
     sleep 1
     Write-Host (++$idx).ToString('00000')
-    $object = Get-Object ... -ea:Continue
+    $object = Get-Object <$> -ea:Continue
     if (!$?) { continue }
     $series.Add(($object | Select-Object *))
     if ($series.Count -le 1) { continue }
-    $comparison = Compare-Object -ReferenceObject @($series[-2]) -DifferenceObject @($series[-1]) `
-            -Property <#Id,#>Name,Type,...
+    $comparison = Compare-Object -ReferenceObject @($series[-2]) -DifferenceObject @($series[-1]) -Property <#Id,#>Name,Type,...
     $isDifferent = !!(@($comparison.SideIndicator) -ne '==')
     if ($isDifferent) { Write-Host Difference at $series.Count }
 }
