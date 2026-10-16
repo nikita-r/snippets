@@ -15,6 +15,9 @@
 *.ps1   eol=lf
 *.sh    eol=lf
 
+# misc
+*.lock  eol=lf
+
 # graphics
 *.gif   binary
 *.ico   binary
